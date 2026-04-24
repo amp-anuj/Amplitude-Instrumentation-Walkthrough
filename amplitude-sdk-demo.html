@@ -823,6 +823,24 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
         </div>
       </div>
 
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">The Amplitude data model</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+          <div style="background:var(--blue-50);border-radius:8px;padding:12px">
+            <div style="font-weight:600;font-size:12px;color:var(--blue-dk);margin-bottom:4px">📌 Event</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.6">An action a user takes. Has an <strong>event type</strong> (name) and <strong>event properties</strong> (context about that action).<br><br><code style="font-family:var(--mono);font-size:10px">amplitude.track('Song Played', { genre: 'jazz', duration: 180 })</code></div>
+          </div>
+          <div style="background:var(--teal-50);border-radius:8px;padding:12px">
+            <div style="font-weight:600;font-size:12px;color:var(--teal-dk);margin-bottom:4px">👤 User Properties</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.6">Attributes that describe the user — plan, role, country. Persist across sessions. Set via <code style="font-family:var(--mono);font-size:10px">amplitude.identify()</code>.<br><br>Used for segmentation, experiment targeting, and cohort membership.</div>
+          </div>
+          <div style="background:var(--amber-50);border-radius:8px;padding:12px">
+            <div style="font-weight:600;font-size:12px;color:var(--amber-dk);margin-bottom:4px">🔑 User Identity</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.6"><strong>User ID</strong> — your app's ID for the logged-in user.<br><strong>Device ID</strong> — SDK-generated, persists per browser/device. Required for anonymous users.<br><strong>Amplitude ID</strong> — Amplitude's internal merge key; created on first event.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="info blue">
         <strong>Unified SDK</strong> — If starting fresh, consider <code>@amplitude/unified</code> which bundles Analytics, Experiment, Session Replay, and Guides &amp; Surveys in a single package. Load once, configure all products.
       </div>
@@ -851,6 +869,42 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
           <div class="concept-desc" style="margin-top:5px">Custom <code style="font-family:var(--mono);font-size:11px">amplitude.track()</code> calls. You control the event name and every property. Amplitude is the source of truth for critical business events like subscriptions and purchases.</div>
           <div style="margin-top:8px;font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em">Good for</div>
           <div style="font-size:12px;color:var(--text-2);margin-top:3px">Purchase flows · Custom properties · Server-verified events · Subscription state</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">Autocapture by tier</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+          <div style="border-left:3px solid var(--teal);padding:10px 12px;background:var(--surface-2);border-radius:0 6px 6px 0">
+            <div style="font-weight:700;font-size:11px;color:var(--teal-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Tier 1 — Quick Insight</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65">
+              ✓ Page views<br>
+              ✓ Sessions (start/end)<br>
+              ✓ Attribution (UTM, referrer, click IDs)<br>
+              ✓ Form interactions
+            </div>
+            <div style="margin-top:8px;font-size:10px;background:var(--teal-50);color:var(--teal-dk);padding:3px 7px;border-radius:4px;display:inline-block">On by default</div>
+          </div>
+          <div style="border-left:3px solid var(--blue);padding:10px 12px;background:var(--surface-2);border-radius:0 6px 6px 0">
+            <div style="font-weight:700;font-size:11px;color:var(--blue-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Tier 2 — User Clarity</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65">
+              ✓ Element clicks (all)<br>
+              ✓ File downloads<br>
+              ✓ Rage clicks &amp; dead clicks<br>
+              ✓ Frustration signals
+            </div>
+            <div style="margin-top:8px;font-size:10px;background:var(--blue-50);color:var(--blue-dk);padding:3px 7px;border-radius:4px;display:inline-block">elementInteractions: true</div>
+          </div>
+          <div style="border-left:3px solid var(--purple);padding:10px 12px;background:var(--surface-2);border-radius:0 6px 6px 0">
+            <div style="font-weight:700;font-size:11px;color:var(--purple-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Tier 3 — Engineering Context</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65">
+              ✓ Network failures<br>
+              ✓ SPA navigation (history API)<br>
+              ✓ Visual Labeling selectors<br>
+              ✓ Console errors (opt-in)
+            </div>
+            <div style="margin-top:8px;font-size:10px;background:var(--purple-50);color:var(--purple-dk);padding:3px 7px;border-radius:4px;display:inline-block">Individual toggles</div>
+          </div>
         </div>
       </div>
 
@@ -1554,6 +1608,24 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
         </tbody>
       </table>
 
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">Targeting types</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+          <div style="background:var(--surface-2);border-radius:6px;padding:12px">
+            <div style="font-weight:700;font-size:11px;color:var(--text-1);margin-bottom:4px">🔬 Individual Users</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.6">Target by specific User ID or Device ID. Used for QA and internal testing — force a user into a variant without affecting the general population. <br><br>Set in the flag's <strong>Individual Inclusions</strong> list in the Amplitude UI.</div>
+          </div>
+          <div style="background:var(--surface-2);border-radius:6px;padding:12px">
+            <div style="font-weight:700;font-size:11px;color:var(--text-1);margin-bottom:4px">🎯 Targeted Users</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.6">Target by user property values or cohort membership. Examples: plan = "enterprise", country = "US", or any saved Amplitude cohort.<br><br><strong>Cohort targeting note:</strong> cohorts refresh every ~60 min — users entering a cohort may take up to an hour to see a flag change.</div>
+          </div>
+          <div style="background:var(--surface-2);border-radius:6px;padding:12px">
+            <div style="font-weight:700;font-size:11px;color:var(--text-1);margin-bottom:4px">🌍 All Users</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.6">No targeting rule — anyone who calls <code style="font-family:var(--mono);font-size:10px">fetch()</code> is eligible.<br><br>For remote evaluation, user properties in the <code style="font-family:var(--mono);font-size:10px">fetch()</code> call are used for targeting. Pass them explicitly when not using <code style="font-family:var(--mono);font-size:10px">initializeWithAmplitudeAnalytics</code>.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="info amber tp-only">
         <strong>Common mistake:</strong> When not using the integrated Amplitude Analytics path, you must manually track <code>[Experiment] Exposure</code>. Missing exposures will skew experiment results — users who see the treatment won't be counted.
       </div>
@@ -2225,6 +2297,35 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
         <div class="info amber">
           <strong>Use <code>analytics.ready()</code></strong> to wrap the boot call — Segment loads asynchronously, so <code>analytics.user()</code> won't have identity available until the library has fully loaded.<br><br>
           Without <code>forwardEvent()</code>, "On event tracked" triggers won't evaluate. You'll only be able to trigger on page load or other non-event conditions.
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">Production requirements</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+          <div>
+            <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🛡️ Content Security Policy (CSP)</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px">Guides &amp; Surveys loads images, media, and scripts from Amplitude CDN. Add to your CSP headers:</div>
+            <div class="code-wrap" style="margin:0">
+              <pre style="font-size:10px;line-height:1.7"><span class="cv">img-src</span>     <span class="cs">https://*.amplitude.com</span>
+<span class="cv">media-src</span>   <span class="cs">https://*.amplitude.com</span>
+<span class="cv">style-src</span>   <span class="cs">https://*.amplitude.com</span>
+<span class="cv">script-src</span>  <span class="cs">https://*.amplitude.com</span>
+<span class="cv">connect-src</span> <span class="cs">https://*.amplitude.com</span></pre>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🔀 SPA Routing</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px"><strong>Plugin path:</strong> Required — the SDK must detect route changes to re-evaluate guide eligibility.<br><strong>Standalone path:</strong> Highly recommended — set the router so guide targeting updates on navigation.</div>
+            <div class="code-wrap" style="margin:0">
+              <pre style="font-size:10px"><span class="cc">// After boot() — wire your SPA router</span>
+<span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">setRouter</span>((<span class="cv">url</span>) => {
+  <span class="cc">// call your router's navigate function</span>
+  router.<span class="cf">push</span>(<span class="cv">url</span>); <span class="cc">// Vue Router example</span>
+  <span class="cc">// history.pushState({}, '', url); // plain JS</span>
+});</pre>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -3133,12 +3234,14 @@ function applyCustomerConfig() {
     });
   });
 
-  // Pre-select CDP paths and hide third-party content for Amplitude-native customers
+  // Pre-select CDP paths and hide third-party content — only when skill has configured a customer
   const isThirdParty = cfg.cdp !== 'amplitude';
-  if (!isThirdParty) document.body.classList.add('amp-native');
-  if (cfg.products.includes('experiment'))     selectExpPath(isThirdParty ? 'standalone' : 'amplitude');
-  if (cfg.products.includes('guides'))         selectGsPath(isThirdParty ? 'standalone' : 'plugin');
-  if (cfg.products.includes('session_replay')) selectSrPath(isThirdParty ? 'standalone' : 'plugin');
+  if (cfg.customer && !isThirdParty) document.body.classList.add('amp-native');
+  if (cfg.customer) {
+    if (cfg.products.includes('experiment'))     selectExpPath(isThirdParty ? 'standalone' : 'amplitude');
+    if (cfg.products.includes('guides'))         selectGsPath(isThirdParty ? 'standalone' : 'plugin');
+    if (cfg.products.includes('session_replay')) selectSrPath(isThirdParty ? 'standalone' : 'plugin');
+  }
 
   // Pre-fill API key into all SDK init inputs
   if (cfg.apiKey) {
@@ -3226,6 +3329,17 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
         </div>
       </div>
 
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px">
+        <div class="card">
+          <div class="card-title">Session Replay Monitor</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.65">The <strong>#1 debugging resource</strong> for SR implementations. Found at: <strong>Session Replay tab → System Status</strong>.<br><br>Shows per-project health: capture rate, data ingestion lag, SDK version distribution, and whether replays are being linked to events correctly. Check here first when replays aren't appearing.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Heatmaps</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.65">Available as a Session Replay add-on — <strong>no additional instrumentation required</strong>. Amplitude generates click and scroll heatmaps automatically from the same SR data you're already capturing.<br><br>Viewable per URL pattern in the Session Replay UI. Pair with funnels to see which page elements correlate with conversion.</div>
+        </div>
+      </div>
+
       <div class="nav-footer">
         <span class="nav-progress">Step 1 of 7</span>
         <button class="btn btn-primary" onclick="showStep('r',1,null)">Next: Sample rate &amp; privacy →</button>
@@ -3257,6 +3371,28 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
         </div>
       </div>
 
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">Out-of-the-box masking levels</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+          <div style="background:var(--surface-2);border-radius:6px;padding:12px;border-top:2px solid #e55">
+            <div style="font-weight:700;font-size:11px;color:#c44;margin-bottom:6px">🔒 Conservative</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65">Masks all text content and images across the entire page. Maximum privacy — minimal visual fidelity in replays. Good for heavily regulated industries (healthcare, finance).</div>
+          </div>
+          <div style="background:var(--surface-2);border-radius:6px;padding:12px;border-top:2px solid var(--amber)">
+            <div style="font-weight:700;font-size:11px;color:var(--amber-dk);margin-bottom:6px">🟡 Moderate</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65">Masks inputs and form fields. Other text content is visible. <strong>Default level.</strong> Balances privacy with useful replay fidelity for most products.</div>
+          </div>
+          <div style="background:var(--surface-2);border-radius:6px;padding:12px;border-top:2px solid var(--teal)">
+            <div style="font-weight:700;font-size:11px;color:var(--teal-dk);margin-bottom:6px">🟢 Liberal</div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.65">Only masks elements explicitly marked with <code style="font-family:var(--mono);font-size:10px">.amp-block</code> or matched by your <code style="font-family:var(--mono);font-size:10px">blockSelector</code>. Maximum visual clarity — use only for internal tools or non-sensitive pages.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info teal" style="margin-top:4px">
+        <strong>Remote Sample Rate</strong> — admins can override the SDK's <code>sampleRate</code> from the Amplitude UI without a code deploy. Found under <strong>Settings → Session Replay</strong>. Changes take a few minutes to propagate. The remote value always wins over the SDK value.
+      </div>
+
       <div class="info amber">
         <strong>Only sampled sessions have a Replay ID.</strong> Events from sessions that aren't sampled in will not have the <code>[Amplitude] Session Replay ID</code> property and won't appear in the replay viewer.
       </div>
@@ -3268,6 +3404,7 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
       <aside class="step-aside">
         <div class="aside-card">
           <div class="aside-section">Sample rate guidance</div>
+          <div class="aside-row"><span class="aside-label" style="min-width:60px">Starting point</span><span class="aside-val">20–50% is a good baseline. Use: quota ÷ monthly sessions to find your ceiling.</span></div>
           <div class="aside-row"><span class="aside-label" style="min-width:60px">Dev / QA</span><span class="aside-val">1.0 — capture everything to validate implementation</span></div>
           <div class="aside-row"><span class="aside-label" style="min-width:60px">Production</span><span class="aside-val">0.01–0.1 typical (1–10%). Balance coverage vs. storage.</span></div>
           <div class="aside-row"><span class="aside-label" style="min-width:60px">Funnels</span><span class="aside-val">Consider higher rate on key conversion pages where replay adds most value.</span></div>

@@ -98,6 +98,8 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
 .badge-purple { background: rgba(107,92,231,0.25); color: #B4ACFA; border: 1px solid rgba(107,92,231,0.4); }
 .badge-pink   { background: rgba(212,83,126,0.25); color: #F4A8C4; border: 1px solid rgba(212,83,126,0.4); }
 .badge-teal   { background: rgba(29,158,117,0.25); color: #6FD9B8; border: 1px solid rgba(29,158,117,0.4); }
+.badge-gray   { background: rgba(120,120,140,0.18); color: #b0b0c8; border: 1px solid rgba(120,120,140,0.3); }
+.concept-card.cfg-product-dim { opacity: 0.38; filter: grayscale(0.5); pointer-events: none; }
 
 /* ─────────────────────────────────────
    TABS — sits below dark header, white bg
@@ -623,12 +625,15 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
     <span class="logo-sub">SDK Instrumentation Walkthrough</span>
   </div>
   <div class="header-right">
-    <span id="active-badge" class="product-badge badge-blue">Analytics</span>
+    <span id="active-badge" class="product-badge badge-gray">Overview</span>
   </div>
 </header>
 
 <nav class="tabs">
-  <button class="tab active" onclick="switchProduct('analytics',this)">
+  <button class="tab active" onclick="switchProduct('overview',this)">
+    <span class="dot" style="background:var(--text-3)"></span> Overview
+  </button>
+  <button class="tab" onclick="switchProduct('analytics',this)">
     <span class="dot" style="background:var(--blue)"></span> Analytics SDK
   </button>
   <button class="tab" onclick="switchProduct('experiment',this)">
@@ -643,9 +648,113 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
 </nav>
 
 <!-- ══════════════════════════════════════
+  OVERVIEW PANEL
+══════════════════════════════════════ -->
+<div id="panel-overview" class="tab-panel active">
+  <aside class="sidebar">
+    <div class="sidebar-section">Overview</div>
+    <div class="step-item active" onclick="showStep('o',0,this)">
+      <div class="step-num"><span>1</span></div>
+      <div class="step-label">The Amplitude Platform</div>
+    </div>
+    <div class="step-item" onclick="showStep('o',1,this)">
+      <div class="step-num"><span>2</span></div>
+      <div class="step-label">Today's session</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- O0: Platform overview -->
+    <div id="o-step-0" class="step-page active">
+      <div class="step-eyebrow" style="color:var(--amp-blue)">Amplitude Platform</div>
+      <h2 class="step-title">The Amplitude Platform</h2>
+      <p class="step-sub">Amplitude is a digital analytics and product intelligence platform. Teams use it to understand user behavior, run experiments, guide users through key moments, and replay exactly what users experienced.</p>
+
+      <div class="concept-grid" id="o-product-grid">
+        <div class="concept-card" id="o-card-analytics" style="border-top:3px solid var(--blue)">
+          <div class="concept-icon" style="background:var(--blue-50)">📊</div>
+          <div class="concept-name" style="color:var(--blue-800)">Analytics</div>
+          <div class="concept-desc">Track events, identify users, and analyze behavior. Understand how users navigate your product, where they convert, and what drives retention. The foundation all other products build on.</div>
+        </div>
+        <div class="concept-card" id="o-card-experiment" style="border-top:3px solid var(--purple)">
+          <div class="concept-icon" style="background:var(--purple-50)">🧪</div>
+          <div class="concept-name" style="color:var(--purple-800)">Experiment</div>
+          <div class="concept-desc">Run A/B tests and feature flags with statistical confidence. Ship features to targeted groups, measure impact on key metrics, and make data-driven decisions about what to roll out.</div>
+        </div>
+        <div class="concept-card" id="o-card-guides" style="border-top:3px solid var(--pink)">
+          <div class="concept-icon" style="background:var(--pink-lt)">🗺️</div>
+          <div class="concept-name" style="color:var(--pink-dk)">Guides &amp; Surveys</div>
+          <div class="concept-desc">Deliver contextual in-app guidance and collect feedback at the right moment. Trigger guides, tours, and surveys based on user behavior — no code deploys required after initial SDK setup.</div>
+        </div>
+        <div class="concept-card" id="o-card-session-replay" style="border-top:3px solid var(--teal)">
+          <div class="concept-icon" style="background:var(--teal-lt)">🎥</div>
+          <div class="concept-name" style="color:var(--teal-dk)">Session Replay</div>
+          <div class="concept-desc">See exactly what users saw. Combine behavioral analytics with visual session recordings — jump from a funnel drop-off directly to the replays of affected users to diagnose friction.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="card-title">How the products work together</div>
+        <div class="checklist">
+          <div class="check-item done">Analytics is the foundation — all other SDKs initialize on top of it and share the same <code style="font-family:var(--mono);font-size:11px">device_id</code>, session, and user identity</div>
+          <div class="check-item done">Experiment targeting uses Analytics user properties and cohorts — no separate identity setup needed with <code style="font-family:var(--mono);font-size:11px">initializeWithAmplitudeAnalytics</code></div>
+          <div class="check-item done">Guides &amp; Surveys fire in real time on Analytics events — event-based triggers work because the SDK receives the same event stream</div>
+          <div class="check-item done">Session Replay links to Analytics events via a shared Session Replay ID — jump from a funnel step directly to the replay of affected users</div>
+        </div>
+      </div>
+
+      <div class="info blue">
+        <strong>Unified SDK.</strong> Starting fresh? <code>@amplitude/unified</code> (npm) or the Unified Script (CDN) initializes all four products in a single call — one API key, one SDK version to manage.
+      </div>
+
+      <div class="nav-footer">
+        <span class="nav-progress">Step 1 of 2</span>
+        <button class="btn btn-primary" onclick="showStep('o',1,null)">Next: Today's session →</button>
+      </div>
+    </div>
+
+    <!-- O1: Today's session -->
+    <div id="o-step-1" class="step-page">
+      <div class="step-eyebrow" style="color:var(--amp-blue)">Amplitude Platform</div>
+      <h2 class="step-title">Today's session</h2>
+      <p class="step-sub">We'll walk through each product step by step — initializing SDKs, firing real events, and watching data flow into Amplitude live.</p>
+
+      <div class="card">
+        <div class="card-title">What we'll cover</div>
+        <div class="checklist" id="o-agenda-list">
+          <div class="check-item o-agenda-analytics">Analytics SDK — Initialize, identify users, track events, revenue, and groups</div>
+          <div class="check-item o-agenda-experiment">Experiment SDK — Feature flags vs experiments, providers, fetch &amp; read variants, exposure tracking</div>
+          <div class="check-item o-agenda-guides">Guides &amp; Surveys — Plugin setup, triggers, targeting, and debug utilities</div>
+          <div class="check-item o-agenda-session-replay">Session Replay — Sample rate, privacy masking, and how sessions link to analytics events</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="card-title">Before we start</div>
+        <div class="checklist">
+          <div class="check-item">Have an Amplitude project API key ready — you'll paste it on the Analytics tab to initialize the SDK live</div>
+          <div class="check-item">Use Chrome for best results — the <a href="https://amplitude.com/docs/data/chrome-extension-debug" target="_blank" style="color:var(--blue-800);font-weight:600">Amplitude Chrome Extension</a> shows events firing in real time alongside this demo</div>
+          <div class="check-item">Session Replay starts recording this walkthrough session automatically once the Analytics SDK initializes</div>
+        </div>
+      </div>
+
+      <div class="info teal">
+        <strong>Analytics first.</strong> The Experiment SDK, Guides &amp; Surveys plugin, and Session Replay plugin all initialize on top of the Analytics SDK. Start there — everything else follows.
+      </div>
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('o',0,null)">← Back</button></div>
+        <span class="nav-progress">Step 2 of 2</span>
+        <button class="btn btn-primary" onclick="goToFirstProduct()">Start: Analytics SDK →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════
   ANALYTICS PRODUCT PANEL
 ══════════════════════════════════════ -->
-<div id="panel-analytics" class="tab-panel active">
+<div id="panel-analytics" class="tab-panel">
   <aside class="sidebar">
     <div class="sidebar-section">Overview</div>
     <div class="step-item active" onclick="showStep('a',0,this)">
@@ -2389,9 +2498,17 @@ const CUSTOMER_CONFIG = {
 
 // ══ Tab & step navigation ══════════════════════════
 function goToProduct(id) {
-  const idx = {analytics:0, experiment:1, guides:2, replay:3}[id];
+  const idx = {overview:0, analytics:1, experiment:2, guides:3, replay:4}[id];
   const tabs = document.querySelectorAll('.tab');
   switchProduct(id, tabs[idx]);
+}
+
+function goToFirstProduct() {
+  const cfg = CUSTOMER_CONFIG;
+  const order = ['analytics','experiment','guides','session_replay'];
+  const first = order.find(k => cfg.products.includes(k)) || 'analytics';
+  const idMap = {analytics:'analytics', experiment:'experiment', guides:'guides', session_replay:'replay'};
+  goToProduct(idMap[first]);
 }
 
 function switchProduct(id, btn) {
@@ -2400,16 +2517,16 @@ function switchProduct(id, btn) {
   document.getElementById('panel-' + id).classList.add('active');
   if (btn) btn.classList.add('active');
   const badge = document.getElementById('active-badge');
-  const labels = {analytics:'Analytics', experiment:'Experiment', guides:'Guides & Surveys', replay:'Session Replay'};
-  const classes = {analytics:'badge-blue', experiment:'badge-purple', guides:'badge-pink', replay:'badge-teal'};
+  const labels = {overview:'Overview', analytics:'Analytics', experiment:'Experiment', guides:'Guides & Surveys', replay:'Session Replay'};
+  const classes = {overview:'badge-gray', analytics:'badge-blue', experiment:'badge-purple', guides:'badge-pink', replay:'badge-teal'};
   badge.textContent = labels[id];
   badge.className = 'product-badge ' + classes[id];
 }
 
 function showStep(product, idx, clickedEl) {
-  const map = { a:'analytics', e:'experiment', g:'guides', r:'replay', analytics:'analytics', experiment:'experiment', guides:'guides', replay:'replay' };
+  const map = { o:'overview', a:'analytics', e:'experiment', g:'guides', r:'replay', overview:'overview', analytics:'analytics', experiment:'experiment', guides:'guides', replay:'replay' };
   const panelId = map[product] || 'analytics';
-  const prefix = { analytics:'a', experiment:'e', guides:'g', replay:'r' }[panelId];
+  const prefix = { overview:'o', analytics:'a', experiment:'e', guides:'g', replay:'r' }[panelId];
 
   document.querySelectorAll('#panel-' + panelId + ' .step-page').forEach(p => p.classList.remove('active'));
   const page = document.getElementById(prefix + '-step-' + idx);
@@ -2994,10 +3111,10 @@ function applyCustomerConfig() {
   }
 
   const tabMap = [
-    { key: 'analytics',      tabIdx: 0 },
-    { key: 'experiment',     tabIdx: 1 },
-    { key: 'guides',         tabIdx: 2 },
-    { key: 'session_replay', tabIdx: 3 },
+    { key: 'analytics',      tabIdx: 1, prodId: 'analytics'  },
+    { key: 'experiment',     tabIdx: 2, prodId: 'experiment' },
+    { key: 'guides',         tabIdx: 3, prodId: 'guides'     },
+    { key: 'session_replay', tabIdx: 4, prodId: 'replay'     },
   ];
   const tabs = document.querySelectorAll('.tab');
 
@@ -3005,9 +3122,16 @@ function applyCustomerConfig() {
     if (!cfg.products.includes(key)) tabs[tabIdx].classList.add('cfg-hidden');
   });
 
-  // Activate first visible tab
-  const first = tabMap.find(({ key }) => cfg.products.includes(key));
-  if (first) switchProduct(['analytics','experiment','guides','replay'][first.tabIdx], tabs[first.tabIdx]);
+  // Dim non-contracted products in the overview panel
+  const cardMap   = { analytics:'o-card-analytics', experiment:'o-card-experiment', guides:'o-card-guides', session_replay:'o-card-session-replay' };
+  const agendaMap = { analytics:'o-agenda-analytics', experiment:'o-agenda-experiment', guides:'o-agenda-guides', session_replay:'o-agenda-session-replay' };
+  tabMap.forEach(({ key }) => {
+    const card = document.getElementById(cardMap[key]);
+    if (card && !cfg.products.includes(key)) card.classList.add('cfg-product-dim');
+    document.querySelectorAll('.' + agendaMap[key]).forEach(el => {
+      if (!cfg.products.includes(key)) el.style.display = 'none';
+    });
+  });
 
   // Pre-select CDP paths and hide third-party content for Amplitude-native customers
   const isThirdParty = cfg.cdp !== 'amplitude';

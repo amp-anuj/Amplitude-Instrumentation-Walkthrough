@@ -962,7 +962,7 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
   <span class="cf">autocapture</span>: <span id="a-autocapture-snippet" style="color:#569cd6">true</span>
 });
 <span class="cc">// Session Replay bundled — add plugin to enable:</span>
-<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({ <span class="cf">sampleRate</span>: <span class="cn">0.5</span> }));
+<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({ <span class="cf">sampleRate</span>: <span class="cn">1</span> }));
 <span class="cs">&lt;/script&gt;</span>
 
 <span class="cc">&lt;!-- G&amp;S requires a separate script (add after the line above) --&gt;</span>
@@ -989,7 +989,7 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
 <span class="cc">// Single call initializes all products</span>
 <span class="cf">initAll</span>(<span class="cs">'<span id="a-key-in-code-npm">YOUR_API_KEY</span>'</span>, {
   <span class="cf">analytics</span>: { <span class="cf">autocapture</span>: <span id="a-autocapture-snippet-npm" style="color:#569cd6">true</span> },
-  <span class="cf">sessionReplay</span>: { <span class="cf">sampleRate</span>: <span class="cn">0.5</span> },  <span class="cc">// 0 = disabled</span>
+  <span class="cf">sessionReplay</span>: { <span class="cf">sampleRate</span>: <span class="cn">1</span> },  <span class="cc">// 0 = disabled</span>
   <span class="cf">experiment</span>: { <span class="cf">deploymentKey</span>: <span class="cs">'YOUR_DEPLOYMENT_KEY'</span> },
   <span class="cf">engagement</span>: {}  <span class="cc">// Guides &amp; Surveys</span>
 });
@@ -1018,7 +1018,7 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
 <span class="cc">&lt;!-- Session Replay pinned separately --&gt;</span>
 <span class="cs">&lt;script src="https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.22.2-min.js.gz"&gt;&lt;/script&gt;</span>
 <span class="cs">&lt;script&gt;</span>
-<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({ <span class="cf">sampleRate</span>: <span class="cn">0.5</span> }));
+<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({ <span class="cf">sampleRate</span>: <span class="cn">1</span> }));
 <span class="cs">&lt;/script&gt;</span></pre>
         </div>
         <div class="info amber">

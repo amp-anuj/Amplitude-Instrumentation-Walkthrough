@@ -102,7 +102,11 @@ const CUSTOMER_CONFIG = {
 **CDP mapping:**
 - Amplitude Browser SDK → `"amplitude"` (plugin paths + `initializeWithAmplitudeAnalytics`)
 - Segment → `"segment"` (standalone paths with Segment snippets)
-- mParticle, RudderStack, or any other CDP → treat as `"segment"` (standalone paths apply)
+- RudderStack → `"rudderstack"` (standalone paths apply)
+- mParticle → `"mparticle"` (standalone paths apply)
+- Any other CDP → `"segment"` (standalone paths are the closest match)
+
+> All non-`"amplitude"` values trigger standalone/third-party paths throughout the demo. The distinction between `"segment"`, `"rudderstack"`, and `"mparticle"` is cosmetic — the HTML uses `cdp !== 'amplitude'` as the branch condition.
 
 ---
 
@@ -160,8 +164,15 @@ Generated: acme-corp-demo.html
 Config applied:
   Customer:  Acme Corp
   Products:  Analytics, Experiment, Session Replay  (Guides & Surveys hidden — not on contract)
-  CDP:       Segment → standalone paths pre-selected on Experiment, G&S, and SR tabs
+  CDP:       Segment  →  standalone paths pre-selected on Experiment, G&S, and SR tabs
   API key:   not pre-filled (paste live during call)
+
+Tabs shown:
+  ✓ Overview (always shown — platform intro + session agenda)
+  ✓ Analytics SDK  (8 steps: data model, autocapture tiers, init, identify, track, revenue, groups)
+  ✓ Experiment SDK (8 steps: flags vs experiments, targeting, providers, fetch, exposure)
+  ✗ Guides & Surveys — hidden (not on contract)
+  ✓ Session Replay  (7 steps: SR Monitor, sample rate + masking levels, install, configure)
 
 Salesforce: Experiment + SR confirmed on contract. Guides not found.
             Tech stack: Segment device-mode per opportunity notes.

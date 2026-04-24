@@ -48,6 +48,64 @@ python3 -m http.server 8000
 
 ---
 
+## Customizing for a customer
+
+The demo can be tailored for a specific customer — showing only the products they've contracted and pre-selecting the right integration paths. Two ways to do it:
+
+### Option A — Claude skill (recommended)
+
+Install the skill once, then generate customer-specific files on demand before any call.
+
+**Install:**
+```bash
+mkdir -p ~/.claude/plugins/marketplaces/claude-plugins-official/plugins/amplitude-tools/.claude-plugin
+mkdir -p ~/.claude/plugins/marketplaces/claude-plugins-official/plugins/amplitude-tools/skills/instrumentation-walkthrough
+```
+
+Copy [`skills/instrumentation-walkthrough/SKILL.md`](skills/instrumentation-walkthrough/SKILL.md) from this repo into:
+```
+~/.claude/plugins/marketplaces/claude-plugins-official/plugins/amplitude-tools/skills/instrumentation-walkthrough/SKILL.md
+```
+
+Also copy [`skills/instrumentation-walkthrough/../.claude-plugin/plugin.json`](.claude-plugin/plugin.json) to:
+```
+~/.claude/plugins/marketplaces/claude-plugins-official/plugins/amplitude-tools/.claude-plugin/plugin.json
+```
+
+Restart Claude Code, then trigger with natural language:
+> "build me an interactive demo for Acme Corp"
+
+Claude will look up the customer in Salesforce, confirm the details with you, and generate a pre-configured `acme-corp-demo.html` in your current directory.
+
+### Option B — Manual config
+
+Open `amplitude-sdk-demo.html` and find the `CUSTOMER_CONFIG` block near the top of the `<script>` tag:
+
+```js
+const CUSTOMER_CONFIG = {
+  customer: "",          // shown in the header — e.g. "Acme Corp"
+  products: ["analytics", "experiment", "guides", "session_replay"],
+  cdp: "amplitude",     // "amplitude" | "segment" | "rudderstack" | "mparticle"
+  apiKey: "",           // pre-filled into all SDK init inputs
+};
+```
+
+Edit the values, save as `[customer]-demo.html`, and open in Chrome.
+
+**`products`** controls which tabs are shown. Remove any products not on the customer's contract:
+- `"analytics"` — Analytics SDK tab
+- `"experiment"` — Experiment SDK tab
+- `"guides"` — Guides & Surveys tab
+- `"session_replay"` — Session Replay tab
+
+**`cdp`** controls which integration paths are pre-selected and which third-party content is shown:
+- `"amplitude"` — hides all Segment/standalone paths and third-party content; shows only native Amplitude paths
+- `"segment"` / `"rudderstack"` / `"mparticle"` — shows standalone/Segment paths throughout
+
+**`apiKey`** — if provided, pre-fills the customer's API key into all SDK init inputs so you don't need to paste it during the call.
+
+---
+
 ## Features
 
 ### Analytics tab
@@ -115,8 +173,13 @@ External docs referenced:
 ## File structure
 
 ```
-amplitude-sdk-demo.html   # The entire app — single self-contained file
-README.md                 # This file
+amplitude-sdk-demo.html                          # The entire app — single self-contained file
+README.md                                        # This file
+skills/
+  instrumentation-walkthrough/
+    SKILL.md                                     # Claude skill for generating customer demos
+.claude-plugin/
+  plugin.json                                    # Plugin metadata for Claude Code
 ```
 
 Everything — HTML, CSS, and JavaScript — lives in a single file with no external dependencies beyond Google Fonts (DM Sans) and the Amplitude/Segment CDN scripts loaded at runtime when a key is entered.

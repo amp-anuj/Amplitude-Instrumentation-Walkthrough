@@ -129,6 +129,10 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--amp-blue); border-bottom-color: var(--amp-blue); font-weight: 600; }
 .tab .dot { width: 7px; height: 7px; border-radius: 50%; }
+.tab.cfg-hidden { display: none !important; }
+body.amp-native .tp-only { display: none !important; }
+.amp-native-only { display: none; }
+body.amp-native .amp-native-only { display: block !important; }
 
 /* ─────────────────────────────────────
    LAYOUT
@@ -1441,7 +1445,7 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
         </tbody>
       </table>
 
-      <div class="info amber">
+      <div class="info amber tp-only">
         <strong>Common mistake:</strong> When not using the integrated Amplitude Analytics path, you must manually track <code>[Experiment] Exposure</code>. Missing exposures will skew experiment results — users who see the treatment won't be counted.
       </div>
 
@@ -1491,16 +1495,17 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
     <div id="e-step-3" class="step-page">
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Overview</div>
       <h2 class="step-title">The two providers</h2>
-      <p class="step-sub">The Experiment SDK needs two things wired up at initialization: a <strong>User Provider</strong> that tells it who the current user is, and an <strong>Exposure Tracking Provider</strong> that tells it where to send exposure events. How these are configured depends on your analytics setup.</p>
+      <p class="step-sub tp-only">The Experiment SDK needs two things wired up at initialization: a <strong>User Provider</strong> that tells it who the current user is, and an <strong>Exposure Tracking Provider</strong> that tells it where to send exposure events. How these are configured depends on your analytics setup.</p>
+      <p class="step-sub amp-native-only">The Experiment SDK needs identity and a destination for exposure events. With <code style="font-family:var(--mono)">initializeWithAmplitudeAnalytics</code>, both are wired automatically from your existing Analytics SDK — no manual implementation needed.</p>
 
       <div class="provider-row">
-        <div class="provider-box" style="border-top:2px solid var(--purple)">
+        <div class="provider-box tp-only" style="border-top:2px solid var(--purple)">
           <div class="provider-icon">😃</div>
           <div class="provider-name">ExperimentUserProvider</div>
           <div class="provider-role">Implements <code style="font-family:var(--mono);font-size:11px">getUser()</code>. Called on every <code style="font-family:var(--mono);font-size:11px">fetch()</code> to identify the current user for variant assignment. Returns <code style="font-family:var(--mono);font-size:11px">{ user_id, device_id }</code> — at least one is required.</div>
           <div class="provider-req" style="background:var(--purple-lt);color:var(--purple-dk);">Required</div>
         </div>
-        <div class="provider-box" style="border-top:2px solid var(--amp-blue)">
+        <div class="provider-box tp-only" style="border-top:2px solid var(--amp-blue)">
           <div class="provider-icon">⚡</div>
           <div class="provider-name">ExposureTrackingProvider</div>
           <div class="provider-role">Implements <code style="font-family:var(--mono);font-size:11px">track(exposure)</code>. Called automatically when <code style="font-family:var(--mono);font-size:11px">variant()</code> is invoked. Sends a <code style="font-family:var(--mono);font-size:11px">$exposure</code> event to your analytics provider so Amplitude can compute experiment results.</div>
@@ -1524,17 +1529,17 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
             <td class="cell-yes">Auto — reads from Analytics SDK</td>
             <td class="cell-yes">Auto — sends via amplitude.track()</td>
           </tr>
-          <tr>
+          <tr class="tp-only">
             <td><strong>Segment (cloud-mode)</strong><br><span style="font-size:11px;color:var(--text-3)">initialize()</span></td>
             <td class="cell-req">Manual — implement getUser() using analytics.user()</td>
             <td class="cell-req">Manual — implement track() using analytics.track('$exposure')</td>
           </tr>
-          <tr>
+          <tr class="tp-only">
             <td><strong>Segment (device-mode)</strong><br><span style="font-size:11px;color:var(--text-3)">initialize()</span></td>
             <td class="cell-req">Manual — use amplitude.getInstance().options.deviceId for device_id</td>
             <td class="cell-req">Manual — implement track() using analytics.track('$exposure')</td>
           </tr>
-          <tr>
+          <tr class="tp-only">
             <td><strong>Other CDP / mParticle</strong><br><span style="font-size:11px;color:var(--text-3)">initialize()</span></td>
             <td class="cell-req">Manual — map to provider's user/device ID fields</td>
             <td class="cell-req">Manual — forward $exposure to your Amplitude destination</td>
@@ -1564,7 +1569,7 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
           <div class="dc-title">initializeWithAmplitudeAnalytics</div>
           <div class="dc-desc">You already use Amplitude Analytics. <strong>Both providers are configured automatically</strong> — user identity is pulled from the Analytics SDK and exposures are sent to Amplitude. Just replace <code style="font-family:var(--mono);font-size:11px">initialize()</code> with this one call.</div>
         </div>
-        <div class="decision-card" id="e-opt-sa" onclick="selectExpPath('standalone')">
+        <div class="decision-card tp-only" id="e-opt-sa" onclick="selectExpPath('standalone')">
           <div class="dc-title">initialize</div>
           <div class="dc-desc">Third-party analytics (Segment, mParticle, RudderStack). <strong>You must implement both providers manually</strong> in the config object — <code style="font-family:var(--mono);font-size:11px">userProvider.getUser()</code> and <code style="font-family:var(--mono);font-size:11px">exposureTrackingProvider.track()</code>.</div>
         </div>
@@ -1915,7 +1920,8 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
     <div id="g-step-0" class="step-page active">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Overview</div>
       <h2 class="step-title">The three providers</h2>
-      <p class="step-sub">The G&amp;S SDK needs three things to function. Understanding these upfront makes implementation choices obvious.</p>
+      <p class="step-sub tp-only">The G&amp;S SDK needs three things to function. Understanding these upfront makes implementation choices obvious.</p>
+      <p class="step-sub amp-native-only">The G&amp;S SDK needs identity, an event destination, and a real-time event feed. With the Browser SDK plugin, all three are wired automatically — no manual implementation needed.</p>
 
       <div class="provider-row">
         <div class="provider-box" style="border-top:2px solid var(--teal)">
@@ -1949,13 +1955,13 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
             <td class="cell-yes">Auto</td>
             <td class="cell-yes">Auto</td>
           </tr>
-          <tr>
+          <tr class="tp-only">
             <td><strong>Third-party analytics (Segment)</strong></td>
             <td class="cell-req">Required in boot()</td>
             <td class="cell-req">Required in boot()</td>
             <td class="cell-req">Requires forwardEvent()</td>
           </tr>
-          <tr>
+          <tr class="tp-only">
             <td><strong>Amplitude + another tool</strong></td>
             <td class="cell-yes">Auto</td>
             <td class="cell-yes">Auto</td>
@@ -2039,7 +2045,7 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
           <div class="dc-title">Plugin (Browser SDK 2)</div>
           <div class="dc-desc">Amplitude Analytics is already installed. Add G&amp;S as a plugin — all three providers are handled automatically. Just two lines of code.</div>
         </div>
-        <div class="decision-card" id="g-opt-sa" onclick="selectGsPath('standalone')">
+        <div class="decision-card tp-only" id="g-opt-sa" onclick="selectGsPath('standalone')">
           <div class="dc-title">Standalone SDK</div>
           <div class="dc-desc">Use for: Segment device mode · Rudderstack · Server-side sources (Snowflake, S3, HTTP API) · Amplitude server-side SDKs · Any setup without Amplitude Browser SDK on the client.</div>
         </div>
@@ -2373,6 +2379,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
 </div>
 
 <script>
+// ══ Customer config — generated by /instrumentation-walkthrough skill ══
+const CUSTOMER_CONFIG = {
+  customer: "",          // e.g. "Acme Corp" — shown in header
+  products: ["analytics", "experiment", "guides", "session_replay"],
+  cdp: "amplitude",     // "amplitude" | "segment" | "rudderstack" | "mparticle"
+  apiKey: "",           // pre-filled into all SDK init inputs
+};
+
 // ══ Tab & step navigation ══════════════════════════
 function goToProduct(id) {
   const idx = {analytics:0, experiment:1, guides:2, replay:3}[id];
@@ -2971,6 +2985,48 @@ function acReset() {
   acUpdateSnippets();
 }
 
+// ══ Apply customer config on load ══════════════════
+function applyCustomerConfig() {
+  const cfg = CUSTOMER_CONFIG;
+
+  if (cfg.customer) {
+    document.querySelector('.logo-sub').textContent = cfg.customer + ' — Instrumentation Walkthrough';
+  }
+
+  const tabMap = [
+    { key: 'analytics',      tabIdx: 0 },
+    { key: 'experiment',     tabIdx: 1 },
+    { key: 'guides',         tabIdx: 2 },
+    { key: 'session_replay', tabIdx: 3 },
+  ];
+  const tabs = document.querySelectorAll('.tab');
+
+  tabMap.forEach(({ key, tabIdx }) => {
+    if (!cfg.products.includes(key)) tabs[tabIdx].classList.add('cfg-hidden');
+  });
+
+  // Activate first visible tab
+  const first = tabMap.find(({ key }) => cfg.products.includes(key));
+  if (first) switchProduct(['analytics','experiment','guides','replay'][first.tabIdx], tabs[first.tabIdx]);
+
+  // Pre-select CDP paths and hide third-party content for Amplitude-native customers
+  const isThirdParty = cfg.cdp !== 'amplitude';
+  if (!isThirdParty) document.body.classList.add('amp-native');
+  if (cfg.products.includes('experiment'))     selectExpPath(isThirdParty ? 'standalone' : 'amplitude');
+  if (cfg.products.includes('guides'))         selectGsPath(isThirdParty ? 'standalone' : 'plugin');
+  if (cfg.products.includes('session_replay')) selectSrPath(isThirdParty ? 'standalone' : 'plugin');
+
+  // Pre-fill API key into all SDK init inputs
+  if (cfg.apiKey) {
+    ['a-api-key', 'e-amp-key', 'gs-api-key', 'r-api-key'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = cfg.apiKey; el.dispatchEvent(new Event('input')); }
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', applyCustomerConfig);
+
 </script>
 
 <!-- ══════════════════════════════════════
@@ -3135,7 +3191,7 @@ function acReset() {
         <tbody>
           <tr><td><strong>Browser SDK + SR Plugin</strong></td><td class="cell-yes">Yes — automatic</td><td>Shared instance, same device_id and session</td></tr>
           <tr><td><strong>Standalone SDK + Amplitude Analytics</strong></td><td class="cell-yes">Yes — automatic</td><td>Pass same device_id and session_id from Analytics to SR SDK</td></tr>
-          <tr><td><strong>Standalone SDK + Segment</strong></td><td class="cell-req">Manual wiring</td><td>Pass Amplitude's device_id and session_id explicitly to SR SDK init</td></tr>
+          <tr class="tp-only"><td><strong>Standalone SDK + Segment</strong></td><td class="cell-req">Manual wiring</td><td>Pass Amplitude's device_id and session_id explicitly to SR SDK init</td></tr>
           <tr><td><strong>Custom session IDs</strong></td><td class="cell-no">No</td><td>Must use Amplitude default timestamp-based sessions</td></tr>
           <tr><td><strong>Server-side SDK only</strong></td><td class="cell-no">Not supported</td><td>SR only supports client-side JavaScript and mobile SDKs</td></tr>
         </tbody>
@@ -3160,7 +3216,7 @@ function acReset() {
           <div class="dc-title">SR Plugin</div>
           <div class="dc-desc">You use Amplitude Browser SDK 2. Add Session Replay as a plugin — one line, shared device_id and session management automatically.</div>
         </div>
-        <div class="decision-card" id="r-opt-standalone" onclick="selectSrPath('standalone')">
+        <div class="decision-card tp-only" id="r-opt-standalone" onclick="selectSrPath('standalone')">
           <div class="dc-title">Standalone SDK</div>
           <div class="dc-desc">You use a third-party analytics provider (Segment, mParticle, RudderStack) or Amplitude's HTTP/Batch API. Must pass device_id and session_id manually.</div>
         </div>

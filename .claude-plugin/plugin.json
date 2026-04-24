@@ -1,0 +1,8 @@
+{
+  "name": "amplitude-tools",
+  "description": "Amplitude CSA/TSM tools — generates customer-tailored instrumentation walkthrough demos",
+  "author": {
+    "name": "Anuj Sharma",
+    "email": "anuj.sharma@amplitude.com"
+  }
+}

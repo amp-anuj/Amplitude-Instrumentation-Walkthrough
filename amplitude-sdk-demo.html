@@ -2066,43 +2066,46 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
     <div class="sidebar-section">Overview</div>
     <div class="step-item active" onclick="showStep('g',0,this)">
       <div class="step-num"><span>1</span></div>
-      <div class="step-label">The three providers</div>
+      <div class="step-label">What you can build</div>
     </div>
     <div class="step-item" onclick="showStep('g',1,this)">
       <div class="step-num"><span>2</span></div>
+      <div class="step-label">The three providers</div>
+    </div>
+    <div class="step-item" onclick="showStep('g',2,this)">
+      <div class="step-num"><span>3</span></div>
       <div class="step-label">Taxonomy considerations</div>
     </div>
     <div class="sidebar-section">Implementation</div>
-    <div class="step-item" onclick="showStep('g',2,this)">
-      <div class="step-num"><span>3</span></div>
-      <div class="step-label">Plugin vs Standalone</div>
-    </div>
     <div class="step-item" onclick="showStep('g',3,this)">
       <div class="step-num"><span>4</span></div>
-      <div class="step-label">Initialize &amp; boot</div>
+      <div class="step-label">Plugin vs Standalone</div>
     </div>
     <div class="step-item" onclick="showStep('g',4,this)">
       <div class="step-num"><span>5</span></div>
+      <div class="step-label">Initialize &amp; boot</div>
+    </div>
+    <div class="step-item" onclick="showStep('g',5,this)">
+      <div class="step-num"><span>6</span></div>
       <div class="step-label">Triggers &amp; targeting</div>
     </div>
     <div class="sidebar-section">Live Demo</div>
-    <div class="step-item" onclick="showStep('g',5,this)">
-      <div class="step-num"><span>6</span></div>
-      <div class="step-label">Show a guide by key</div>
-    </div>
     <div class="step-item" onclick="showStep('g',6,this)">
       <div class="step-num"><span>7</span></div>
+      <div class="step-label">Show a guide by key</div>
+    </div>
+    <div class="step-item" onclick="showStep('g',7,this)">
+      <div class="step-num"><span>8</span></div>
       <div class="step-label">Debug &amp; verify</div>
     </div>
   </aside>
 
   <main class="main">
-    <!-- G0: Three providers -->
+    <!-- G0: What you can build -->
     <div id="g-step-0" class="step-page active">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Overview</div>
-      <h2 class="step-title">The three providers</h2>
-      <p class="step-sub tp-only">The G&amp;S SDK needs three things to function. Understanding these upfront makes implementation choices obvious.</p>
-      <p class="step-sub amp-native-only">The G&amp;S SDK needs identity, an event destination, and a real-time event feed. With the Browser SDK plugin, all three are wired automatically — no manual implementation needed.</p>
+      <h2 class="step-title">What you can build</h2>
+      <p class="step-sub">Guides &amp; Surveys lets you build targeted in-product experiences — from onboarding tours to NPS surveys — without a separate tool or engineering work for each one.</p>
 
       <div class="card" style="margin-bottom:16px">
         <div class="card-title">Guide types (form factors)</div>
@@ -2159,6 +2162,27 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
         </div>
       </div>
 
+      <div class="concept-card" style="display:flex;gap:14px;align-items:flex-start">
+        <div style="font-size:22px;flex-shrink:0;margin-top:2px">🗂️</div>
+        <div>
+          <div class="concept-name">Resource Center</div>
+          <div class="concept-desc" style="margin-top:4px">A curated in-product portal that surfaces help docs, walkthrough guides, video tutorials, and marketing material — without leaving your app. Available on web only. Built-in integrations: <strong>Zendesk, Help Scout, HubSpot</strong>. Configured entirely in the Amplitude UI, no extra SDK calls required.</div>
+        </div>
+      </div>
+
+      <div class="nav-footer">
+        <span class="nav-progress">Step 1 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',1,null)">Next: The three providers →</button>
+      </div>
+    </div>
+
+    <!-- G1: Three providers -->
+    <div id="g-step-1" class="step-page">
+      <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Overview</div>
+      <h2 class="step-title">The three providers</h2>
+      <p class="step-sub tp-only">The G&amp;S SDK needs three things to function. Understanding these upfront makes implementation choices obvious.</p>
+      <p class="step-sub amp-native-only">The G&amp;S SDK needs identity, an event destination, and a real-time event feed. With the Browser SDK plugin, all three are wired automatically — no manual implementation needed.</p>
+
       <div class="provider-row">
         <div class="provider-box" style="border-top:2px solid var(--teal)">
           <div class="provider-icon">😃</div>
@@ -2207,13 +2231,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       </table>
 
       <div class="nav-footer">
-        <span class="nav-progress">Step 1 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('g',1,null)">Next: Taxonomy →</button>
+        <div><button class="btn" onclick="showStep('g',0,null)">← Back</button></div>
+        <span class="nav-progress">Step 2 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',2,null)">Next: Taxonomy →</button>
       </div>
     </div>
 
-    <!-- G1: Taxonomy -->
-    <div id="g-step-1" class="step-page">
+    <!-- G2: Taxonomy -->
+    <div id="g-step-2" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Overview</div>
       <h2 class="step-title">Analytics taxonomy considerations</h2>
       <p class="step-sub">G&amp;S targeting and triggering depends heavily on what your Analytics SDK is already tracking. Plan your taxonomy before building guides.</p>
@@ -2234,14 +2259,6 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
         <div class="concept-card">
           <div class="concept-name">URL targeting</div>
           <div class="concept-desc" style="margin-top:4px">Combine URL patterns with event triggers for more precise targeting — e.g. show only on <code style="font-family:var(--mono);font-size:11px">/dashboard</code> when <code>Feature Viewed</code> fires.</div>
-        </div>
-      </div>
-
-      <div class="concept-card" style="margin-top:4px;display:flex;gap:14px;align-items:flex-start">
-        <div style="font-size:22px;flex-shrink:0;margin-top:2px">🗂️</div>
-        <div>
-          <div class="concept-name">Resource Center</div>
-          <div class="concept-desc" style="margin-top:4px">A curated in-product portal that surfaces help docs, walkthrough guides, video tutorials, and marketing material — without leaving your app. Available on web only. Built-in integrations: <strong>Zendesk, Help Scout, HubSpot</strong>. Configured entirely in the Amplitude UI, no extra SDK calls required.</div>
         </div>
       </div>
 
@@ -2271,14 +2288,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('g',0,null)">← Back</button></div>
-        <span class="nav-progress">Step 2 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('g',2,null)">Next: Plugin vs Standalone →</button>
+        <div><button class="btn" onclick="showStep('g',1,null)">← Back</button></div>
+        <span class="nav-progress">Step 3 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',3,null)">Next: Plugin vs Standalone →</button>
       </div>
     </div>
 
-    <!-- G2: Plugin vs Standalone -->
-    <div id="g-step-2" class="step-page">
+    <!-- G3: Plugin vs Standalone -->
+    <div id="g-step-3" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Implementation</div>
       <h2 class="step-title">Plugin vs Standalone SDK</h2>
       <p class="step-sub">Choose your installation path based on how your application sends analytics data today.</p>
@@ -2393,14 +2410,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('g',1,null)">← Back</button></div>
-        <span class="nav-progress">Step 3 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('g',3,null)">Next: Initialize &amp; boot →</button>
+        <div><button class="btn" onclick="showStep('g',2,null)">← Back</button></div>
+        <span class="nav-progress">Step 4 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',4,null)">Next: Initialize &amp; boot →</button>
       </div>
     </div>
 
-    <!-- G3: Initialize & boot -->
-    <div id="g-step-3" class="step-page">
+    <!-- G4: Initialize & boot -->
+    <div id="g-step-4" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Implementation</div>
       <h2 class="step-title">Initialize &amp; boot</h2>
       <p class="step-sub">Load the SDK from CDN and initialize it. With a real API key, this will connect to Amplitude and fetch your live guides and surveys.</p>
@@ -2441,14 +2458,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('g',2,null)">← Back</button></div>
-        <span class="nav-progress">Step 4 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('g',4,null)">Next: Triggers &amp; targeting →</button>
+        <div><button class="btn" onclick="showStep('g',3,null)">← Back</button></div>
+        <span class="nav-progress">Step 5 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',5,null)">Next: Triggers &amp; targeting →</button>
       </div>
     </div>
 
-    <!-- G4: Triggers & targeting -->
-    <div id="g-step-4" class="step-page">
+    <!-- G5: Triggers & targeting -->
+    <div id="g-step-5" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Implementation</div>
       <h2 class="step-title">Triggers &amp; targeting</h2>
       <p class="step-sub">Once the SDK is initialized, guides and surveys appear automatically based on conditions set in the Amplitude UI — no additional code changes are needed for basic delivery.</p>
@@ -2516,14 +2533,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('g',3,null)">← Back</button></div>
-        <span class="nav-progress">Step 5 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('g',5,null)">Next: Show a guide →</button>
+        <div><button class="btn" onclick="showStep('g',4,null)">← Back</button></div>
+        <span class="nav-progress">Step 6 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',6,null)">Next: Show a guide →</button>
       </div>
     </div>
 
-    <!-- G5: Show by key -->
-    <div id="g-step-5" class="step-page">
+    <!-- G6: Show by key -->
+    <div id="g-step-6" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Live Demo</div>
       <h2 class="step-title">Show a guide or survey by key</h2>
       <p class="step-sub">Use <code style="font-family:var(--mono)">engagement.gs.show(key)</code> to display any guide programmatically — useful for QA, previewing, and demo flows.</p>
@@ -2570,14 +2587,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('g',4,null)">← Back</button></div>
-        <span class="nav-progress">Step 6 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('g',6,null)">Next: Debug &amp; verify →</button>
+        <div><button class="btn" onclick="showStep('g',5,null)">← Back</button></div>
+        <span class="nav-progress">Step 7 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',7,null)">Next: Debug &amp; verify →</button>
       </div>
     </div>
 
-    <!-- G6: Debug -->
-    <div id="g-step-6" class="step-page">
+    <!-- G7: Debug -->
+    <div id="g-step-7" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Debug &amp; Verify</div>
       <h2 class="step-title">Debug &amp; verify</h2>
       <p class="step-sub">These tools let you verify the SDK is correctly initialized and confirm your guides are fetching properly.</p>
@@ -2644,8 +2661,8 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('g',5,null)">← Back</button></div>
-        <span class="nav-progress">Step 7 of 7</span>
+        <div><button class="btn" onclick="showStep('g',6,null)">← Back</button></div>
+        <span class="nav-progress">Step 8 of 8</span>
       </div>
     </div>
   </main>

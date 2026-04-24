@@ -23,6 +23,8 @@ A guided, step-by-step walkthrough across four Amplitude products, each with a s
 
 No build step, no dependencies, no server required.
 
+**Hosted on GitHub Pages:** [https://amp-anuj.github.io/Amplitude-Instrumentation-Walkthrough/amplitude-sdk-demo.html](https://amp-anuj.github.io/Amplitude-Instrumentation-Walkthrough/amplitude-sdk-demo.html)
+
 ```bash
 # Clone or download, then just open the file
 open amplitude-sdk-demo.html

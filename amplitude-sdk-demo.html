@@ -810,7 +810,7 @@ div:hover > .copy-btn { opacity: 1; }
     <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('a',7,this)">
       <div class="step-num"><span>8</span></div>
-      <div class="step-label">Event stream</div>
+      <div class="step-label">QA &amp; Validation</div>
     </div>
   </aside>
 
@@ -1481,14 +1481,14 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('a',5,null)">← Back</button></div>
         <span class="nav-progress">Step 7 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('a',7,null)">Next: Event stream →</button>
+        <button class="btn btn-primary" onclick="showStep('a',7,null)">Next: QA &amp; Validation →</button>
       </div>
     </div>
 
     <!-- A6: Event Stream -->
     <div id="a-step-7" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — QA</div>
-      <h2 class="step-title">Event stream</h2>
+      <h2 class="step-title">QA &amp; Validation</h2>
       <p class="step-sub">All events fired in steps 3–6 appear here in real time. With a valid API key, these are actually sent to Amplitude — verify in <a href="https://amplitude.com/docs/data/chrome-extension-debug" target="_blank">the Chrome Extension debugger</a>.</p>
 
       <div class="stat-row">
@@ -1501,7 +1501,7 @@ div:hover > .copy-btn { opacity: 1; }
       </div>
 
       <div class="info teal" style="margin-top:14px">
-        <strong>What to show customers:</strong> Fire a few events, then open the Amplitude UI → Data → Live. You should see them appearing with sub-second latency. This is the "wow moment" — real data flowing in instantly.
+        <strong>What to look for:</strong> Fire a few events, then open the Amplitude UI → Data → Live. You should see them appearing with sub-second latency. This is the "wow moment" — real data flowing in instantly.
       </div>
 
       <div class="nav-footer">
@@ -1551,7 +1551,7 @@ div:hover > .copy-btn { opacity: 1; }
     <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('e',7,this)">
       <div class="step-num"><span>8</span></div>
-      <div class="step-label">Event stream</div>
+      <div class="step-label">QA &amp; Validation</div>
     </div>
   </aside>
 
@@ -2061,14 +2061,14 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('e',5,null)">← Back</button></div>
         <span class="nav-progress">Step 7 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('e',7,null)">Next: Event stream →</button>
+        <button class="btn btn-primary" onclick="showStep('e',7,null)">Next: QA &amp; Validation →</button>
       </div>
     </div>
 
     <!-- E6: Stream -->
     <div id="e-step-7" class="step-page">
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — QA</div>
-      <h2 class="step-title">Event stream</h2>
+      <h2 class="step-title">QA &amp; Validation</h2>
       <p class="step-sub">All experiment events fired in steps 4–5 are captured here. Note the <code style="font-family:var(--mono)">sent_via</code> field — it reflects whether exposures are automatic or manual based on the initialization path you chose.</p>
 
       <div class="stat-row">
@@ -3406,7 +3406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('r',6,this)">
       <div class="step-num"><span>7</span></div>
-      <div class="step-label">Event stream</div>
+      <div class="step-label">QA &amp; Validation</div>
     </div>
   </aside>
 
@@ -3826,19 +3826,19 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('r',4,null)">← Back</button></div>
         <span class="nav-progress">Step 6 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('r',6,null)">Next: Event stream →</button>
+        <button class="btn btn-primary" onclick="showStep('r',6,null)">Next: QA &amp; Validation →</button>
       </div>
     </div>
 
-    <!-- R6: Event stream -->
+    <!-- R6: QA &amp; Validation -->
     <div id="r-step-6" class="step-page">
       <div class="step-eyebrow" style="color:var(--teal)">Session Replay — QA</div>
-      <h2 class="step-title">Event stream</h2>
+      <h2 class="step-title">QA &amp; Validation</h2>
       <p class="step-sub">When Session Replay is active, the SDK attaches <code style="font-family:var(--mono)">[Amplitude] Session Replay ID</code> as a property on all events fired during sampled sessions. Those events appear here.</p>
 
       <div class="info teal" style="display:flex;gap:10px;align-items:flex-start">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7.25" stroke="#1D9E75" stroke-width="1.5"/><rect x="7.25" y="4" width="1.5" height="1.5" rx=".75" fill="#1D9E75"/><rect x="7.25" y="6.5" width="1.5" height="5.5" rx=".75" fill="#1D9E75"/></svg>
-        <div><strong>What to show customers:</strong> After initializing with a real API key and sampleRate &gt; 0, click "Simulate events" to fire tracked events with a Session Replay ID attached. Then open Amplitude → Session Replay — the recordings should appear within seconds.</div>
+        <div><strong>What to look for:</strong> After initializing with a real API key and sampleRate &gt; 0, click "Simulate events" to fire tracked events with a Session Replay ID attached. Then open Amplitude → Session Replay — the recordings should appear within seconds.</div>
       </div>
 
       <div class="stat-row">

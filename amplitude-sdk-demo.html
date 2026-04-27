@@ -602,6 +602,27 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
 .aside-note { background:var(--amp-blue-lt); color:var(--amp-blue-dk); border:1px solid var(--amp-blue-mid); border-left:3px solid var(--amp-blue); border-radius:var(--r-md); padding:9px 11px; font-size:11px; line-height:1.5; }
 .aside-mono { font-family:var(--mono); font-size:10px; color:rgba(255,255,255,0.55); }
 .aside-mono-light { font-family:var(--mono); font-size:10px; color:var(--text-3); }
+
+/* ── Copy button ─────────────────────────── */
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.45);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-family: var(--mono);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+  line-height: 1.6;
+}
+div:hover > .copy-btn { opacity: 1; }
+.copy-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.copy-btn.copied { color: #4ec9b0; border-color: #4ec9b0; opacity: 1; }
 </style>
 </head>
 <body>
@@ -636,14 +657,14 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
   <button class="tab" onclick="switchProduct('analytics',this)">
     <span class="dot" style="background:var(--blue)"></span> Analytics SDK
   </button>
+  <button class="tab" onclick="switchProduct('replay',this)">
+    <span class="dot" style="background:var(--teal)"></span> Session Replay
+  </button>
   <button class="tab" onclick="switchProduct('experiment',this)">
     <span class="dot" style="background:var(--purple)"></span> Experiment SDK
   </button>
   <button class="tab" onclick="switchProduct('guides',this)">
     <span class="dot" style="background:var(--pink)"></span> Guides &amp; Surveys
-  </button>
-  <button class="tab" onclick="switchProduct('replay',this)">
-    <span class="dot" style="background:var(--teal)"></span> Session Replay
   </button>
 </nav>
 
@@ -1482,7 +1503,7 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('a',6,null)">← Back</button></div>
         <span class="nav-progress">Step 8 of 8</span>
-        <button class="btn btn-primary" onclick="goToProduct('experiment')">Continue: Experiment SDK →</button>
+        <button class="btn btn-primary" onclick="goToProduct('replay')">Continue: Session Replay →</button>
       </div>
     </div>
   </main>
@@ -3332,7 +3353,38 @@ function applyCustomerConfig() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', applyCustomerConfig);
+document.addEventListener('DOMContentLoaded', () => {
+  applyCustomerConfig();
+
+  // Add copy buttons to all code snippets
+  document.querySelectorAll('pre:not(#r-props-pre):not(#gs-debug-pre)').forEach(pre => {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:relative';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.onclick = function() {
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      }).catch(() => {
+        const range = document.createRange();
+        range.selectNode(pre);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    };
+    wrapper.appendChild(btn);
+  });
+});
 
 </script>
 
@@ -3577,9 +3629,9 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
 <span class="cs">&lt;script&gt;</span>
 <span class="cc">// Session Replay Plugin — shares device_id &amp; session from Analytics SDK</span>
 <span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({
-  <span class="cf">sampleRate</span>: <span class="cn">0.5</span>  <span class="cc">// capture 50% of sessions — lower in production</span>
+  <span class="cf">sampleRate</span>: <span class="cn" id="r-sr-rate-cdn">0.5</span>  <span class="cc">// capture 50% of sessions — lower in production</span>
 }));
-<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">init</span>(<span class="cs">'API_KEY'</span>, {
+<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">init</span>(<span class="cs">'<span id="r-key-init">API_KEY</span>'</span>, {
   <span class="cf">fetchRemoteConfig</span>: <span class="ck">true</span>,
   <span class="cf">autocapture</span>: <span class="ck">true</span>
 });
@@ -3614,10 +3666,10 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
 
 <span class="cc">// Wait for Segment to load — identity won't be available until ready()</span>
 <span class="cv">analytics</span>.<span class="cf">ready</span>(<span class="ck">async</span> () => {
-  <span class="ck">await</span> <span class="cv">sessionReplay</span>.<span class="cf">init</span>(<span class="cs">'AMPLITUDE_API_KEY'</span>, {
+  <span class="ck">await</span> <span class="cv">sessionReplay</span>.<span class="cf">init</span>(<span class="cs">'<span id="r-key-sa">AMPLITUDE_API_KEY</span>'</span>, {
     deviceId:  <span class="cv">analytics</span>.<span class="cf">user</span>().<span class="cf">anonymousId</span>(), <span class="cc">// Segment anonymous ID → Amplitude device_id</span>
     sessionId: <span class="cv">Date</span>.<span class="cf">now</span>(),                      <span class="cc">// Amplitude-style ms timestamp</span>
-    sampleRate: <span class="cn">0.5</span>
+    sampleRate: <span class="cn" id="r-sr-rate-sa">0.5</span>
   }).promise;
 
   <span class="cc">// Step 3 — inject Session Replay ID into every Segment track() call</span>
@@ -3647,7 +3699,7 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
       <div class="field-group" style="margin-top:4px">
         <div class="field-row">
           <label>Amplitude API key</label>
-          <input id="r-api-key" type="text" placeholder="Paste your Amplitude API key" oninput="document.getElementById('r-key-plugin').textContent=this.value||'API_KEY'"/>
+          <input id="r-api-key" type="text" placeholder="Paste your Amplitude API key" oninput="const v=this.value||'API_KEY';['r-key-plugin','r-key-init'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});const sa=document.getElementById('r-key-sa');if(sa)sa.textContent=this.value||'AMPLITUDE_API_KEY';"/>
         </div>
         <div class="field-row" id="r-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
@@ -3660,7 +3712,7 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
         </div>
         <div class="field-row" id="r-sample-row">
           <label>Sample rate</label>
-          <input id="r-sample-rate" type="number" value="1" min="0" max="1" step="0.1"/>
+          <input id="r-sample-rate" type="number" value="1" min="0" max="1" step="0.1" oninput="const v=this.value||'1';['r-sr-rate-cdn','r-sr-rate-sa','r-sr-rate-init'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});"/>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
@@ -3684,7 +3736,7 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
       <div class="code-wrap">
         <span class="code-label">full config — plugin path</span>
         <pre><span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({
-  <span class="cf">sampleRate</span>: <span class="cn">0.5</span>,          <span class="cc">// 0–1, controls % of sessions captured</span>
+  <span class="cf">sampleRate</span>: <span class="cn" id="r-sr-rate-init">0.5</span>,          <span class="cc">// 0–1, controls % of sessions captured</span>
 
   <span class="cc">// Privacy configuration</span>
   <span class="cf">privacyConfig</span>: {
@@ -3839,6 +3891,7 @@ document.addEventListener('DOMContentLoaded', applyCustomerConfig);
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('r',5,null)">← Back</button></div>
         <span class="nav-progress">Step 7 of 7</span>
+        <button class="btn btn-primary" onclick="goToProduct('experiment')">Continue: Experiment SDK →</button>
       </div>
     </div>
 

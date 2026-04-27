@@ -3132,7 +3132,7 @@ let srInit_done = false, srPath = 'plugin';
 
 function selectSrPath(path) {
   srPath = path;
-  ['plugin','standalone','gtm'].forEach(p => {
+  ['plugin','standalone'].forEach(p => {
     document.getElementById('r-opt-' + p).classList.toggle('selected', p === path);
     document.getElementById('r-code-' + p).style.display = p === path ? 'block' : 'none';
   });
@@ -3597,10 +3597,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="dc-title">Standalone SDK</div>
           <div class="dc-desc">You use a third-party analytics provider (Segment, mParticle, RudderStack) or Amplitude's HTTP/Batch API. Must pass device_id and session_id manually.</div>
         </div>
-        <div class="decision-card" id="r-opt-gtm" onclick="selectSrPath('gtm')">
-          <div class="dc-title">Google Tag Manager</div>
-          <div class="dc-desc">Use the Amplitude GTM template. Session Replay is available but disabled by default — enable it via checkbox in the tag configuration. Good for testing, not recommended for production.</div>
-        </div>
       </div>
 
       <!-- Plugin code -->
@@ -3672,13 +3668,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
 
-      <!-- GTM note -->
-      <div id="r-code-gtm" style="display:none">
-        <div class="info blue">
-          <strong>GTM installation:</strong> Update to the latest Amplitude template in GTM (Tags → Templates). In your Amplitude tag, expand the Session Replay section and check <strong>Enable Session Replay</strong>. Set your sample rate. GTM loads scripts asynchronously — this can cause timing issues in production. Amplitude recommends GTM only for testing, not production.
-        </div>
-        <div class="info amber"><strong>Note:</strong> To prevent GTM from capturing replays on specific pages, remove the plugin programmatically: <code style="font-family:var(--mono);font-size:11px">window.amplitude.remove('@amplitude/plugin-session-replay-browser')</code></div>
-      </div>
 
       <div class="field-group" style="margin-top:4px">
         <div class="field-row">
@@ -3869,6 +3858,47 @@ document.addEventListener('DOMContentLoaded', () => {
       <div id="r-props-out" style="display:none;margin-top:10px">
         <div class="code-wrap" style="margin-bottom:0">
           <pre id="r-props-pre" style="white-space:pre-wrap;font-size:11px"></pre>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Find your session in Amplitude</div>
+        <p style="font-size:12px;color:var(--text-2);margin:6px 0 12px">Once events are firing and the session is sampled, find the replay in your Amplitude project using your device ID.</p>
+
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="min-width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">1</div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text)">Open the Amplitude Chrome Extension</div>
+              <div style="font-size:11px;color:var(--text-2);margin-top:3px;line-height:1.55">Click the Amplitude logo in Chrome's toolbar (puzzle piece → Amplitude Instrumentation Explorer). Under the <strong>User</strong> section, copy the <code style="font-family:var(--mono);font-size:10px">device_id</code> value.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="min-width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">2</div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text)">Copy your device ID from the SDK</div>
+              <div style="font-size:11px;color:var(--text-2);margin:3px 0 6px;line-height:1.55">Or grab it directly from the initialized SDK:</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <code id="r-device-id-display" style="font-family:var(--mono);font-size:11px;color:var(--teal);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:4px 8px">initialize the SDK first</code>
+                <button class="btn" style="font-size:11px;padding:4px 10px" onclick="
+                  const did = window.amplitude && window.amplitude.getDeviceId ? window.amplitude.getDeviceId() : null;
+                  if (!did) { alert('Initialize the SDK first (step 4).'); return; }
+                  document.getElementById('r-device-id-display').textContent = did;
+                  navigator.clipboard.writeText(did).then(() => {
+                    this.textContent = 'Copied!'; this.style.color='var(--teal)';
+                    setTimeout(() => { this.textContent = 'Copy device ID'; this.style.color=''; }, 2000);
+                  });
+                ">Copy device ID</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="min-width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">3</div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text)">Search in Amplitude Session Replay</div>
+              <div style="font-size:11px;color:var(--text-2);margin-top:3px;line-height:1.55">In your Amplitude project, go to <strong>Session Replay</strong> → use the filter to search by <strong>Device ID</strong> → paste your device ID. Your recording should appear within seconds of events firing.</div>
+            </div>
+          </div>
         </div>
       </div>
 

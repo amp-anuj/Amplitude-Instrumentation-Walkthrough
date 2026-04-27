@@ -807,7 +807,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-num"><span>7</span></div>
       <div class="step-label">Groups &amp; group properties</div>
     </div>
-    <div class="sidebar-section">Live Demo</div>
+    <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('a',7,this)">
       <div class="step-num"><span>8</span></div>
       <div class="step-label">Event stream</div>
@@ -987,7 +987,7 @@ div:hover > .copy-btn { opacity: 1; }
 <span class="cs">&lt;/script&gt;</span>
 
 <span class="cc">&lt;!-- G&amp;S requires a separate script (add after the line above) --&gt;</span>
-<span class="cs">&lt;script src="https://cdn.amplitude.com/script/<span class="cv">YOUR_API_KEY</span>.engagement.js"&gt;&lt;/script&gt;</span>
+<span class="cs">&lt;script src="https://cdn.amplitude.com/script/<span id="a-key-engagement">YOUR_API_KEY</span>.engagement.js"&gt;&lt;/script&gt;</span>
 <span class="cs">&lt;script&gt;</span><span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">plugin</span>());<span class="cs">&lt;/script&gt;</span></pre>
         </div>
         <div class="info teal">
@@ -1067,7 +1067,7 @@ div:hover > .copy-btn { opacity: 1; }
           <div class="field-row">
             <label>API key</label>
             <input id="a-api-key" type="text" placeholder="Paste your Amplitude API key"
-              oninput="const v=this.value||'YOUR_API_KEY';['a-key-in-code','a-key-in-code-2','a-key-in-code-npm','a-key-in-code-pin'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});" />
+              oninput="const v=this.value||'YOUR_API_KEY';['a-key-in-code','a-key-in-code-2','a-key-in-code-npm','a-key-in-code-pin','a-key-engagement'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});" />
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
@@ -1158,6 +1158,10 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
         <div class="aside-note">
           <strong>Remote config</strong> — with <code style="font-family:var(--mono);font-size:10px">fetchRemoteConfig: true</code> you can override any of these from <strong>Data → Settings → Autocapture</strong> without a code deploy.
+        </div>
+        <div class="aside-note" style="margin-top:8px;border-left-color:var(--amber)">
+          <strong>Fallback behavior</strong> — if the SDK can't reach the remote config service, it falls back to whatever is in your <code style="font-family:var(--mono);font-size:10px">init()</code> block. If nothing is set there, Amplitude uses defaults — which may capture more than you expect.<br><br>
+          <strong>Recommendation:</strong> always set your <code style="font-family:var(--mono);font-size:10px">init()</code> block to the <em>least permissive config you're comfortable with</em>. That way, a failed remote config fetch never causes unexpected data ingestion.
         </div>
       </aside>
       </div><!-- /step-body -->
@@ -1483,7 +1487,7 @@ div:hover > .copy-btn { opacity: 1; }
 
     <!-- A6: Event Stream -->
     <div id="a-step-7" class="step-page">
-      <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Live Demo</div>
+      <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — QA</div>
       <h2 class="step-title">Event stream</h2>
       <p class="step-sub">All events fired in steps 3–6 appear here in real time. With a valid API key, these are actually sent to Amplitude — verify in <a href="https://amplitude.com/docs/data/chrome-extension-debug" target="_blank">the Chrome Extension debugger</a>.</p>
 
@@ -1544,7 +1548,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-num"><span>7</span></div>
       <div class="step-label">Exposure &amp; outcomes</div>
     </div>
-    <div class="sidebar-section">Live Demo</div>
+    <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('e',7,this)">
       <div class="step-num"><span>8</span></div>
       <div class="step-label">Event stream</div>
@@ -1784,7 +1788,7 @@ div:hover > .copy-btn { opacity: 1; }
 <span class="cs">&lt;script src="https://unpkg.com/@amplitude/experiment-js-client@1.15.5/dist/experiment.umd.js"&gt;&lt;/script&gt;</span>
 <span class="cs">&lt;script&gt;</span>
 <span class="cc">// 1. Initialize Analytics SDK first</span>
-<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">init</span>(<span class="cs">'YOUR_API_KEY'</span>);
+<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">init</span>(<span class="cs">'<span id="e-amp-key-init">YOUR_API_KEY</span>'</span>);
 
 <span class="cc">// 2. Experiment client — both providers handled automatically:
 //    • ExperimentUserProvider  → reads user_id &amp; device_id from amplitude
@@ -1851,7 +1855,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="field-group">
         <div class="field-row" id="e-amp-key-row">
           <label>Amplitude API key</label>
-          <input id="e-amp-key" placeholder="Analytics API key" oninput="syncT('e-amp-key-code',this.value)"/>
+          <input id="e-amp-key" placeholder="Analytics API key" oninput="syncT('e-amp-key-code',this.value);const _el=document.getElementById('e-amp-key-init');if(_el)_el.textContent=this.value||'YOUR_API_KEY';"/>
         </div>
         <div class="field-row" id="e-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
@@ -1994,7 +1998,7 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="code-wrap">
           <pre><span class="cc">// Exposure fires automatically when variant() is called.
 // Track downstream outcomes via the Analytics SDK:</span>
-<span class="cv">amplitude</span>.<span class="cf">track</span>(<span class="cs">'Checkout Completed'</span>, {
+<span class="cv">amplitude</span>.<span class="cf">track</span>(<span class="cs">'<span id="e-outcome-amp">Checkout Completed</span>'</span>, {
   variant: <span class="cv">variant</span>.value,
   revenue: <span class="cn">49</span>
 });</pre>
@@ -2007,11 +2011,17 @@ div:hover > .copy-btn { opacity: 1; }
           <pre><span class="cc">// ExposureTrackingProvider handles exposure automatically when variant() is called.
 // No manual tracking needed — it fires $exposure through Segment to Amplitude.
 // Just track your outcome events:</span>
-<span class="cv">analytics</span>.<span class="cf">track</span>(<span class="cs">'Checkout Completed'</span>, { variant: <span class="cv">variant</span>.value, revenue: <span class="cn">49</span> });</pre>
+<span class="cv">analytics</span>.<span class="cf">track</span>(<span class="cs">'<span id="e-outcome-sa">Checkout Completed</span>'</span>, { variant: <span class="cv">variant</span>.value, revenue: <span class="cn">49</span> });</pre>
         </div>
         <div class="info teal"><strong>ExposureTrackingProvider handles this.</strong> When you call <code>variant()</code>, the SDK automatically invokes <code>exposureTrackingProvider.track(exposure)</code>, which fires <code>$exposure</code> through <code>analytics.track()</code> to Segment → Amplitude. No manual <code>[Experiment] Exposure</code> call needed. Make sure the Amplitude destination in Segment is configured to forward events.</div>
       </div>
 
+      <div class="field-group" style="margin-bottom:10px">
+        <div class="field-row">
+          <label>Outcome event name</label>
+          <input id="e-outcome-name" value="Checkout Completed" oninput="const v=this.value||'Checkout Completed';['e-outcome-amp','e-outcome-sa'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});"/>
+        </div>
+      </div>
       <div class="btn-row">
         <button class="btn btn-teal" onclick="eExpose()">Track exposure</button>
         <button class="btn" onclick="eConvert()">Track conversion</button>
@@ -2057,7 +2067,7 @@ div:hover > .copy-btn { opacity: 1; }
 
     <!-- E6: Stream -->
     <div id="e-step-7" class="step-page">
-      <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Live Demo</div>
+      <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — QA</div>
       <h2 class="step-title">Event stream</h2>
       <p class="step-sub">All experiment events fired in steps 4–5 are captured here. Note the <code style="font-family:var(--mono)">sent_via</code> field — it reflects whether exposures are automatic or manual based on the initialization path you chose.</p>
 
@@ -2110,7 +2120,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-num"><span>6</span></div>
       <div class="step-label">Triggers &amp; targeting</div>
     </div>
-    <div class="sidebar-section">Live Demo</div>
+    <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('g',6,this)">
       <div class="step-num"><span>7</span></div>
       <div class="step-label">Show a guide by key</div>
@@ -2339,10 +2349,10 @@ div:hover > .copy-btn { opacity: 1; }
           <pre><span class="cc">&lt;!-- 1. Analytics SDK first (no async attribute) --&gt;</span>
 <span class="cs">&lt;script src="https://cdn.amplitude.com/script/<span id="g-key-plugin">API_KEY</span>.js"&gt;&lt;/script&gt;</span>
 <span class="cc">&lt;!-- 2. Engagement SDK after --&gt;</span>
-<span class="cs">&lt;script src="https://cdn.amplitude.com/script/API_KEY.engagement.js"&gt;&lt;/script&gt;</span>
+<span class="cs">&lt;script src="https://cdn.amplitude.com/script/<span id="g-key-plugin-eng">API_KEY</span>.engagement.js"&gt;&lt;/script&gt;</span>
 <span class="cs">&lt;script&gt;</span>
 <span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">plugin</span>());
-<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">init</span>(<span class="cs">'API_KEY'</span>, { <span class="cf">fetchRemoteConfig</span>: <span class="ck">true</span> });
+<span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">init</span>(<span class="cs">'<span id="g-key-plugin-init">API_KEY</span>'</span>, { <span class="cf">fetchRemoteConfig</span>: <span class="ck">true</span> });
 <span class="cs">&lt;/script&gt;</span></pre>
         </div>
         <div class="info teal">The plugin calls <code>boot()</code> automatically. Do <strong>not</strong> call <code>engagement.init()</code> or <code>engagement.boot()</code> manually — the plugin handles it. All three providers are wired automatically.</div>
@@ -2374,7 +2384,7 @@ div:hover > .copy-btn { opacity: 1; }
 <span class="cv">analytics</span>.<span class="cf">ready</span>(<span class="ck">async</span> () => {
 
   <span class="cc">// Step 1: init</span>
-  <span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">init</span>(<span class="cs">'API_KEY'</span>, { serverZone: <span class="cs">'US'</span> });
+  <span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">init</span>(<span class="cs">'<span id="g-key-sa-init">API_KEY</span>'</span>, { serverZone: <span class="cs">'US'</span> });
 
   <span class="cc">// Step 2: boot — wire all three providers from Segment identity</span>
   <span class="ck">await</span> <span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">boot</span>({
@@ -2401,52 +2411,10 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
       </div>
 
-      <div class="card" style="margin-top:4px">
-        <div class="card-title">Production requirements</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-          <div>
-            <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🛡️ Content Security Policy (CSP)</div>
-            <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px">Guides &amp; Surveys loads images, media, and scripts from Amplitude CDN. Add to your CSP headers:</div>
-            <div class="code-wrap" style="margin:0">
-              <pre style="font-size:10px;line-height:1.7"><span class="cv">img-src</span>     <span class="cs">https://*.amplitude.com</span>
-<span class="cv">media-src</span>   <span class="cs">https://*.amplitude.com</span>
-<span class="cv">style-src</span>   <span class="cs">https://*.amplitude.com</span>
-<span class="cv">script-src</span>  <span class="cs">https://*.amplitude.com</span>
-<span class="cv">connect-src</span> <span class="cs">https://*.amplitude.com</span></pre>
-            </div>
-          </div>
-          <div>
-            <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🔀 SPA Routing</div>
-            <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px"><strong>Plugin path:</strong> Required — the SDK must detect route changes to re-evaluate guide eligibility.<br><strong>Standalone path:</strong> Highly recommended — set the router so guide targeting updates on navigation.</div>
-            <div class="code-wrap" style="margin:0">
-              <pre style="font-size:10px"><span class="cc">// After boot() — wire your SPA router</span>
-<span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">setRouter</span>((<span class="cv">url</span>) => {
-  <span class="cc">// call your router's navigate function</span>
-  router.<span class="cf">push</span>(<span class="cv">url</span>); <span class="cc">// Vue Router example</span>
-  <span class="cc">// history.pushState({}, '', url); // plain JS</span>
-});</pre>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('g',2,null)">← Back</button></div>
-        <span class="nav-progress">Step 4 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('g',4,null)">Next: Initialize &amp; boot →</button>
-      </div>
-    </div>
-
-    <!-- G4: Initialize & boot -->
-    <div id="g-step-4" class="step-page">
-      <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Implementation</div>
-      <h2 class="step-title">Initialize &amp; boot</h2>
-      <p class="step-sub">Load the SDK from CDN and initialize it. With a real API key, this will connect to Amplitude and fetch your live guides and surveys.</p>
-
-      <div class="field-group">
+      <div class="field-group" style="margin-top:4px">
         <div class="field-row">
           <label>Amplitude API key</label>
-          <input id="gs-api-key" placeholder="Paste your Amplitude API key" oninput="document.getElementById('g-key-plugin').textContent=this.value||'API_KEY';document.getElementById('g-key-sa').textContent=this.value||'API_KEY'"/>
+          <input id="gs-api-key" placeholder="Paste your Amplitude API key" oninput="const _v=this.value||'API_KEY';['g-key-plugin','g-key-sa','g-key-plugin-eng','g-key-plugin-init','g-key-sa-init'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=_v;});"/>
         </div>
         <div class="field-row" id="g-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
@@ -2476,6 +2444,45 @@ div:hover > .copy-btn { opacity: 1; }
       </div>
       <div id="gs-boot-row" style="display:none">
         <button class="btn" onclick="gsBoot()" style="margin-bottom:10px">Boot user session</button>
+      </div>
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('g',2,null)">← Back</button></div>
+        <span class="nav-progress">Step 4 of 8</span>
+        <button class="btn btn-primary" onclick="showStep('g',4,null)">Next: Production requirements →</button>
+      </div>
+    </div>
+
+    <!-- G4: Initialize & boot -->
+    <div id="g-step-4" class="step-page">
+      <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Implementation</div>
+      <h2 class="step-title">Production requirements</h2>
+      <p class="step-sub">Before going live, two things need to be in place: your CSP headers must allow Amplitude CDN assets, and SPAs must wire the router so guide targeting re-evaluates on navigation.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+        <div>
+          <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🛡️ Content Security Policy (CSP)</div>
+          <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px">Guides &amp; Surveys loads images, media, and scripts from Amplitude CDN. Add to your CSP headers:</div>
+          <div class="code-wrap" style="margin:0">
+            <pre style="font-size:10px;line-height:1.7"><span class="cv">img-src</span>     <span class="cs">https://*.amplitude.com</span>
+<span class="cv">media-src</span>   <span class="cs">https://*.amplitude.com</span>
+<span class="cv">style-src</span>   <span class="cs">https://*.amplitude.com</span>
+<span class="cv">script-src</span>  <span class="cs">https://*.amplitude.com</span>
+<span class="cv">connect-src</span> <span class="cs">https://*.amplitude.com</span></pre>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🔀 SPA Routing</div>
+          <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px"><strong>Plugin path:</strong> Required — the SDK must detect route changes to re-evaluate guide eligibility.<br><strong>Standalone path:</strong> Highly recommended — set the router so guide targeting updates on navigation.</div>
+          <div class="code-wrap" style="margin:0">
+            <pre style="font-size:10px"><span class="cc">// After boot() — wire your SPA router</span>
+<span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">setRouter</span>((<span class="cv">url</span>) => {
+  <span class="cc">// call your router's navigate function</span>
+  router.<span class="cf">push</span>(<span class="cv">url</span>); <span class="cc">// Vue Router example</span>
+  <span class="cc">// history.pushState({}, '', url); // plain JS</span>
+});</pre>
+          </div>
+        </div>
       </div>
 
       <div class="nav-footer">
@@ -2526,31 +2533,8 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
       </div>
 
-      <div class="step-body" style="margin-top:14px">
-      <div class="step-content">
-        <div class="info teal">
-          <strong>Delivery is fully automatic after SDK init.</strong> No code changes are needed to start showing guides — all targeting, scheduling, frequency limits, and platform filters are evaluated server-side. The only code required is the SDK initialization.
-        </div>
-      </div>
-      <aside class="step-aside">
-        <div class="aside-card">
-          <div class="aside-section">Priority order (when multiple guides qualify)</div>
-          <div class="aside-row"><span class="aside-label" style="min-width:18px">1</span><span class="aside-val">Active before inactive</span></div>
-          <div class="aside-row"><span class="aside-label" style="min-width:18px">2</span><span class="aside-val">Priority level: Urgent &gt; High &gt; Medium &gt; Low</span></div>
-          <div class="aside-row"><span class="aside-label" style="min-width:18px">3</span><span class="aside-val">Most recently seen by the user</span></div>
-          <div class="aside-row"><span class="aside-label" style="min-width:18px">4</span><span class="aside-val">Most recently created in Amplitude</span></div>
-        </div>
-        <div class="aside-card-light">
-          <div class="aside-section-light">Trigger types</div>
-          <div class="aside-row-light"><span class="aside-label-light" style="min-width:90px">Immediately</span><span class="aside-val-light">On page/screen load</span></div>
-          <div class="aside-row-light"><span class="aside-label-light" style="min-width:90px">On event</span><span class="aside-val-light">When a tracked event fires in real-time</span></div>
-          <div class="aside-row-light"><span class="aside-label-light" style="min-width:90px">On element</span><span class="aside-val-light">Click or hover on a specific element</span></div>
-          <div class="aside-row-light"><span class="aside-label-light" style="min-width:90px">Time on page</span><span class="aside-val-light">After N seconds on the current page</span></div>
-        </div>
-        <div class="aside-note">
-          <strong>CSP reminder</strong> — if your app uses a Content Security Policy, add <code style="font-family:var(--mono);font-size:10px">https://*.amplitude.com</code> to <code style="font-family:var(--mono);font-size:10px">script-src</code>, <code style="font-family:var(--mono);font-size:10px">img-src</code>, <code style="font-family:var(--mono);font-size:10px">style-src</code>, and <code style="font-family:var(--mono);font-size:10px">connect-src</code> before guides can render.
-        </div>
-      </aside>
+      <div class="info teal" style="margin-top:14px">
+        <strong>Delivery is fully automatic after SDK init.</strong> No code changes needed to start showing guides — all targeting, scheduling, frequency limits, and platform filters are evaluated server-side. The only code required is the SDK initialization itself.
       </div>
 
       <div class="nav-footer">
@@ -2562,7 +2546,7 @@ div:hover > .copy-btn { opacity: 1; }
 
     <!-- G6: Show by key -->
     <div id="g-step-6" class="step-page">
-      <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Live Demo</div>
+      <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — QA</div>
       <h2 class="step-title">Show a guide or survey by key</h2>
       <p class="step-sub">Use <code style="font-family:var(--mono)">engagement.gs.show(key)</code> to display any guide programmatically — useful for QA, previewing, and demo flows.</p>
 
@@ -3419,7 +3403,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="step-num"><span>6</span></div>
       <div class="step-label">Privacy &amp; masking</div>
     </div>
-    <div class="sidebar-section">Live Demo</div>
+    <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('r',6,this)">
       <div class="step-num"><span>7</span></div>
       <div class="step-label">Event stream</div>
@@ -3629,7 +3613,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <span class="cs">&lt;script&gt;</span>
 <span class="cc">// Session Replay Plugin — shares device_id &amp; session from Analytics SDK</span>
 <span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({
-  <span class="cf">sampleRate</span>: <span class="cn" id="r-sr-rate-cdn">0.5</span>  <span class="cc">// capture 50% of sessions — lower in production</span>
+  <span class="cf">sampleRate</span>: <span class="cn" id="r-sr-rate-cdn">1</span>  <span class="cc">// capture 50% of sessions — lower in production</span>
 }));
 <span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">init</span>(<span class="cs">'<span id="r-key-init">API_KEY</span>'</span>, {
   <span class="cf">fetchRemoteConfig</span>: <span class="ck">true</span>,
@@ -3669,7 +3653,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <span class="ck">await</span> <span class="cv">sessionReplay</span>.<span class="cf">init</span>(<span class="cs">'<span id="r-key-sa">AMPLITUDE_API_KEY</span>'</span>, {
     deviceId:  <span class="cv">analytics</span>.<span class="cf">user</span>().<span class="cf">anonymousId</span>(), <span class="cc">// Segment anonymous ID → Amplitude device_id</span>
     sessionId: <span class="cv">Date</span>.<span class="cf">now</span>(),                      <span class="cc">// Amplitude-style ms timestamp</span>
-    sampleRate: <span class="cn" id="r-sr-rate-sa">0.5</span>
+    sampleRate: <span class="cn" id="r-sr-rate-sa">1</span>
   }).promise;
 
   <span class="cc">// Step 3 — inject Session Replay ID into every Segment track() call</span>
@@ -3736,7 +3720,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="code-wrap">
         <span class="code-label">full config — plugin path</span>
         <pre><span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">window</span>.<span class="cv">sessionReplay</span>.<span class="cf">plugin</span>({
-  <span class="cf">sampleRate</span>: <span class="cn" id="r-sr-rate-init">0.5</span>,          <span class="cc">// 0–1, controls % of sessions captured</span>
+  <span class="cf">sampleRate</span>: <span class="cn" id="r-sr-rate-init">1</span>,          <span class="cc">// 0–1, controls % of sessions captured</span>
 
   <span class="cc">// Privacy configuration</span>
   <span class="cf">privacyConfig</span>: {
@@ -3859,7 +3843,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <!-- R6: Event stream -->
     <div id="r-step-6" class="step-page">
-      <div class="step-eyebrow" style="color:var(--teal)">Session Replay — Live Demo</div>
+      <div class="step-eyebrow" style="color:var(--teal)">Session Replay — QA</div>
       <h2 class="step-title">Event stream</h2>
       <p class="step-sub">When Session Replay is active, the SDK attaches <code style="font-family:var(--mono)">[Amplitude] Session Replay ID</code> as a property on all events fired during sampled sessions. Those events appear here.</p>
 

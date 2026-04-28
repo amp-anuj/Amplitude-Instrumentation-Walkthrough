@@ -1157,7 +1157,7 @@ div:hover > .copy-btn { opacity: 1; }
           <button class="btn" onclick="acReset()" style="font-size:11px;padding:4px 10px;color:var(--text-3)">↺ Reset to defaults</button>
         </div>
         <div class="aside-note">
-          <strong>Remote config</strong> — with <code style="font-family:var(--mono);font-size:10px">fetchRemoteConfig: true</code> you can override any of these from <strong>Data → Settings → Autocapture</strong> without a code deploy.
+          <strong>Remote config</strong> — with <code style="font-family:var(--mono);font-size:10px">fetchRemoteConfig: true</code> you can override any of these from <strong>Data → Settings → Autocapture</strong> without a code deploy. Note: newer SDK versions prefer the nested form <code style="font-family:var(--mono);font-size:10px">remoteConfig: { fetchRemoteConfig: true }</code> — both work today.
         </div>
         <div class="aside-note" style="margin-top:8px;border-left-color:var(--amber)">
           <strong>Fallback behavior</strong> — if the SDK can't reach the remote config service, it falls back to whatever is in your <code style="font-family:var(--mono);font-size:10px">init()</code> block. If nothing is set there, Amplitude uses defaults — which may capture more than you expect.<br><br>
@@ -3011,9 +3011,10 @@ function eExpose(){
 }
 function eConvert(){
   if(!eReq())return;
-  if(expPath==='amplitude'&&window.amplitude&&aInit_done)window.amplitude.track('Checkout Completed',{variant:eAssigned||'unknown',revenue:49});
-  else if(window.analytics&&window.analytics.track)window.analytics.track('Checkout Completed',{variant:eAssigned||'unknown',revenue:49});
-  addEvent('e-stream','outcome','Checkout Completed',{variant:eAssigned||'unknown',revenue:49,sent_via:expPath==='amplitude'?'amplitude.track()':'analytics.track() → Segment'});
+  const evtName=(document.getElementById('e-outcome-name')||{}).value||'Checkout Completed';
+  if(expPath==='amplitude'&&window.amplitude&&aInit_done)window.amplitude.track(evtName,{variant:eAssigned||'unknown',revenue:49});
+  else if(window.analytics&&window.analytics.track)window.analytics.track(evtName,{variant:eAssigned||'unknown',revenue:49});
+  addEvent('e-stream','outcome',evtName,{variant:eAssigned||'unknown',revenue:49,sent_via:expPath==='amplitude'?'amplitude.track()':'analytics.track() → Segment'});
   incStat('e-cnt-outcome');
 }
 function eBounce(){
@@ -3423,7 +3424,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="concept-name" style="color:var(--teal-dk)">Web (JavaScript)</div>
           <div class="concept-desc" style="margin-top:5px">Supported via the Session Replay Plugin (Browser SDK) or the Standalone SDK. Captures DOM interactions, clicks, scrolls, and form inputs as rrweb events — not a screen recording.</div>
           <div style="margin-top:8px;font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em">Frameworks</div>
-          <div style="font-size:12px;color:var(--text-2);margin-top:3px">React · Vue · Angular · plain JS · GTM</div>
+          <div style="font-size:12px;color:var(--text-2);margin-top:3px">React · Vue · Angular · plain JS</div>
         </div>
         <div class="concept-card">
           <div class="concept-name">Mobile (iOS / Android)</div>

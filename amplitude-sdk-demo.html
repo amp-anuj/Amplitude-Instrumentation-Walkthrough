@@ -200,7 +200,7 @@ body.amp-native .amp-native-only { display: block !important; }
 /* ─────────────────────────────────────
    MAIN CONTENT
 ───────────────────────────────────── */
-.main { flex:1; overflow-y:auto; padding:32px 28px 56px; max-width:1000px; }
+.main { flex:1; overflow-y:auto; padding:32px 40px 56px; max-width:2000px; }
 
 /* ─────────────────────────────────────
    STEP CONTENT
@@ -449,11 +449,13 @@ body.amp-native .amp-native-only { display: block !important; }
 }
 @keyframes slideIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
 .etag { font-size:9px; font-weight:700; padding:2px 7px; border-radius:4px; white-space:nowrap; flex-shrink:0; margin-top:2px; text-transform:uppercase; letter-spacing:.05em; }
-.t-track    { background:var(--amp-blue-lt); color:var(--amp-blue-dk); }
-.t-identify { background:var(--teal-lt);     color:var(--teal-dk); }
-.t-revenue  { background:var(--amber-lt);    color:var(--amber-dk); }
+.t-track      { background:var(--amp-blue-lt); color:var(--amp-blue-dk); }
+.t-identify   { background:var(--teal-lt);     color:var(--teal-dk); }
+.t-revenue    { background:var(--amber-lt);    color:var(--amber-dk); }
+.t-autocapture{ background:#e8f0fe;            color:#3c4a9e; }
+.t-system     { background:var(--surface-2);   color:var(--text-3); }
 .t-fetch    { background:var(--purple-lt);   color:var(--purple-dk); }
-.t-expose   { background:var(--teal-lt);     color:var(--teal-dk); }
+.t-exposure { background:var(--teal-lt);     color:var(--teal-dk); }
 .t-outcome  { background:var(--amber-lt);    color:var(--amber-dk); }
 .t-shown    { background:var(--pink-lt);     color:var(--pink-dk); }
 .t-action   { background:var(--teal-lt);     color:var(--teal-dk); }
@@ -481,7 +483,8 @@ body.amp-native .amp-native-only { display: block !important; }
 ───────────────────────────────────── */
 .show-result { padding:12px 14px; border-radius:var(--r-md); font-size:12px; border-left:3px solid; border-top:1px solid; border-right:1px solid; border-bottom:1px solid; margin-top:12px; display:none; }
 .show-result.ok  { background:var(--teal-lt);  border-color:var(--teal-mid);  border-left-color:var(--teal);  color:var(--teal-dk); }
-.show-result.err { background:#FCEBEB; border-color:#F7C1C1; border-left-color:#E24B4A; color:#791F1F; }
+.show-result.err  { background:#FCEBEB; border-color:#F7C1C1; border-left-color:#E24B4A; color:#791F1F; }
+.show-result.info { background:var(--amber-lt); border-color:var(--amber-mid); border-left-color:var(--amber); color:var(--amber-dk); }
 .show-result-title { font-weight:600; margin-bottom:3px; }
 
 /* ─────────────────────────────────────
@@ -537,11 +540,12 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
 /* ─────────────────────────────────────
    SPLIT LAYOUT — main + aside panel
 ───────────────────────────────────── */
-.step-body { display:flex; gap:20px; align-items:flex-start; }
+.step-body { display:flex; gap:32px; align-items:flex-start; }
 .step-content { flex:1; min-width:0; }
 .step-aside {
-  width:260px; flex-shrink:0;
+  width:320px; flex-shrink:0;
   display:flex; flex-direction:column; gap:10px;
+  position:sticky; top:0;
 }
 .aside-card {
   background:var(--amp-navy);
@@ -623,6 +627,87 @@ hr { border:none; border-top:1px solid var(--border); margin:18px 0; }
 div:hover > .copy-btn { opacity: 1; }
 .copy-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
 .copy-btn.copied { color: #4ec9b0; border-color: #4ec9b0; opacity: 1; }
+
+/* ─────────────────────────────────────
+   PRESENTER MODE
+───────────────────────────────────── */
+.present-btn {
+  display:flex; align-items:center; gap:6px;
+  padding:6px 14px; border-radius:20px;
+  background:var(--amp-blue); color:#fff;
+  border:none; font-size:12px; font-weight:600;
+  cursor:pointer; letter-spacing:.02em; transition:opacity .15s;
+}
+.present-btn:hover { opacity:.85; }
+.present-btn svg { flex-shrink:0; }
+
+/* Presenter overlay nav arrows */
+.p-nav-btn {
+  display:none;
+  position:fixed; top:50%; transform:translateY(-50%);
+  z-index:200; background:rgba(0,0,0,.55);
+  color:#fff; border:none; border-radius:50%;
+  width:52px; height:52px; font-size:22px;
+  cursor:pointer; align-items:center; justify-content:center;
+  transition:background .15s; backdrop-filter:blur(4px);
+}
+.p-nav-btn:hover { background:rgba(0,0,0,.78); }
+#p-prev { left:14px; }
+#p-next { right:14px; }
+
+/* Presenter progress chip */
+#p-progress {
+  display:none;
+  position:fixed; top:14px; right:14px; z-index:201;
+  background:rgba(0,0,0,.65); color:#fff;
+  padding:6px 14px; border-radius:20px;
+  font-size:12px; font-weight:600; letter-spacing:.04em;
+  backdrop-filter:blur(4px);
+}
+
+/* Active presenter mode styles */
+body.presenter-mode .sidebar { display:none !important; }
+body.presenter-mode .tabs { display:none !important; }
+body.presenter-mode header { display:none !important; }
+body.presenter-mode .tab-panel { padding-top:0; }
+body.presenter-mode .main {
+  padding: 48px 96px;
+  max-width: 2000px;
+  margin: 0 auto;
+}
+body.presenter-mode .p-nav-btn { display:flex; }
+body.presenter-mode #p-progress { display:block; }
+body.presenter-mode .step-page.active { min-height:100vh; padding-bottom:100px; }
+body.presenter-mode .nav-footer { display:none !important; }
+
+/* ─────────────────────────────────────
+   OUTPUT LINE (demo feedback)
+───────────────────────────────────── */
+.output-line {
+  padding: 9px 13px;
+  border-radius: var(--r-md);
+  font-size: 12px;
+  font-family: var(--mono);
+  line-height: 1.5;
+  margin-top: 10px;
+  display: none;
+}
+.output-line.success { display:block; background: var(--teal-lt); border: 1px solid var(--teal-mid); border-left: 3px solid var(--teal); color: var(--teal-dk); }
+.output-line.info    { display:block; background: var(--amp-blue-lt); border: 1px solid var(--amp-blue-mid); border-left: 3px solid var(--amp-blue); color: var(--amp-blue-dk); }
+
+/* TL;DR callout */
+.tldr {
+  display:flex; align-items:flex-start; gap:10px;
+  background:var(--surface); border:1px solid var(--border);
+  border-left:3px solid var(--amp-blue);
+  border-radius:var(--r-lg); padding:10px 14px;
+  margin:8px 0 16px; font-size:13px; color:var(--text);
+  line-height:1.5;
+}
+.tldr-icon {
+  font-size:15px; flex-shrink:0; margin-top:1px;
+}
+.tldr strong { color:var(--text); font-weight:600; }
 </style>
 </head>
 <body>
@@ -645,10 +730,18 @@ div:hover > .copy-btn { opacity: 1; }
     <div class="logo-divider"></div>
     <span class="logo-sub">SDK Instrumentation Walkthrough</span>
   </div>
-  <div class="header-right">
+  <div class="header-right" style="display:flex;align-items:center;gap:12px">
     <span id="active-badge" class="product-badge badge-gray">Overview</span>
+    <button class="present-btn" onclick="togglePresenterMode()" id="present-toggle-btn">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><polygon points="4,2 14,8 4,14" fill="white"/></svg>
+      Present
+    </button>
   </div>
 </header>
+<!-- Presenter nav overlay -->
+<button class="p-nav-btn" id="p-prev" onclick="presenterNav(-1)" title="Previous step">&#8592;</button>
+<button class="p-nav-btn" id="p-next" onclick="presenterNav(1)" title="Next step">&#8594;</button>
+<div id="p-progress">Overview · 1 of 2</div>
 
 <nav class="tabs">
   <button class="tab active" onclick="switchProduct('overview',this)">
@@ -780,7 +873,7 @@ div:hover > .copy-btn { opacity: 1; }
     <div class="sidebar-section">Overview</div>
     <div class="step-item active" onclick="showStep('a',0,this)">
       <div class="step-num"><span>1</span></div>
-      <div class="step-label">What is the Browser SDK?</div>
+      <div class="step-label">Events, users &amp; the data model</div>
     </div>
     <div class="step-item" onclick="showStep('a',1,this)">
       <div class="step-num"><span>2</span></div>
@@ -789,27 +882,35 @@ div:hover > .copy-btn { opacity: 1; }
     <div class="sidebar-section">Implementation</div>
     <div class="step-item" onclick="showStep('a',2,this)">
       <div class="step-num"><span>3</span></div>
-      <div class="step-label">Initialize SDK</div>
+      <div class="step-label">Choose install method</div>
     </div>
     <div class="step-item" onclick="showStep('a',3,this)">
       <div class="step-num"><span>4</span></div>
-      <div class="step-label">Identify users</div>
+      <div class="step-label">Configure &amp; initialize</div>
     </div>
     <div class="step-item" onclick="showStep('a',4,this)">
       <div class="step-num"><span>5</span></div>
-      <div class="step-label">Track events</div>
+      <div class="step-label">Identify users</div>
     </div>
     <div class="step-item" onclick="showStep('a',5,this)">
       <div class="step-num"><span>6</span></div>
-      <div class="step-label">Track revenue</div>
+      <div class="step-label">Track events</div>
     </div>
     <div class="step-item" onclick="showStep('a',6,this)">
       <div class="step-num"><span>7</span></div>
-      <div class="step-label">Groups &amp; group properties</div>
+      <div class="step-label">Track revenue</div>
     </div>
-    <div class="sidebar-section">QA</div>
     <div class="step-item" onclick="showStep('a',7,this)">
       <div class="step-num"><span>8</span></div>
+      <div class="step-label">Groups &amp; group properties</div>
+    </div>
+    <div class="step-item" onclick="showStep('a',8,this)">
+      <div class="step-num"><span>9</span></div>
+      <div class="step-label">SDK Plugins</div>
+    </div>
+    <div class="sidebar-section">QA</div>
+    <div class="step-item" onclick="showStep('a',9,this)">
+      <div class="step-num"><span>10</span></div>
       <div class="step-label">QA &amp; Validation</div>
     </div>
   </aside>
@@ -818,8 +919,9 @@ div:hover > .copy-btn { opacity: 1; }
     <!-- A0: What is Browser SDK -->
     <div id="a-step-0" class="step-page active">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Overview</div>
-      <h2 class="step-title">The Browser SDK</h2>
-      <p class="step-sub">A client-side JavaScript SDK for capturing user events and properties. Works in any browser — no build tools or bundler required when loaded from CDN.</p>
+      <h2 class="step-title">Events, users &amp; the data model</h2>
+      <p class="step-sub">Everything Amplitude captures boils down to three things: an <strong>event</strong> (what happened), a <strong>user</strong> (who did it), and <strong>properties</strong> (context). Understanding these makes every other SDK call obvious.</p>
+      <div class="tldr"><span class="tldr-icon">💡</span><span>Every interaction in your product becomes an <strong>event</strong>. Every event carries <strong>properties</strong> for context. Every event is tied to a <strong>user</strong>. These three things are the entire Amplitude data model.</span></div>
 
       <div class="concept-grid">
         <div class="concept-card">
@@ -867,7 +969,7 @@ div:hover > .copy-btn { opacity: 1; }
       </div>
 
       <div class="nav-footer">
-        <span class="nav-progress">Step 1 of 8</span>
+        <span class="nav-progress">Step 1 of 10</span>
         <button class="btn btn-primary" onclick="showStep('a',1,null)">Next: Autocapture vs Precision →</button>
       </div>
     </div>
@@ -877,6 +979,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Overview</div>
       <h2 class="step-title">Autocapture vs Precision Tracking</h2>
       <p class="step-sub">These two approaches aren't either/or — the recommended approach combines both. Autocapture handles broad discovery; precision tracking handles what matters most.</p>
+      <div class="tldr"><span class="tldr-icon">💡</span><span>Autocapture gives you immediate signal with <strong>zero custom code</strong> — use it as your baseline, then layer precision tracking on top for the metrics that matter most.</span></div>
 
       <div class="concept-grid">
         <div class="concept-card" style="border:2px solid var(--blue)">
@@ -939,16 +1042,18 @@ div:hover > .copy-btn { opacity: 1; }
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('a',0,null)">← Back</button></div>
-        <span class="nav-progress">Step 2 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('a',2,null)">Next: Initialize SDK →</button>
+        <span class="nav-progress">Step 2 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',2,null)">Next: Choose install method →</button>
       </div>
     </div>
 
-    <!-- A2: Initialize -->
+    <!-- A2: Choose install method -->
     <div id="a-step-2" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
-      <h2 class="step-title">Initialize the SDK</h2>
-      <p class="step-sub">Choose your installation method. All three load the same Amplitude Browser SDK — the difference is who manages the version and which products are bundled.</p>
+      <h2 class="step-title">Choose your install method</h2>
+      <p class="step-sub">All three options load the same Amplitude Browser SDK — the difference is who manages the version and which products are bundled.</p>
+
+      <div class="tldr"><span class="tldr-icon">💡</span><span>When in doubt, use the <strong>Unified Script</strong> — it's the fastest path to value and requires no build tooling. Switch to npm only when you need version control or Feature Experiment.</span></div>
 
       <div class="step-body">
       <div class="step-content">
@@ -967,6 +1072,73 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="decision-card" id="a-opt-pinned" onclick="selectInitPath('pinned')">
           <div class="dc-title">Pinned / Minified</div>
           <div class="dc-desc">Lock to a specific SDK version via URL. No surprise updates. Useful for compliance environments or when you need to vet each version before release.</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px">
+        <div class="info blue" style="margin:0">
+          <strong>Web vs Feature Experiment</strong> — Unified Script includes <em>Web Experiment</em> (visual editor, no code). npm includes <em>Feature Experiment</em> (code-based flags). They're different products — choose based on whether your team writes flag evaluation code.
+        </div>
+        <div class="info blue" style="margin:0">
+          <strong>Version management</strong> — Unified Script: Amplitude-managed, always latest stable. npm: customer-managed via <code>package.json</code>. Pinned: customer-managed via URL, explicit upgrades only.
+        </div>
+      </div>
+
+      </div><!-- /step-content -->
+      <aside class="step-aside">
+        <div class="aside-card">
+          <div class="aside-section">What's bundled per method</div>
+          <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.05em;margin:8px 0 6px">Unified Script (CDN)</div>
+          <div class="aside-row"><span class="aside-label">Analytics</span><span class="aside-val" style="color:#4ec9b0">✓ Included</span></div>
+          <div class="aside-row"><span class="aside-label">Session Replay</span><span class="aside-val" style="color:#4ec9b0">✓ Bundled</span></div>
+          <div class="aside-row"><span class="aside-label">Web Experiment</span><span class="aside-val" style="color:#4ec9b0">✓ Bundled</span></div>
+          <div class="aside-row"><span class="aside-label">Feature Exp.</span><span class="aside-val" style="color:#f87171">✗ Not included</span></div>
+          <div class="aside-row"><span class="aside-label">G&amp;S</span><span class="aside-val">Separate script</span></div>
+          <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px">npm (Unified SDK)</div>
+          <div class="aside-row"><span class="aside-label">Analytics</span><span class="aside-val" style="color:#4ec9b0">✓ Included</span></div>
+          <div class="aside-row"><span class="aside-label">Session Replay</span><span class="aside-val" style="color:#4ec9b0">✓ Bundled</span></div>
+          <div class="aside-row"><span class="aside-label">Web Experiment</span><span class="aside-val" style="color:#f87171">✗ Not included</span></div>
+          <div class="aside-row"><span class="aside-label">Feature Exp.</span><span class="aside-val" style="color:#4ec9b0">✓ Bundled</span></div>
+          <div class="aside-row"><span class="aside-label">G&amp;S</span><span class="aside-val" style="color:#4ec9b0">✓ Bundled</span></div>
+        </div>
+      </aside>
+      </div><!-- /step-body -->
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('a',1,null)">← Back</button></div>
+        <span class="nav-progress">Step 3 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',3,null)">Next: Configure &amp; initialize →</button>
+      </div>
+    </div>
+
+    <!-- A3: Configure & initialize -->
+    <div id="a-step-3" class="step-page">
+      <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
+      <h2 class="step-title">Configure &amp; initialize</h2>
+      <p class="step-sub">Paste your API key — the snippet below updates live. Toggle autocapture options on the right to shape what gets captured, then copy and drop the snippet into your codebase.</p>
+      <div class="tldr"><span class="tldr-icon">💡</span><span>With <code style="font-family:var(--mono);font-size:12px">fetchRemoteConfig: true</code>, you can override autocapture settings from <strong>Data → Settings → Autocapture</strong> without a code deploy. Your <code>init()</code> block acts as the fallback.</span></div>
+
+      <div class="step-body">
+      <div class="step-content">
+
+      <!-- API key input + init button -->
+      <div class="card">
+        <div class="card-title">Try it — paste your API key and initialize</div>
+        <div class="field-group">
+          <div class="field-row">
+            <label>API key</label>
+            <input id="a-api-key" type="text" placeholder="Paste your Amplitude API key"
+              oninput="const v=this.value||'YOUR_API_KEY';['a-key-in-code','a-key-in-code-2','a-key-in-code-npm','a-key-in-code-pin','a-key-engagement'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});propagateApiKey(this.value);" />
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn btn-primary" onclick="aInit()">Initialize SDK</button>
+          <div id="a-sdk-status" class="pill pill-idle"><span class="pill-dot"></span>Not initialized</div>
+        </div>
+        <div id="a-sr-row" style="display:none;margin-top:10px;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="7" stroke="var(--teal)" stroke-width="1.5"/><path d="M6 8.5L7.5 10L10 7" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:12px;color:var(--teal-dk)">Session Replay recording this session</span>
+          <div id="a-sr-status" class="pill pill-idle" style="font-size:10px;padding:2px 8px"><span class="pill-dot"></span>Loading…</div>
         </div>
       </div>
 
@@ -1047,42 +1219,13 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
       </div>
 
-      <!-- Product support table -->
-      <table class="compare-table" style="margin-top:14px">
-        <thead><tr><th>Product</th><th>Unified Script (CDN)</th><th>npm (Unified SDK)</th><th>Pinned</th></tr></thead>
-        <tbody>
-          <tr><td>Analytics</td><td class="cell-yes">✓ Included</td><td class="cell-yes">✓ Included</td><td class="cell-yes">✓ Included</td></tr>
-          <tr><td>Session Replay</td><td class="cell-yes">✓ Bundled</td><td class="cell-yes">✓ Bundled</td><td class="cell-req">Separate script</td></tr>
-          <tr><td>Web Experiment</td><td class="cell-yes">✓ Bundled</td><td class="cell-no">✗ Not included</td><td class="cell-no">✗ Not included</td></tr>
-          <tr><td>Feature Experiment</td><td class="cell-no">✗ Not included</td><td class="cell-yes">✓ Bundled</td><td class="cell-req">Separate script</td></tr>
-          <tr><td>Guides &amp; Surveys</td><td class="cell-req">Separate script</td><td class="cell-yes">✓ Bundled</td><td class="cell-req">Separate script</td></tr>
-          <tr><td>Version control</td><td>Amplitude-managed</td><td>Customer-managed</td><td>Customer-managed</td></tr>
-        </tbody>
-      </table>
-
-      <!-- API key input + init button -->
-      <div class="card" style="margin-top:4px">
-        <div class="card-title">Try it — paste your API key and initialize</div>
-        <div class="field-group">
-          <div class="field-row">
-            <label>API key</label>
-            <input id="a-api-key" type="text" placeholder="Paste your Amplitude API key"
-              oninput="const v=this.value||'YOUR_API_KEY';['a-key-in-code','a-key-in-code-2','a-key-in-code-npm','a-key-in-code-pin','a-key-engagement'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});" />
-          </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px">
+        <div class="info amber" style="margin:0">
+          <strong>Fallback behavior</strong> — if the SDK can't reach remote config, it falls back to your <code>init()</code> block. If nothing is set there, Amplitude uses defaults — which may capture more than you expect. Always set the <em>least permissive config</em> you're comfortable with as your fallback.
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <button class="btn btn-primary" onclick="aInit()">Initialize SDK</button>
-          <div id="a-sdk-status" class="pill pill-idle"><span class="pill-dot"></span>Not initialized</div>
+        <div class="info blue" style="margin:0">
+          <strong>Analytics SDK is a prerequisite</strong> for Experiment's <code>initializeWithAmplitudeAnalytics</code> and for the Guides &amp; Surveys plugin path. Regardless of install method, <code>amplitude.track()</code>, <code>amplitude.identify()</code>, and other API calls are identical across all three.
         </div>
-        <div id="a-sr-row" style="display:none;margin-top:10px;align-items:center;gap:8px">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="8" cy="8" r="7" stroke="var(--teal)" stroke-width="1.5"/><path d="M6 8.5L7.5 10L10 7" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span style="font-size:12px;color:var(--teal-dk)">Session Replay recording this session</span>
-          <div id="a-sr-status" class="pill pill-idle" style="font-size:10px;padding:2px 8px"><span class="pill-dot"></span>Loading…</div>
-        </div>
-      </div>
-
-      <div class="info blue">
-        <strong>Analytics SDK is a prerequisite</strong> for Experiment's <code>initializeWithAmplitudeAnalytics</code> and for the Guides &amp; Surveys plugin path. Regardless of which install method you use, the <code>amplitude.track()</code>, <code>amplitude.identify()</code>, and other API calls are identical.
       </div>
 
       </div><!-- /step-content -->
@@ -1159,25 +1302,22 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="aside-note">
           <strong>Remote config</strong> — with <code style="font-family:var(--mono);font-size:10px">fetchRemoteConfig: true</code> you can override any of these from <strong>Data → Settings → Autocapture</strong> without a code deploy. Note: newer SDK versions prefer the nested form <code style="font-family:var(--mono);font-size:10px">remoteConfig: { fetchRemoteConfig: true }</code> — both work today.
         </div>
-        <div class="aside-note" style="margin-top:8px;border-left-color:var(--amber)">
-          <strong>Fallback behavior</strong> — if the SDK can't reach the remote config service, it falls back to whatever is in your <code style="font-family:var(--mono);font-size:10px">init()</code> block. If nothing is set there, Amplitude uses defaults — which may capture more than you expect.<br><br>
-          <strong>Recommendation:</strong> always set your <code style="font-family:var(--mono);font-size:10px">init()</code> block to the <em>least permissive config you're comfortable with</em>. That way, a failed remote config fetch never causes unexpected data ingestion.
-        </div>
       </aside>
       </div><!-- /step-body -->
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',1,null)">← Back</button></div>
-        <span class="nav-progress">Step 3 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('a',3,null)">Next: Identify users →</button>
+        <div><button class="btn" onclick="showStep('a',2,null)">← Back</button></div>
+        <span class="nav-progress">Step 4 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',4,null)">Next: Identify users →</button>
       </div>
     </div>
 
-    <!-- A3: Identify -->
-    <div id="a-step-3" class="step-page">
+    <!-- A4: Identify -->
+    <div id="a-step-4" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Identify users</h2>
       <p class="step-sub">Amplitude tracks every user by a <code style="font-family:var(--mono)">device_id</code> (anonymous) and optionally a <code style="font-family:var(--mono)">user_id</code> (authenticated). User properties power targeting in Experiment and Guides &amp; Surveys.</p>
+      <div class="tldr"><span class="tldr-icon">💡</span><span>User properties set here flow automatically into <strong>Experiment targeting</strong> and <strong>G&amp;S audience filters</strong> — what you instrument in Analytics powers every other product.</span></div>
       <div class="step-body">
       <div class="step-content">
 
@@ -1192,10 +1332,6 @@ div:hover > .copy-btn { opacity: 1; }
 <span class="cv">amplitude</span>.<span class="cf">identify</span>(<span class="cv">identifyEvent</span>);</pre>
       </div>
 
-      <div class="info amber">
-        <strong>User properties matter beyond Analytics.</strong> Any property set here flows into Experiment's variant targeting and Guides &amp; Surveys audience filters — e.g. show a guide only to <code>plan = 'trial'</code> users.
-      </div>
-
       <div class="card">
         <div class="card-title">Try it</div>
         <div class="field-group">
@@ -1206,11 +1342,6 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="btn-row"><button class="btn btn-teal" onclick="aIdentify()">Set user identity</button></div>
       </div>
 
-      <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',2,null)">← Back</button></div>
-        <span class="nav-progress">Step 4 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('a',4,null)">Next: Track events →</button>
-      </div>
       </div><!-- /step-content -->
       <aside class="step-aside">
         <div class="aside-card">
@@ -1232,18 +1363,22 @@ div:hover > .copy-btn { opacity: 1; }
           <div class="aside-row-light"><span class="aside-label-light">user_id</span><span class="aside-val-light">Set after login. Triggers identity merge with Amplitude ID.</span></div>
           <div class="aside-row-light"><span class="aside-label-light">amplitude_id</span><span class="aside-val-light">Canonical ID generated by Amplitude. Always used for analysis.</span></div>
         </div>
-        <div class="aside-tip">
-          <strong>Group properties</strong> — if you have the Accounts add-on, set group-level properties (e.g. company plan, ARR) with <code style="font-family:var(--mono);font-size:10px">amplitude.setGroup()</code> for account-level reporting.
-        </div>
       </aside>
       </div><!-- /step-body -->
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('a',3,null)">← Back</button></div>
+        <span class="nav-progress">Step 5 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',5,null)">Next: Track events →</button>
+      </div>
     </div>
 
     <!-- A4: Track events -->
-    <div id="a-step-4" class="step-page">
+    <div id="a-step-5" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Track events</h2>
       <p class="step-sub">Every meaningful user action is a track call. Event names and properties define what you can analyze — design them thoughtfully with your <a href="#">Implementation Workbook</a>.</p>
+      <div class="tldr"><span class="tldr-icon">💡</span><span>An event only needs a <strong>name</strong> and a <strong>user</strong>. Properties are optional — but the right properties are what turn a raw event into an answerable business question.</span></div>
       <div class="step-body">
       <div class="step-content">
 
@@ -1271,11 +1406,6 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
       </div>
 
-      <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',3,null)">← Back</button></div>
-        <span class="nav-progress">Step 5 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('a',5,null)">Next: Track revenue →</button>
-      </div>
       </div><!-- /step-content -->
       <aside class="step-aside">
         <div class="aside-card">
@@ -1311,18 +1441,22 @@ div:hover > .copy-btn { opacity: 1; }
           </div>
           <div style="font-size:11px;color:var(--text-3);margin-top:8px">Pick one convention (Title Case, snake_case, or camelCase) and apply it everywhere. Mixed casing creates duplicate events in Amplitude.</div>
         </div>
-        <div class="aside-warn">
-          <strong>A/B test data</strong> should be sent as user properties — one property per experiment, value = variant name. This lets you segment any chart by experiment variant without extra event instrumentation.
-        </div>
       </aside>
       </div><!-- /step-body -->
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('a',4,null)">← Back</button></div>
+        <span class="nav-progress">Step 6 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',6,null)">Next: Track revenue →</button>
+      </div>
     </div>
 
     <!-- A5: Revenue -->
-    <div id="a-step-5" class="step-page">
+    <div id="a-step-6" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Track revenue</h2>
       <p class="step-sub">The Revenue object ensures purchase events are structured consistently and flow into Amplitude's revenue charts, LTV analysis, and cohorts.</p>
+      <div class="tldr"><span class="tldr-icon">💡</span><span>Revenue events use <strong>reserved property names</strong> that unlock built-in revenue reports. The names are not flexible — if they don't match exactly, the revenue charts won't work.</span></div>
       <div class="step-body">
       <div class="step-content">
 
@@ -1343,11 +1477,6 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="btn-row"><button class="btn btn-amber" onclick="aRevenue()">Track revenue event</button></div>
       </div>
 
-      <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',4,null)">← Back</button></div>
-        <span class="nav-progress">Step 6 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('a',6,null)">Next: Groups &amp; Group Properties →</button>
-      </div>
       </div><!-- /step-content -->
       <aside class="step-aside">
         <div class="aside-card">
@@ -1368,14 +1497,21 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
       </aside>
       </div><!-- /step-body -->
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('a',5,null)">← Back</button></div>
+        <span class="nav-progress">Step 7 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',7,null)">Next: Groups &amp; Group Properties →</button>
+      </div>
     </div>
 
 
     <!-- A6: Groups & Group Properties -->
-    <div id="a-step-6" class="step-page">
+    <div id="a-step-7" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Groups &amp; group properties</h2>
       <p class="step-sub">Groups enable account-level analytics — query by organization, company, or any entity rather than individual users. Requires the <strong>Accounts add-on</strong>. Use <code style="font-family:var(--mono)">setGroup()</code> to associate users and <code style="font-family:var(--mono)">groupIdentify()</code> to set properties on the group itself.</p>
+      <div class="tldr"><span class="tldr-icon">💡</span><span>Groups let you analyze by <strong>account, team, or company</strong> instead of individual users — essential for B2B products where the unit of value is the organization, not the person.</span></div>
 
       <div class="step-body">
       <div class="step-content">
@@ -1475,29 +1611,145 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="aside-warn">
           <strong>groupIdentify only affects future events.</strong> Properties set on a group do not retroactively update historical events from group members.
         </div>
+        <div class="aside-tip">
+          <strong>Group properties</strong> describe the group itself (e.g. plan type, company size). Set them with <code style="font-family:var(--mono);font-size:10px">amplitude.groupIdentify()</code> — they're separate from user properties and persist to all future events from members of that group.
+        </div>
       </aside>
       </div><!-- /step-body -->
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',5,null)">← Back</button></div>
-        <span class="nav-progress">Step 7 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('a',7,null)">Next: QA &amp; Validation →</button>
+        <div><button class="btn" onclick="showStep('a',6,null)">← Back</button></div>
+        <span class="nav-progress">Step 8 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',8,null)">Next: SDK Plugins →</button>
       </div>
     </div>
 
-    <!-- A6: Event Stream -->
-    <div id="a-step-7" class="step-page">
+    <!-- A8: SDK Plugins -->
+    <div id="a-step-8" class="step-page">
+      <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
+      <h2 class="step-title">SDK Plugins</h2>
+      <p class="step-sub">Plugins let you intercept, enrich, or redirect every event before it leaves the browser. Use them for data enrichment, custom destinations, or event filtering.</p>
+
+      <div class="step-body">
+      <div class="step-content">
+
+        <p style="font-size:13px;color:var(--text-2);margin-bottom:12px;line-height:1.6">There are two plugin types — click one to see its snippet:</p>
+        <div class="concept-grid" style="margin-bottom:18px">
+          <div class="concept-card selected" id="plugin-card-enrichment" onclick="selectPluginType('enrichment')" style="cursor:pointer;transition:opacity .15s">
+            <div class="concept-name">Enrichment plugins</div>
+            <div class="concept-desc" style="margin-top:4px">Run before an event is sent — add/modify properties, filter events, or transform data. Return <code style="font-family:var(--mono);font-size:10px">null</code> to drop the event entirely.</div>
+          </div>
+          <div class="concept-card" id="plugin-card-destination" onclick="selectPluginType('destination')" style="cursor:pointer;opacity:.6;transition:opacity .15s">
+            <div class="concept-name">Destination plugins</div>
+            <div class="concept-desc" style="margin-top:4px">Receive events after enrichment and forward them — fan out to custom endpoints or third-party tools alongside Amplitude.</div>
+          </div>
+        </div>
+
+        <div id="plugin-snippet-enrichment">
+          <div class="code-wrap">
+            <span class="code-label">Enrichment plugin</span>
+            <pre><span class="cc">// Enrichment plugin — runs before each event is sent</span>
+<span class="ck">const</span> <span class="cv">enrichmentPlugin</span> = {
+  name: <span class="cs">'my-enrichment-plugin'</span>,
+  type: <span class="cv">amplitude</span>.<span class="cv">Types</span>.<span class="cv">PluginType</span>.<span class="cv">ENRICHMENT</span>,
+  setup: <span class="ck">async</span> (<span class="cv">config</span>) =&gt; {
+    <span class="cc">// runs once on init — fetch data, set up connections</span>
+  },
+  execute: <span class="ck">async</span> (<span class="cv">event</span>) =&gt; {
+    <span class="cc">// runs for every event — mutate and return the event</span>
+    <span class="cv">event</span>.event_properties = {
+      ...<span class="cv">event</span>.event_properties,
+      app_version: <span class="cs">'2.1.0'</span>,
+      environment: <span class="cs">'production'</span>,
+    };
+    <span class="ck">return</span> <span class="cv">event</span>; <span class="cc">// return null to drop the event</span>
+  },
+};
+
+<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">enrichmentPlugin</span>);</pre>
+          </div>
+        </div>
+
+        <div id="plugin-snippet-destination" style="display:none">
+          <div class="code-wrap">
+            <span class="code-label">Destination plugin</span>
+            <pre><span class="cc">// Destination plugin — receives events after enrichment</span>
+<span class="ck">const</span> <span class="cv">destinationPlugin</span> = {
+  name: <span class="cs">'my-destination-plugin'</span>,
+  type: <span class="cv">amplitude</span>.<span class="cv">Types</span>.<span class="cv">PluginType</span>.<span class="cv">DESTINATION</span>,
+  setup: <span class="ck">async</span> (<span class="cv">config</span>) =&gt; {
+    <span class="cc">// initialize your destination SDK here</span>
+  },
+  execute: <span class="ck">async</span> (<span class="cv">event</span>) =&gt; {
+    <span class="cc">// forward event to your custom destination</span>
+    <span class="ck">await</span> <span class="cf">fetch</span>(<span class="cs">'https://ingest.example.com/events'</span>, {
+      method: <span class="cs">'POST'</span>,
+      body: <span class="cv">JSON</span>.<span class="cf">stringify</span>(<span class="cv">event</span>),
+    });
+  },
+};
+
+<span class="cv">amplitude</span>.<span class="cf">add</span>(<span class="cv">destinationPlugin</span>);</pre>
+          </div>
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.55">Destination plugins run after enrichment. In your real implementation, replace the <code style="font-family:var(--mono);font-size:12px">fetch()</code> call with your destination SDK's ingest method.</p>
+        </div>
+
+        <div id="plugin-output" class="output-line"></div>
+
+      </div><!-- /step-content -->
+
+      <aside class="step-aside">
+        <div class="aside-card">
+          <div class="aside-section">Plugin lifecycle</div>
+          <div class="aside-row">
+            <div>
+              <div class="aside-label">setup(config)</div>
+              <div class="aside-val" style="margin-top:3px">Called once when <code style="font-family:var(--mono);font-size:10px">amplitude.add()</code> is called; use for initialization</div>
+            </div>
+          </div>
+          <div class="aside-row">
+            <div>
+              <div class="aside-label">execute(event)</div>
+              <div class="aside-val" style="margin-top:3px">Called for every event; return the (possibly mutated) event, or <code style="font-family:var(--mono);font-size:10px">null</code> to drop it</div>
+            </div>
+          </div>
+        </div>
+        <div class="aside-card">
+          <div class="aside-section">Plugin types</div>
+          <div class="aside-row"><span class="aside-label">ENRICHMENT</span><span class="aside-val">Runs in the enrichment pipeline, can modify or drop events</span></div>
+          <div class="aside-row"><span class="aside-label">DESTINATION</span><span class="aside-val">Receives enriched events, sends them to a destination</span></div>
+        </div>
+        <div class="aside-card-light">
+          <div class="aside-section-light">Built-in plugins</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.5">Session Replay, Experiment, and Guides &amp; Surveys are all implemented as plugins under the hood. Adding them via <code style="font-family:var(--mono);font-size:10px">amplitude.add()</code> is what wires them into the event pipeline.</div>
+        </div>
+        <div class="aside-note">
+          <strong>Full plugin docs</strong> → <a href="https://amplitude.com/docs/sdks/analytics/browser/browser-sdk-2#plugins" target="_blank" style="color:var(--amp-blue)">amplitude.com/docs/sdks/analytics/browser/browser-sdk-2#plugins</a>
+        </div>
+      </aside>
+      </div><!-- /step-body -->
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('a',7,null)">← Back</button></div>
+        <span class="nav-progress">Step 9 of 10</span>
+        <button class="btn btn-primary" onclick="showStep('a',9,null)">Next: QA &amp; Validation →</button>
+      </div>
+    </div>
+
+    <!-- A9: QA & Validation -->
+    <div id="a-step-9" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — QA</div>
       <h2 class="step-title">QA &amp; Validation</h2>
-      <p class="step-sub">All events fired in steps 3–6 appear here in real time. With a valid API key, these are actually sent to Amplitude — verify in <a href="https://amplitude.com/docs/data/chrome-extension-debug" target="_blank">the Chrome Extension debugger</a>.</p>
+      <p class="step-sub">All events fired in steps 3–8 appear here in real time. With a valid API key, these are actually sent to Amplitude — verify in <a href="https://amplitude.com/docs/data/chrome-extension-debug" target="_blank">the Chrome Extension debugger</a>.</p>
 
       <div class="stat-row">
         <div class="stat"><div class="stat-val" id="a-cnt-total">0</div><div class="stat-lbl">total events</div></div>
-        <div class="stat"><div class="stat-val" id="a-cnt-track">0</div><div class="stat-lbl">track calls</div></div>
-        <div class="stat"><div class="stat-val" id="a-cnt-identify">0</div><div class="stat-lbl">identify calls</div></div>
+        <div class="stat"><div class="stat-val" id="a-cnt-track">0</div><div class="stat-lbl">custom track</div></div>
+        <div class="stat"><div class="stat-val" id="a-cnt-auto">0</div><div class="stat-lbl">autocapture</div></div>
+        <div class="stat"><div class="stat-val" id="a-cnt-identify">0</div><div class="stat-lbl">identify</div></div>
       </div>
       <div class="card" style="padding:12px">
-        <div class="stream" id="a-stream"><div class="stream-empty">Go through steps 3–6 and fire events — they'll appear here</div></div>
+        <div class="stream" id="a-stream"><div class="stream-empty">Go through steps 3–9 and fire events — they'll appear here</div></div>
       </div>
 
       <div class="info teal" style="margin-top:14px">
@@ -1505,8 +1757,8 @@ div:hover > .copy-btn { opacity: 1; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',6,null)">← Back</button></div>
-        <span class="nav-progress">Step 8 of 8</span>
+        <div><button class="btn" onclick="showStep('a',8,null)">← Back</button></div>
+        <span class="nav-progress">Step 10 of 10</span>
         <button class="btn btn-primary" onclick="goToProduct('replay')">Continue: Session Replay →</button>
       </div>
     </div>
@@ -1561,6 +1813,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Overview</div>
       <h2 class="step-title">Feature Flags vs Experiments</h2>
       <p class="step-sub">From an application code perspective there is no difference — both use <code style="font-family:var(--mono)">variant(flag_key)</code>. The distinction is in how you use the results.</p>
+      <div class="tldr" style="border-left-color:var(--purple)"><span class="tldr-icon">💡</span><span>A <strong>flag</strong> controls who sees a feature. An <strong>experiment</strong> measures whether it moved a metric. Both use the same SDK — the difference is the goal.</span></div>
 
       <div class="concept-grid">
         <div class="concept-card" style="border:2px solid var(--purple)">
@@ -1592,6 +1845,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Overview</div>
       <h2 class="step-title">Deployments</h2>
       <p class="step-sub">A deployment is a collection of flags and experiments tied to a single Amplitude Analytics project. Your application uses the deployment key to initialize the SDK.</p>
+      <div class="tldr" style="border-left-color:var(--purple)"><span class="tldr-icon">💡</span><span>Target <strong>individuals</strong> for QA, <strong>user properties</strong> for segmentation, <strong>all users</strong> for rollouts. The targeting type determines how experiment results can be analyzed.</span></div>
 
       <div class="card">
         <div class="card-title">Key facts about deployments</div>
@@ -1620,6 +1874,10 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Overview</div>
       <h2 class="step-title">Assignment vs Exposure events</h2>
       <p class="step-sub">These two events serve different purposes. Understanding the distinction is critical for accurate experiment analysis.</p>
+      <div class="tldr" style="border-left-color:var(--purple)"><span class="tldr-icon">💡</span><span><strong>Assignment</strong> is when a user is bucketed. <strong>Exposure</strong> is when they actually see the treatment. Log only the exposure — premature assignment tracking skews results.</span></div>
+
+      <div class="step-body">
+      <div class="step-content">
 
       <table class="compare-table">
         <thead><tr><th></th><th>Assignment event</th><th>Exposure event</th></tr></thead>
@@ -1633,57 +1891,55 @@ div:hover > .copy-btn { opacity: 1; }
         </tbody>
       </table>
 
-      <div class="card" style="margin-top:4px">
-        <div class="card-title">Targeting types</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
-          <div style="background:var(--surface-2);border-radius:6px;padding:12px">
-            <div style="font-weight:700;font-size:11px;color:var(--text-1);margin-bottom:4px">🔬 Individual Users</div>
-            <div style="font-size:11px;color:var(--text-2);line-height:1.6">Target by specific User ID or Device ID. Used for QA and internal testing — force a user into a variant without affecting the general population. <br><br>Set in the flag's <strong>Individual Inclusions</strong> list in the Amplitude UI.</div>
-          </div>
-          <div style="background:var(--surface-2);border-radius:6px;padding:12px">
-            <div style="font-weight:700;font-size:11px;color:var(--text-1);margin-bottom:4px">🎯 Targeted Users</div>
-            <div style="font-size:11px;color:var(--text-2);line-height:1.6">Target by user property values or cohort membership. Examples: plan = "enterprise", country = "US", or any saved Amplitude cohort.<br><br><strong>Cohort targeting note:</strong> cohorts refresh every ~60 min — users entering a cohort may take up to an hour to see a flag change.</div>
-          </div>
-          <div style="background:var(--surface-2);border-radius:6px;padding:12px">
-            <div style="font-weight:700;font-size:11px;color:var(--text-1);margin-bottom:4px">🌍 All Users</div>
-            <div style="font-size:11px;color:var(--text-2);line-height:1.6">No targeting rule — anyone who calls <code style="font-family:var(--mono);font-size:10px">fetch()</code> is eligible.<br><br>For remote evaluation, user properties in the <code style="font-family:var(--mono);font-size:10px">fetch()</code> call are used for targeting. Pass them explicitly when not using <code style="font-family:var(--mono);font-size:10px">initializeWithAmplitudeAnalytics</code>.</div>
-          </div>
-        </div>
-      </div>
-
       <div class="info amber tp-only">
         <strong>Common mistake:</strong> When not using the integrated Amplitude Analytics path, you must manually track <code>[Experiment] Exposure</code>. Missing exposures will skew experiment results — users who see the treatment won't be counted.
       </div>
 
-      <div class="step-body" style="margin-top:14px">
-      <div class="step-content">
-        <div class="concept-grid">
-          <div class="concept-card" style="border-left:3px solid var(--purple)">
-            <div class="concept-name">Remote Evaluation</div>
-            <div class="concept-desc" style="margin-top:4px"><code style="font-family:var(--mono);font-size:11px">fetch()</code> sends user identity to Amplitude servers for evaluation. Supports user property targeting, cohort membership, identity resolution, and sticky bucketing.</div>
-            <div style="margin-top:6px;font-size:11px;color:var(--text-3)">Best for: client-side, rich targeting needs</div>
-          </div>
-          <div class="concept-card">
-            <div class="concept-name">Local Evaluation</div>
-            <div class="concept-desc" style="margin-top:4px"><code style="font-family:var(--mono);font-size:11px">start()</code> downloads all flag configs on startup. Assignments computed locally — no per-user network round-trip. Targeting properties must be passed explicitly in the user object.</div>
-            <div style="margin-top:6px;font-size:11px;color:var(--text-3)">Best for: server-side, sub-ms latency requirements</div>
-          </div>
+      <div class="concept-grid" style="margin-top:12px">
+        <div class="concept-card" style="border-left:3px solid var(--purple)">
+          <div class="concept-name">Remote Evaluation</div>
+          <div class="concept-desc" style="margin-top:4px"><code style="font-family:var(--mono);font-size:11px">fetch()</code> sends user identity to Amplitude servers for evaluation. Supports user property targeting, cohort membership, identity resolution, and sticky bucketing.</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-3)">Best for: client-side, rich targeting needs</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">Local Evaluation</div>
+          <div class="concept-desc" style="margin-top:4px"><code style="font-family:var(--mono);font-size:11px">start()</code> downloads all flag configs on startup. Assignments computed locally — no per-user network round-trip. Targeting properties must be passed explicitly in the user object.</div>
+          <div style="margin-top:6px;font-size:11px;color:var(--text-3)">Best for: server-side, sub-ms latency requirements</div>
         </div>
       </div>
+
+      </div><!-- /step-content -->
       <aside class="step-aside">
+        <div class="aside-card">
+          <div class="aside-section">Targeting types</div>
+          <div class="aside-row">
+            <div>
+              <div class="aside-label" style="margin-bottom:2px">🔬 Individual</div>
+              <div class="aside-val">Target by specific User ID or Device ID. Used for QA — set in the flag's <strong>Individual Inclusions</strong> list in the Amplitude UI.</div>
+            </div>
+          </div>
+          <div class="aside-row">
+            <div>
+              <div class="aside-label" style="margin-bottom:2px">🎯 Targeted</div>
+              <div class="aside-val">Filter by user properties or cohort membership. Cohorts refresh every ~60 min — account for latency in time-sensitive flags.</div>
+            </div>
+          </div>
+          <div class="aside-row">
+            <div>
+              <div class="aside-label" style="margin-bottom:2px">🌍 All users</div>
+              <div class="aside-val">No rule — anyone who calls <code style="font-family:var(--mono);font-size:10px">fetch()</code> is eligible. Pass user properties explicitly when not using <code style="font-family:var(--mono);font-size:10px">initializeWithAmplitudeAnalytics</code>.</div>
+            </div>
+          </div>
+        </div>
         <div class="aside-card">
           <div class="aside-section">Remote vs Local</div>
           <div class="aside-row"><span class="aside-label" style="min-width:72px">Method</span><span class="aside-val">Remote: <code style="font-family:var(--mono);font-size:10px">fetch()</code><br>Local: <code style="font-family:var(--mono);font-size:10px">start()</code></span></div>
-          <div class="aside-row"><span class="aside-label" style="min-width:72px">Latency</span><span class="aside-val">Remote: HTTP call per user. Local: one call on startup, then ~0ms per assignment.</span></div>
+          <div class="aside-row"><span class="aside-label" style="min-width:72px">Latency</span><span class="aside-val">Remote: HTTP call per user. Local: one call on startup, then ~0ms.</span></div>
           <div class="aside-row"><span class="aside-label" style="min-width:72px">Cohorts</span><span class="aside-val">Remote: built-in. Local: requires <code style="font-family:var(--mono);font-size:10px">cohortSyncConfig</code>.</span></div>
           <div class="aside-row"><span class="aside-label" style="min-width:72px">Sticky</span><span class="aside-val">Remote: supported. Local: not supported.</span></div>
-          <div class="aside-row"><span class="aside-label" style="min-width:72px">Assignment events</span><span class="aside-val">Remote: auto. Local: opt-in via <code style="font-family:var(--mono);font-size:10px">assignmentConfig</code>.</span></div>
         </div>
         <div class="aside-warn">
-          <strong>Variant jumping</strong> — users going from anonymous → logged-in on a new device may jump variants when bucketing by Amplitude ID. Use <strong>User ID bucketing</strong> for logged-in-only experiments.
-        </div>
-        <div class="aside-tip">
-          <strong>Bucketing keys: </strong>Amplitude ID (default, works logged-in/out) · User ID (consistent across devices, requires login) · Device ID (anonymous only) · Group ID (B2B, requires Accounts add-on)
+          <strong>Variant jumping</strong> — users going anonymous → logged-in on a new device may jump variants when bucketing by Amplitude ID. Use <strong>User ID bucketing</strong> for logged-in-only experiments.
         </div>
       </aside>
       </div><!-- /step-body -->
@@ -1768,6 +2024,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Implementation</div>
       <h2 class="step-title">Choose your initialization method</h2>
       <p class="step-sub">Now that you understand the two providers, choose your initialization method. The choice determines whether providers are wired automatically or need manual implementation.</p>
+      <div class="tldr" style="border-left-color:var(--purple)"><span class="tldr-icon">💡</span><span><code style="font-family:var(--mono);font-size:12px">fetch()</code> is the <strong>one network call</strong> that resolves which variant a user gets. After that, <code style="font-family:var(--mono);font-size:12px">variant()</code> is a local lookup with zero latency.</span></div>
 
       <div class="decision-grid">
         <div class="decision-card selected" id="e-opt-amp" onclick="selectExpPath('amplitude')">
@@ -1802,6 +2059,9 @@ div:hover > .copy-btn { opacity: 1; }
       </div>
 
       <div id="e-code-sa" style="display:none">
+        <div class="info blue" style="margin-bottom:14px">
+          The snippet below is a working example for <strong>Segment</strong> (Analytics.js). If you use a different CDP or tag manager, update the integration code accordingly — the Experiment SDK initialization logic remains the same.
+        </div>
         <div class="code-wrap">
           <span class="code-label">Step 1 — Add Segment snippet to &lt;head&gt;</span>
           <pre><span class="cs">&lt;script&gt;</span>
@@ -1855,7 +2115,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="field-group">
         <div class="field-row" id="e-amp-key-row">
           <label>Amplitude API key</label>
-          <input id="e-amp-key" placeholder="Analytics API key" oninput="syncT('e-amp-key-code',this.value);const _el=document.getElementById('e-amp-key-init');if(_el)_el.textContent=this.value||'YOUR_API_KEY';"/>
+          <input id="e-amp-key" placeholder="Analytics API key" oninput="this.dataset.userModified='true';syncT('e-amp-key-code',this.value);const _el=document.getElementById('e-amp-key-init');if(_el)_el.textContent=this.value||'YOUR_API_KEY';"/>
         </div>
         <div class="field-row" id="e-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
@@ -1865,6 +2125,7 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="field-row">
           <label>Deployment key</label>
           <input id="e-dep-key" placeholder="client-xxxxx..." oninput="syncT('e-dep-key-code-amp',this.value);syncT('e-dep-key-code-sa',this.value)"/>
+          <button class="btn btn-sm" onclick="copyApiKeyToDeployment()" style="font-size:11px;padding:4px 10px;white-space:nowrap;margin-left:8px">← Use Analytics API key</button>
         </div>
         <div class="field-row" id="e-seg-uid-row" style="display:none">
           <label>User ID</label>
@@ -1889,6 +2150,9 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Implementation</div>
       <h2 class="step-title">Fetch &amp; read variants</h2>
       <p class="step-sub"><code style="font-family:var(--mono)">fetch()</code> downloads variant assignments from Amplitude. <code style="font-family:var(--mono)">variant()</code> reads from the local cache — always call it at the decision point in your code.</p>
+
+      <div class="step-body">
+      <div class="step-content">
 
       <div id="e-fetch-code-amp">
         <div class="code-wrap">
@@ -1955,10 +2219,9 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
       </div>
 
-      <div class="step-body" style="margin-top:14px">
-      <div class="step-content">
         <div class="info purple"><strong>Re-call fetch() after identity changes.</strong> If a user logs in mid-session, call <code style="font-family:var(--mono);font-size:12px">fetch()</code> again after <code style="font-family:var(--mono);font-size:12px">amplitude.setUserId()</code> so targeting re-evaluates with the authenticated identity.</div>
-      </div>
+
+      </div><!-- /step-content -->
       <aside class="step-aside">
         <div class="aside-card">
           <div class="aside-section">When to call fetch()</div>
@@ -1988,75 +2251,128 @@ div:hover > .copy-btn { opacity: 1; }
       </div>
     </div>
 
-    <!-- E5: Exposure -->
+    <!-- E5: Exposure & outcomes -->
     <div id="e-step-6" class="step-page">
       <div class="step-eyebrow" style="color:var(--purple)">Experiment SDK — Implementation</div>
-      <h2 class="step-title">Exposure &amp; outcome tracking</h2>
-      <p class="step-sub">Exposure events tell Amplitude which users actually saw each variant. Without them, you can't compute experiment results.</p>
+      <h2 class="step-title">Exposure &amp; outcomes</h2>
+      <p class="step-sub">Exposure tells Amplitude which variant a user saw. Metric events tell it what they did. Together they power your experiment results.</p>
 
-      <div id="e-expose-code-amp">
-        <div class="code-wrap">
-          <pre><span class="cc">// Exposure fires automatically when variant() is called.
-// Track downstream outcomes via the Analytics SDK:</span>
-<span class="cv">amplitude</span>.<span class="cf">track</span>(<span class="cs">'<span id="e-outcome-amp">Checkout Completed</span>'</span>, {
-  variant: <span class="cv">variant</span>.value,
-  revenue: <span class="cn">49</span>
-});</pre>
-        </div>
-        <div class="info teal"><strong>Integrated path:</strong> No extra code needed for exposures. <code>variant()</code> automatically sends <code>[Experiment] Exposure</code> to Amplitude via the shared Analytics SDK instance.</div>
-      </div>
-
-      <div id="e-expose-code-sa" style="display:none">
-        <div class="code-wrap">
-          <pre><span class="cc">// ExposureTrackingProvider handles exposure automatically when variant() is called.
-// No manual tracking needed — it fires $exposure through Segment to Amplitude.
-// Just track your outcome events:</span>
-<span class="cv">analytics</span>.<span class="cf">track</span>(<span class="cs">'<span id="e-outcome-sa">Checkout Completed</span>'</span>, { variant: <span class="cv">variant</span>.value, revenue: <span class="cn">49</span> });</pre>
-        </div>
-        <div class="info teal"><strong>ExposureTrackingProvider handles this.</strong> When you call <code>variant()</code>, the SDK automatically invokes <code>exposureTrackingProvider.track(exposure)</code>, which fires <code>$exposure</code> through <code>analytics.track()</code> to Segment → Amplitude. No manual <code>[Experiment] Exposure</code> call needed. Make sure the Amplitude destination in Segment is configured to forward events.</div>
-      </div>
-
-      <div class="field-group" style="margin-bottom:10px">
-        <div class="field-row">
-          <label>Outcome event name</label>
-          <input id="e-outcome-name" value="Checkout Completed" oninput="const v=this.value||'Checkout Completed';['e-outcome-amp','e-outcome-sa'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});"/>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-teal" onclick="eExpose()">Track exposure</button>
-        <button class="btn" onclick="eConvert()">Track conversion</button>
-        <button class="btn" style="background:var(--gray-50);border-color:var(--gray-100);color:var(--gray-800)" onclick="eBounce()">Track bounce</button>
-      </div>
-
-      <div class="step-body" style="margin-top:14px">
+      <div class="step-body">
       <div class="step-content">
-        <div class="concept-grid">
-          <div class="concept-card">
-            <div class="concept-name">Holdout groups</div>
-            <div class="concept-desc" style="margin-top:4px">Hold a % of users out of multiple experiments to measure long-term cumulative impact. Users tagged <code style="font-family:var(--mono);font-size:10px">holdout</code> as their variant value. Holdout % can't be changed after creation.</div>
-          </div>
-          <div class="concept-card">
-            <div class="concept-name">Mutex groups</div>
-            <div class="concept-desc" style="margin-top:4px">Prevent users from participating in multiple conflicting experiments simultaneously. Traffic is multiplicative — a 5% holdout + 50/50 mutex = 47.5% effective traffic per experiment.</div>
-          </div>
+
+        <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">Exposure tracking</h3>
+        <p style="font-size:13px;color:var(--text-2);margin-bottom:12px;line-height:1.55">Exposure is recorded the moment a user is assigned to a variant. Choose how your app reports it:</p>
+
+        <!-- Tab selector -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <button class="btn btn-blue" id="exp-tab-btn-auto" onclick="selectExpTracking('auto')" style="font-weight:700">Automatic (default)</button>
+          <button class="btn" id="exp-tab-btn-sdk" onclick="selectExpTracking('sdk')">SDK method</button>
+          <button class="btn" id="exp-tab-btn-code" onclick="selectExpTracking('code')">track() method</button>
         </div>
-      </div>
+
+        <!-- Automatic panel -->
+        <div id="exp-track-auto">
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.55">When you call <code style="font-family:var(--mono);font-size:12px">experiment.variant()</code>, the SDK fires an exposure event automatically. No extra code needed — this is the recommended approach.</p>
+          <div class="code-wrap">
+            <pre><span class="cc">// Fetch variant — exposure fires automatically</span>
+<span class="ck">const</span> <span class="cv">variant</span> = <span class="cv">experiment</span>.<span class="cf">variant</span>(<span class="cs">'my-flag'</span>);
+
+<span class="ck">if</span> (<span class="cv">variant</span>.value === <span class="cs">'treatment'</span>) {
+  <span class="cc">// show treatment experience</span>
+} <span class="ck">else</span> {
+  <span class="cc">// show control experience</span>
+}</pre>
+          </div>
+          <hr style="margin:16px 0">
+          <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">Metric event</h3>
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.55">Log the outcome event you want to measure as a metric in your experiment results.</p>
+          <div class="field-group">
+            <div class="field-row"><label>Event name</label><input id="e-metric-name-auto" value="Button Clicked" style="max-width:220px"/></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-teal" onclick="eConversion(document.getElementById('e-metric-name-auto').value,'experiment-output')">Send metric event</button>
+          </div>
+          <div id="experiment-output" class="output-line"></div>
+        </div>
+
+        <!-- SDK method panel -->
+        <div id="exp-track-sdk" style="display:none">
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.55">Call <code style="font-family:var(--mono);font-size:12px">experiment.exposure()</code> explicitly — useful when you want to delay exposure until the user actually sees the treatment (e.g. after a loading state).</p>
+          <div class="code-wrap">
+            <pre><span class="cc">// Manually fire exposure for a specific flag key</span>
+<span class="cv">experiment</span>.<span class="cf">exposure</span>(<span class="cs">'my-flag'</span>);</pre>
+          </div>
+          <div class="btn-row" style="margin-top:10px">
+            <button class="btn btn-purple" onclick="eManualExposure()">Fire exposure event</button>
+          </div>
+          <div id="exp-manual-out" class="output-line"></div>
+          <hr style="margin:16px 0">
+          <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">Metric event</h3>
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.55">Log the outcome event you want to measure as a metric in your experiment results.</p>
+          <div class="field-group">
+            <div class="field-row"><label>Event name</label><input id="e-metric-name-sdk" value="Button Clicked" style="max-width:220px"/></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-teal" onclick="eConversion(document.getElementById('e-metric-name-sdk').value,'exp-sdk-metric-out')">Send metric event</button>
+          </div>
+          <div id="exp-sdk-metric-out" class="output-line"></div>
+        </div>
+
+        <!-- track() method panel -->
+        <div id="exp-track-code" style="display:none">
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.55">Use <code style="font-family:var(--mono);font-size:12px">amplitude.track()</code> with the <code style="font-family:var(--mono);font-size:12px">$exposure</code> event name when you need to add custom properties to the exposure event — for example, to record which page or surface the experiment ran on.</p>
+          <div class="code-wrap">
+            <pre><span class="ck">const</span> <span class="cv">flagKey</span> = <span class="cs">'my-flag'</span>;
+<span class="ck">const</span> <span class="cv">variant</span> = <span class="cv">experiment</span>.<span class="cf">variant</span>(<span class="cv">flagKey</span>);
+
+<span class="cc">// Use amplitude.track() when you need custom properties on the exposure event</span>
+<span class="cv">amplitude</span>.<span class="cf">track</span>(<span class="cs">'$exposure'</span>, {
+  flag_key: <span class="cv">flagKey</span>,
+  variant: <span class="cv">variant</span>.value,
+  exp_key: <span class="cv">variant</span>.expKey,
+  <span class="cc">// add any custom properties here:</span>
+  surface: <span class="cs">'homepage'</span>,
+});</pre>
+          </div>
+          <div class="btn-row" style="margin-top:10px">
+            <button class="btn btn-blue" onclick="eTrackExposure()">Send $exposure event</button>
+          </div>
+          <div id="exp-track-out" class="output-line"></div>
+          <hr style="margin:16px 0">
+          <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">Metric event</h3>
+          <p style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.55">Log the outcome event you want to measure as a metric in your experiment results.</p>
+          <div class="field-group">
+            <div class="field-row"><label>Event name</label><input id="e-metric-name-code" value="Button Clicked" style="max-width:220px"/></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-teal" onclick="eConversion(document.getElementById('e-metric-name-code').value,'exp-code-metric-out')">Send metric event</button>
+          </div>
+          <div id="exp-code-metric-out" class="output-line"></div>
+        </div>
+
+      </div><!-- /step-content -->
+
       <aside class="step-aside">
         <div class="aside-card">
-          <div class="aside-section">Holdout rules</div>
-          <div class="aside-row"><span class="aside-val">Add experiments <em>before</em> they go live. Adding active experiments unassigns users and corrupts data.</span></div>
-          <div class="aside-row"><span class="aside-val">Don't add the same experiment to multiple holdouts — traffic compounds (0.95 × 0.95 = 90.25%).</span></div>
-          <div class="aside-row"><span class="aside-val">Don't remove running experiments or delete a holdout group while experiments are active.</span></div>
+          <div class="aside-section">Why separate exposure from metrics?</div>
+          <div class="aside-row"><span class="aside-val">Exposure = "I saw this variant". Metric event = "I did this action". They're logged separately so Amplitude can calculate lift — the difference in metric rates between control and treatment.</span></div>
         </div>
-        <div class="aside-note">
-          <strong>Sticky bucketing</strong> — users keep their assigned variant even if targeting rules or rollout weights change mid-experiment. Only available on Feature Experiments, not flags.
+        <div class="aside-card">
+          <div class="aside-section">Exposure event properties</div>
+          <div class="aside-row"><span class="aside-label">flag_key</span><span class="aside-val">the experiment flag key</span></div>
+          <div class="aside-row"><span class="aside-label">variant</span><span class="aside-val">the variant value, e.g. "treatment"</span></div>
         </div>
         <div class="aside-card-light">
-          <div class="aside-section-light">Exposure ordering</div>
-          <div style="font-size:11px;color:var(--text-2);line-height:1.5">The exposure event must arrive in Amplitude <em>before</em> the metric event. Event ordering matters for analysis — ensure your pipeline doesn't reorder events in transit.</div>
+          <div class="aside-section-light">When to use each method</div>
+          <div class="aside-row-light"><span class="aside-label-light">Automatic</span><span class="aside-val-light">Recommended. Zero code, fires on <code style="font-family:var(--mono);font-size:10px">variant()</code></span></div>
+          <div class="aside-row-light"><span class="aside-label-light">SDK method</span><span class="aside-val-light">Delay exposure until treatment is visible</span></div>
+          <div class="aside-row-light"><span class="aside-label-light">track()</span><span class="aside-val-light">Need custom properties on the exposure event</span></div>
+        </div>
+        <div class="aside-warn">
+          <strong>Avoid double-exposure:</strong> if using the SDK method or track() method, set <code style="font-family:var(--mono);font-size:10px">automaticExposureTracking: false</code> in your Experiment config to prevent duplicate exposure events.
         </div>
       </aside>
-      </div>
+      </div><!-- /step-body -->
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('e',5,null)">← Back</button></div>
@@ -2110,11 +2426,11 @@ div:hover > .copy-btn { opacity: 1; }
     <div class="sidebar-section">Implementation</div>
     <div class="step-item" onclick="showStep('g',3,this)">
       <div class="step-num"><span>4</span></div>
-      <div class="step-label">Plugin vs Standalone</div>
+      <div class="step-label">Choose install method</div>
     </div>
     <div class="step-item" onclick="showStep('g',4,this)">
       <div class="step-num"><span>5</span></div>
-      <div class="step-label">Initialize &amp; boot</div>
+      <div class="step-label">Implementation requirements</div>
     </div>
     <div class="step-item" onclick="showStep('g',5,this)">
       <div class="step-num"><span>6</span></div>
@@ -2137,6 +2453,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Overview</div>
       <h2 class="step-title">What you can build</h2>
       <p class="step-sub">Guides &amp; Surveys lets you build targeted in-product experiences — from onboarding tours to NPS surveys — without a separate tool or engineering work for each one.</p>
+      <div class="tldr" style="border-left-color:var(--pink)"><span class="tldr-icon">💡</span><span>G&amp;S gives you five <strong>form factors</strong> (how it looks) and four <strong>survey types</strong> (what it asks) — all configured in the Amplitude UI, no code changes needed after the initial SDK setup.</span></div>
 
       <div class="card" style="margin-bottom:16px">
         <div class="card-title">Guide types (form factors)</div>
@@ -2213,6 +2530,7 @@ div:hover > .copy-btn { opacity: 1; }
       <h2 class="step-title">The three providers</h2>
       <p class="step-sub tp-only">The G&amp;S SDK needs three things to function. Understanding these upfront makes implementation choices obvious.</p>
       <p class="step-sub amp-native-only">The G&amp;S SDK needs identity, an event destination, and a real-time event feed. With the Browser SDK plugin, all three are wired automatically — no manual implementation needed.</p>
+      <div class="tldr" style="border-left-color:var(--pink)"><span class="tldr-icon">💡</span><span>The SDK needs to know <strong>who the user is</strong>, <strong>where to send events</strong>, and <strong>what the user is doing</strong>. One provider per concern — which ones you wire manually depends on your analytics setup.</span></div>
 
       <div class="provider-row">
         <div class="provider-box" style="border-top:2px solid var(--teal)">
@@ -2274,6 +2592,9 @@ div:hover > .copy-btn { opacity: 1; }
       <h2 class="step-title">Analytics taxonomy considerations</h2>
       <p class="step-sub">G&amp;S targeting and triggering depends heavily on what your Analytics SDK is already tracking. Plan your taxonomy before building guides.</p>
 
+      <div class="step-body">
+      <div class="step-content">
+
       <div class="concept-grid">
         <div class="concept-card">
           <div class="concept-name">Event triggers</div>
@@ -2297,10 +2618,7 @@ div:hover > .copy-btn { opacity: 1; }
         <strong>Enable platforms before you build.</strong> Go to Amplitude → Settings → Projects → Guides &amp; Surveys tab → App Management and add your platform (Web, iOS, Android, React Native). If this isn't done, users will only see "Desktop" as an option when building guides.
       </div>
 
-      <div class="step-body" style="margin-top:14px">
-      <div class="step-content">
-        <div class="info coral"><strong>Enable platforms before you build guides.</strong> Go to Amplitude → Settings → Project → Guides &amp; Surveys → App Management and enable Web, iOS, or Android. Content built before enabling may need to be rebuilt since platform options are locked at creation time.</div>
-      </div>
+      </div><!-- /step-content -->
       <aside class="step-aside">
         <div class="aside-card">
           <div class="aside-section">Targeting latency</div>
@@ -2315,21 +2633,34 @@ div:hover > .copy-btn { opacity: 1; }
         <div class="aside-tip">
           <strong>Combine URL + event</strong> — pair a URL pattern like <code style="font-family:var(--mono);font-size:10px">/dashboard</code> with an event trigger for precise targeting without custom event support.
         </div>
+        <div class="aside-card">
+          <div class="aside-section">Reference</div>
+          <div class="aside-row">
+            <a href="https://amplitude.com/docs/guides-and-surveys/analytics-glossary" target="_blank" rel="noopener" style="font-size:11px;color:var(--amp-blue);text-decoration:none;display:flex;align-items:center;gap:5px">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2h5v2H4v8h8v-3h2v5H2V2zm7 0h5v5h-2V4.414L6.707 9.707 5.293 8.293 10.586 3H9V2z" fill="currentColor"/></svg>
+              Analytics glossary for Guides &amp; Surveys
+            </a>
+          </div>
+        </div>
       </aside>
       </div>
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('g',1,null)">← Back</button></div>
         <span class="nav-progress">Step 3 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('g',3,null)">Next: Plugin vs Standalone →</button>
+        <button class="btn btn-primary" onclick="showStep('g',3,null)">Next: Choose install method →</button>
       </div>
     </div>
 
-    <!-- G3: Plugin vs Standalone -->
+    <!-- G3: Choose install method -->
     <div id="g-step-3" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Implementation</div>
-      <h2 class="step-title">Plugin vs Standalone SDK</h2>
+      <h2 class="step-title">Choose install method</h2>
       <p class="step-sub">Choose your installation path based on how your application sends analytics data today.</p>
+      <div class="tldr" style="border-left-color:var(--pink)"><span class="tldr-icon">💡</span><span>Plugin path: <strong>two script tags</strong> and the SDK wires itself. Standalone path: you wire three providers manually. Choose based on whether Amplitude Browser SDK is already on the page.</span></div>
+
+      <div class="step-body">
+      <div class="step-content">
 
       <div class="decision-grid">
         <div class="decision-card selected" id="g-opt-plugin" onclick="selectGsPath('plugin')">
@@ -2414,7 +2745,7 @@ div:hover > .copy-btn { opacity: 1; }
       <div class="field-group" style="margin-top:4px">
         <div class="field-row">
           <label>Amplitude API key</label>
-          <input id="gs-api-key" placeholder="Paste your Amplitude API key" oninput="const _v=this.value||'API_KEY';['g-key-plugin','g-key-sa','g-key-plugin-eng','g-key-plugin-init','g-key-sa-init'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=_v;});"/>
+          <input id="gs-api-key" placeholder="Paste your Amplitude API key" oninput="this.dataset.userModified='true';const _v=this.value||'API_KEY';['g-key-plugin','g-key-sa','g-key-plugin-eng','g-key-plugin-init','g-key-sa-init'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=_v;});"/>
         </div>
         <div class="field-row" id="g-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
@@ -2446,36 +2777,62 @@ div:hover > .copy-btn { opacity: 1; }
         <button class="btn" onclick="gsBoot()" style="margin-bottom:10px">Boot user session</button>
       </div>
 
+      </div><!-- /step-content -->
+      <aside class="step-aside">
+        <div class="aside-card">
+          <div class="aside-section">SDK load order matters</div>
+          <div class="aside-row"><span class="aside-val"><strong>Plugin path:</strong> Amplitude SDK must load BEFORE the Engagement SDK. Do <strong>not</strong> use <code style="font-family:var(--mono);font-size:10px">async</code> on either script tag — they must execute synchronously in order.</span></div>
+        </div>
+        <div class="aside-note">
+          <strong>Plugin path — what's automatic:</strong><br>
+          ✓ User Provider (reads identity from Analytics SDK)<br>
+          ✓ Tracking Provider (routes events via amplitude.track())<br>
+          ✓ Event Provider (forwards events for real-time triggers)<br>
+          ✓ boot() called automatically
+        </div>
+        <div class="aside-warn">
+          <strong>Standalone only:</strong> Always call <code style="font-family:var(--mono);font-size:10px">engagement.init()</code> before <code style="font-family:var(--mono);font-size:10px">boot()</code>. Without <code style="font-family:var(--mono);font-size:10px">forwardEvent()</code>, "On event tracked" triggers won't fire in real time.
+        </div>
+        <div class="aside-card-light">
+          <div class="aside-section-light">Segment Write Key vs API Key</div>
+          <div style="font-size:11px;color:var(--text-2);line-height:1.5">The Segment Write Key loads Analytics.js. The Amplitude API Key is passed to <code style="font-family:var(--mono);font-size:10px">engagement.init()</code> — they're different credentials.</div>
+        </div>
+      </aside>
+      </div><!-- /step-body -->
+
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('g',2,null)">← Back</button></div>
         <span class="nav-progress">Step 4 of 8</span>
-        <button class="btn btn-primary" onclick="showStep('g',4,null)">Next: Production requirements →</button>
+        <button class="btn btn-primary" onclick="showStep('g',4,null)">Next: Implementation requirements →</button>
       </div>
     </div>
 
-    <!-- G4: Initialize & boot -->
+    <!-- G4: Implementation requirements -->
     <div id="g-step-4" class="step-page">
       <div class="step-eyebrow" style="color:var(--pink)">Guides &amp; Surveys — Implementation</div>
-      <h2 class="step-title">Production requirements</h2>
-      <p class="step-sub">Before going live, two things need to be in place: your CSP headers must allow Amplitude CDN assets, and SPAs must wire the router so guide targeting re-evaluates on navigation.</p>
+      <h2 class="step-title">Implementation requirements</h2>
+      <p class="step-sub">Before going live, three things need to be in place: your CSP headers must allow Amplitude CDN assets, SPAs must wire the router so guide targeting re-evaluates on navigation, and the SDK must be booted with a user identity.</p>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-        <div>
-          <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🛡️ Content Security Policy (CSP)</div>
-          <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px">Guides &amp; Surveys loads images, media, and scripts from Amplitude CDN. Add to your CSP headers:</div>
+      <div class="step-body" style="margin-top:8px">
+      <div class="step-content">
+
+        <div style="margin-bottom:16px">
+          <div style="font-weight:700;font-size:12px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">🛡️ Content Security Policy (CSP)</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:8px">Guides &amp; Surveys loads images, media, and scripts from Amplitude CDN. Add to your CSP headers:</div>
           <div class="code-wrap" style="margin:0">
-            <pre style="font-size:10px;line-height:1.7"><span class="cv">img-src</span>     <span class="cs">https://*.amplitude.com</span>
+            <pre style="font-size:11px;line-height:1.7"><span class="cv">img-src</span>     <span class="cs">https://*.amplitude.com</span>
 <span class="cv">media-src</span>   <span class="cs">https://*.amplitude.com</span>
 <span class="cv">style-src</span>   <span class="cs">https://*.amplitude.com</span>
 <span class="cv">script-src</span>  <span class="cs">https://*.amplitude.com</span>
 <span class="cv">connect-src</span> <span class="cs">https://*.amplitude.com</span></pre>
           </div>
         </div>
+
         <div>
-          <div style="font-weight:700;font-size:11px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">🔀 SPA Routing</div>
-          <div style="font-size:11px;color:var(--text-2);line-height:1.65;margin-bottom:8px"><strong>Plugin path:</strong> Required — the SDK must detect route changes to re-evaluate guide eligibility.<br><strong>Standalone path:</strong> Highly recommended — set the router so guide targeting updates on navigation.</div>
+          <div style="font-weight:700;font-size:12px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">🔀 SPA Routing</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:8px"><strong>Plugin path:</strong> Required — the SDK must detect route changes to re-evaluate guide eligibility.<br><strong>Standalone path:</strong> Highly recommended — set the router so guide targeting updates on navigation.</div>
           <div class="code-wrap" style="margin:0">
-            <pre style="font-size:10px"><span class="cc">// After boot() — wire your SPA router</span>
+            <pre style="font-size:11px"><span class="cc">// After boot() — wire your SPA router</span>
 <span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">setRouter</span>((<span class="cv">url</span>) => {
   <span class="cc">// call your router's navigate function</span>
   router.<span class="cf">push</span>(<span class="cv">url</span>); <span class="cc">// Vue Router example</span>
@@ -2483,7 +2840,43 @@ div:hover > .copy-btn { opacity: 1; }
 });</pre>
           </div>
         </div>
-      </div>
+
+        <div style="margin-top:16px">
+          <div style="font-weight:700;font-size:12px;color:var(--pink-dk);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">📄 This demo (static HTML file)</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:8px">This walkthrough is a single HTML file with no framework router. Wire <code style="font-family:var(--mono);font-size:11px">setRouter</code> using <code style="font-family:var(--mono);font-size:11px">history.pushState</code>, then notify the SDK when the step view changes so trigger conditions re-evaluate.</div>
+          <div class="code-wrap" style="margin:0">
+            <pre style="font-size:11px"><span class="cc">// 1. Wire setRouter so guide CTAs can navigate within the page</span>
+<span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">setRouter</span>((<span class="cv">url</span>) => {
+  <span class="cv">history</span>.<span class="cf">pushState</span>({}, <span class="cs">''</span>, <span class="cv">url</span>);
+});
+
+<span class="cc">// 2. Re-evaluate guide eligibility on step navigation
+//    Patch showStep() — or call this anywhere navigation happens</span>
+<span class="ck">const</span> _nav = <span class="cv">window</span>.<span class="cv">showStep</span>;
+<span class="cv">window</span>.<span class="cv">showStep</span> = <span class="ck">function</span>(<span class="cv">product</span>, <span class="cv">idx</span>, <span class="cv">el</span>) {
+  _nav(<span class="cv">product</span>, <span class="cv">idx</span>, <span class="cv">el</span>);
+  <span class="cc">// Plugin path: amplitude.track() automatically forwards to G&amp;S</span>
+  <span class="ck">if</span> (<span class="cv">window</span>.<span class="cv">amplitude</span>) <span class="cv">window</span>.<span class="cv">amplitude</span>.<span class="cf">track</span>(<span class="cs">'[Amplitude] Page Viewed'</span>, { page: product + <span class="cs">'-step-'</span> + idx });
+  <span class="cc">// Standalone path: forward directly to G&amp;S for trigger evaluation</span>
+  <span class="ck">if</span> (<span class="cv">window</span>.<span class="cv">engagement</span>?.forwardEvent) <span class="cv">window</span>.<span class="cv">engagement</span>.<span class="cf">forwardEvent</span>({ event_type: <span class="cs">'$pageview'</span>, event_properties: { page: product + <span class="cs">'-step-'</span> + idx } });
+};</pre>
+          </div>
+        </div>
+
+      </div><!-- /step-content -->
+      <aside class="step-aside">
+        <div class="aside-card">
+          <div class="aside-section">Production checklist</div>
+          <div class="aside-row"><span class="aside-val">✓ CSP headers updated with *.amplitude.com</span></div>
+          <div class="aside-row"><span class="aside-val">✓ SPA router wired after boot()</span></div>
+          <div class="aside-row"><span class="aside-val">✓ Platform enabled in Settings → G&amp;S → App Management</span></div>
+          <div class="aside-row"><span class="aside-val">✓ sampleRate set (if using Session Replay alongside)</span></div>
+        </div>
+        <div class="aside-note">
+          <strong>Plugin path only:</strong> If you skip <code style="font-family:var(--mono);font-size:10px">setRouter()</code>, guide targeting will only re-evaluate on hard page loads. Users navigating via client-side routing won't trigger guides on new "pages."
+        </div>
+      </aside>
+      </div><!-- /step-body -->
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('g',3,null)">← Back</button></div>
@@ -2583,7 +2976,6 @@ div:hover > .copy-btn { opacity: 1; }
         </div>
         <div class="btn-row">
           <button class="btn btn-pink" onclick="gsShow()">Call engagement.gs.show()</button>
-          <button class="btn" onclick="gsList()">List all guides/surveys</button>
         </div>
         <div id="gs-show-result" class="show-result">
           <div class="show-result-title" id="gs-result-title"></div>
@@ -2658,8 +3050,6 @@ div:hover > .copy-btn { opacity: 1; }
       </div>
       <div class="stat-row">
         <div class="stat"><div class="stat-val" id="gs-cnt-shown">0</div><div class="stat-lbl">shown</div></div>
-        <div class="stat"><div class="stat-val" id="gs-cnt-action">0</div><div class="stat-lbl">interactions</div></div>
-        <div class="stat"><div class="stat-val" id="gs-cnt-dismiss">0</div><div class="stat-lbl">dismissed</div></div>
       </div>
       <div class="card" style="padding:12px">
         <div class="stream" id="gs-stream"><div class="stream-empty">Initialize the SDK and fire events — they'll appear here</div></div>
@@ -2684,7 +3074,7 @@ const CUSTOMER_CONFIG = {
 
 // ══ Tab & step navigation ══════════════════════════
 function goToProduct(id) {
-  const idx = {overview:0, analytics:1, experiment:2, guides:3, replay:4}[id];
+  const idx = {overview:0, analytics:1, replay:2, experiment:3, guides:4}[id];
   const tabs = document.querySelectorAll('.tab');
   switchProduct(id, tabs[idx]);
 }
@@ -2736,7 +3126,7 @@ function addEvent(streamId, type, name, props) {
   const stream = document.getElementById(streamId);
   const empty = stream.querySelector('.stream-empty');
   if (empty) empty.remove();
-  const tags = {track:'t-track',identify:'t-identify',revenue:'t-revenue',fetch:'t-fetch',expose:'t-expose',outcome:'t-outcome',shown:'t-shown',action:'t-action',dismiss:'t-dismiss'};
+  const tags = {track:'t-track',identify:'t-identify',revenue:'t-revenue',fetch:'t-fetch',exposure:'t-exposure',shown:'t-shown',action:'t-action',dismiss:'t-dismiss',autocapture:'t-autocapture',system:'t-system'};
   const el = document.createElement('div');
   el.className = 'event-item';
   el.innerHTML = `<span class="etag ${tags[type]||'t-track'}">${type}</span><div class="ebody"><div class="ename">${name}</div>${props?`<div class="eprops">${JSON.stringify(props)}</div>`:''}</div><span class="etime">${now()}</span>`;
@@ -2747,6 +3137,66 @@ function loadScript(src) {
   return new Promise((res,rej)=>{
     if(document.querySelector(`script[src="${src}"]`)){res();return;}
     const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Failed: '+src));document.head.appendChild(s);
+  });
+}
+
+// ══ SHARED DEMO PLUGIN ═══════════════════════════
+// Intercepts every SDK event — updates Analytics QA stream and SR QA stream
+function installDemoPlugin() {
+  if (window._demoPluginAdded) return;
+  window._demoPluginAdded = true;
+  window.amplitude.add({
+    name: 'demo-stream-logger',
+    type: 'enrichment',
+    setup: async () => {},
+    execute: async (event) => {
+      const et = event.event_type;
+      let type, mainStat;
+      if (et === '$identify' || et === '$groupidentify') {
+        type = 'identify'; mainStat = 'a-cnt-identify';
+      } else if (et === '[Amplitude] Revenue' || et === '[Amplitude] Revenue (Verified)') {
+        type = 'revenue'; mainStat = 'a-cnt-track';
+      } else if (et && et.startsWith('[Amplitude]')) {
+        type = 'autocapture'; mainStat = 'a-cnt-auto';
+      } else {
+        type = 'track'; mainStat = 'a-cnt-track';
+      }
+      // Build display props
+      const props = {};
+      if (et === '$identify' || et === '$groupidentify') {
+        const up = event.user_properties || {};
+        if (up.$set) Object.assign(props, up.$set);
+        else Object.assign(props, up);
+        if (event.user_id) props.user_id = event.user_id;
+        if (event.group_properties) Object.assign(props, {group_properties: event.group_properties});
+      } else {
+        if (event.event_properties) Object.assign(props, event.event_properties);
+        if (event.groups && Object.keys(event.groups).length) props.groups = event.groups;
+      }
+      const displayProps = Object.keys(props).length ? props : null;
+      // Analytics QA stream
+      if (aInit_done) {
+        incStat('a-cnt-total');
+        incStat(mainStat);
+        addEvent('a-stream', type, et, displayProps);
+      }
+      // Guides & Surveys stream (plugin path) — capture G&S events by name pattern
+      // Amplitude Engagement SDK fires [Amplitude] Guide/Survey * events — only surface shown events
+      if (gsInit_done && gsPath === 'plugin' && et && et.startsWith('[Amplitude]') &&
+          (et.includes('Guide') || et.includes('Survey') || et.includes('NPS') || et.includes('Engagement'))) {
+        const isShown = et.toLowerCase().includes('shown') || et.toLowerCase().includes('viewed');
+        if (isShown) { addEvent('gs-stream', 'shown', et, displayProps); incStat('gs-cnt-shown'); }
+      }
+      // Session Replay QA stream — same classification as analytics, skip SR-internal events
+      if (srInit_done && !(et && et.startsWith('[Amplitude] Session Replay'))) {
+        // Capture replay ID from events (plugin runs after SR, so ID is already attached)
+        const srId = event.event_properties && event.event_properties['[Amplitude] Session Replay ID'];
+        if (srId) window._lastSrId = srId;
+        incStat('r-cnt-total');
+        addEvent('r-stream', type, et, displayProps);
+      }
+      return event;
+    }
   });
 }
 
@@ -2766,11 +3216,11 @@ async function aInit() {
   try {
     await loadScript(`https://cdn.amplitude.com/script/${key}.js`);
     window.amplitude.init(key, {fetchRemoteConfig:true, autocapture:true});
+    // Plugin installed after SR in aInitSessionReplay so it runs downstream of SR
+    // and can read the [Amplitude] Session Replay ID SR attaches to events
     aInit_done = true;
     document.getElementById('a-sdk-status').className='pill pill-ok';
     document.getElementById('a-sdk-status').innerHTML='<span class="pill-dot"></span>Initialized';
-    addEvent('a-stream','track','SDK Initialized',{api_key:key.slice(0,8)+'...',autocapture:true,source:'CDN'});
-    incStat('a-cnt-total'); incStat('a-cnt-track');
     // Silently boot Session Replay using the same API key
     aInitSessionReplay(key);
   } catch(e) {
@@ -2799,8 +3249,6 @@ async function aInitSessionReplay(key) {
       if (srTabPill) { srTabPill.className='pill pill-ok'; srTabPill.innerHTML='<span class="pill-dot"></span>Initialized'; }
       const srKeyField = document.getElementById('r-api-key');
       if (srKeyField && !srKeyField.value) srKeyField.value = key;
-      addEvent('a-stream','identify','[Amplitude] Session Replay Started',{sampleRate:1,method:'plugin',auto:true});
-      incStat('a-cnt-total'); incStat('a-cnt-identify');
     } else {
       // Plugin not bundled — SR still available standalone on the SR tab
       if (srStatus) { srStatus.className='pill pill-idle'; srStatus.innerHTML='<span class="pill-dot"></span>Use SR tab'; }
@@ -2811,6 +3259,8 @@ async function aInitSessionReplay(key) {
   } catch(e) {
     if (srStatus) { srStatus.className='pill pill-idle'; srStatus.innerHTML='<span class="pill-dot"></span>Use SR tab'; }
   }
+  // Always install plugin after SR (so it runs downstream and sees the replay ID on events)
+  installDemoPlugin();
 }
 function aReq(){if(!aInit_done){alert('Initialize the SDK first (step 3)');return false;}return true;}
 function aIdentify(){
@@ -2818,37 +3268,27 @@ function aIdentify(){
   const uid=document.getElementById('a-user-id').value, plan=document.getElementById('a-plan').value, role=document.getElementById('a-role').value;
   const id=new window.amplitude.Identify();id.set('plan',plan);id.set('role',role);
   window.amplitude.setUserId(uid);window.amplitude.identify(id);
-  addEvent('a-stream','identify','User Identified: '+uid,{user_id:uid,plan,role});
-  incStat('a-cnt-total');incStat('a-cnt-identify');
 }
 function aTrack(){
   if(!aReq())return;
   const name=document.getElementById('a-evt-name').value||'Button Clicked', prop=document.getElementById('a-evt-prop').value||'upgrade_cta';
   window.amplitude.track(name,{button_id:prop,page:'dashboard'});
-  addEvent('a-stream','track',name,{button_id:prop,page:'dashboard'});
-  incStat('a-cnt-total');incStat('a-cnt-track');
 }
 function aPageView(){
   if(!aReq())return;
   window.amplitude.track('[Amplitude] Page Viewed',{page_title:'Dashboard',url:'/dashboard'});
-  addEvent('a-stream','track','[Amplitude] Page Viewed',{page_title:'Dashboard',url:'/dashboard'});
-  incStat('a-cnt-total');incStat('a-cnt-track');
 }
 function aSearch(){
   if(!aReq())return;
   const terms=['retention cohort','funnel analysis','DAU trend','feature adoption'];
   const p={query:terms[Math.floor(Math.random()*terms.length)],results:Math.floor(Math.random()*20)+1};
   window.amplitude.track('Search Performed',p);
-  addEvent('a-stream','track','Search Performed',p);
-  incStat('a-cnt-total');incStat('a-cnt-track');
 }
 function aRevenue(){
   if(!aReq())return;
   const price=parseFloat(document.getElementById('a-price').value)||49, productId=document.getElementById('a-product').value;
   const r=new window.amplitude.Revenue();r.setProductId(productId);r.setPrice(price);r.setQuantity(1);
   window.amplitude.revenue(r);
-  addEvent('a-stream','revenue','[Amplitude] Revenue',{productId,price,quantity:1,revenue:price});
-  incStat('a-cnt-total');incStat('a-cnt-track');
 }
 
 function aSetGroup(){
@@ -2856,8 +3296,6 @@ function aSetGroup(){
   const gtype=document.getElementById('a-group-type').value||'orgId';
   const gname=document.getElementById('a-group-name').value||'12345';
   window.amplitude.setGroup(gtype, gname);
-  addEvent('a-stream','identify','setGroup()',{group_type:gtype,group_name:gname,note:'Also sets '+gtype+':'+gname+' as user property'});
-  incStat('a-cnt-total');incStat('a-cnt-identify');
 }
 
 function aGroupIdentify(){
@@ -2868,8 +3306,6 @@ function aGroupIdentify(){
   const val=document.getElementById('a-group-val').value||'enterprise';
   const e=new window.amplitude.Identify();e.set(prop,val);
   window.amplitude.groupIdentify(gtype,gname,e);
-  addEvent('a-stream','identify','groupIdentify()',{group_type:gtype,group_name:gname,[prop]:val,note:'Properties set on the group entity'});
-  incStat('a-cnt-total');incStat('a-cnt-identify');
 }
 
 function aTrackWithGroup(){
@@ -2877,8 +3313,53 @@ function aTrackWithGroup(){
   const gtype=document.getElementById('a-group-type').value||'orgId';
   const gname=document.getElementById('a-group-name').value||'12345';
   window.amplitude.track({event_type:'Feature Used',event_properties:{feature:'dashboard'},groups:{[gtype]:gname}});
-  addEvent('a-stream','track','Feature Used (event-level group)',{event_properties:{feature:'dashboard'},groups:{[gtype]:gname},note:'Group attached to this event only'});
-  incStat('a-cnt-total');incStat('a-cnt-track');
+}
+
+function aAddPlugin() {
+  const out = document.getElementById('plugin-output');
+  out.textContent = '✓ Enrichment plugin added — subsequent events will include app_version: "2.1.0"';
+  out.className = 'output-line success';
+  // In a real demo environment this would call amplitude.add(...)
+}
+
+function selectPluginType(type) {
+  const isEnrichment = type === 'enrichment';
+  document.getElementById('plugin-snippet-enrichment').style.display = isEnrichment ? '' : 'none';
+  document.getElementById('plugin-snippet-destination').style.display = isEnrichment ? 'none' : '';
+  document.getElementById('plugin-card-enrichment').classList.toggle('selected', isEnrichment);
+  document.getElementById('plugin-card-enrichment').style.opacity = isEnrichment ? '1' : '0.6';
+  document.getElementById('plugin-card-destination').classList.toggle('selected', !isEnrichment);
+  document.getElementById('plugin-card-destination').style.opacity = isEnrichment ? '0.6' : '1';
+  // clear output on switch
+  const out = document.getElementById('plugin-output');
+  out.textContent = '';
+  out.className = 'output-line';
+}
+
+function propagateApiKey(value) {
+  // Auto-fill r-api-key, e-amp-key, gs-api-key from a-api-key
+  // unless the user has already typed a different value into that field directly
+  ['r-api-key', 'e-amp-key', 'gs-api-key'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.dataset.userModified === 'true') return; // respect manual overrides
+    el.value = value;
+    el.dispatchEvent(new Event('input'));
+    // dispatchEvent triggers those inputs' own oninput, which sets userModified='true'
+    // reset it because this was a propagation, not a user action
+    el.dataset.userModified = '';
+  });
+}
+
+function copyApiKeyToDeployment() {
+  const apiKey = (document.getElementById('a-api-key') || {}).value || '';
+  const depKeyInput = document.getElementById('e-dep-key');
+  if (apiKey && depKeyInput) {
+    depKeyInput.value = apiKey;
+    depKeyInput.dispatchEvent(new Event('input'));
+  } else if (!apiKey) {
+    alert('Enter your Analytics API key first (Analytics tab, step 4).');
+  }
 }
 
 // ══ EXPERIMENT ═══════════════════════════════════
@@ -2896,8 +3377,7 @@ function selectExpPath(path) {
   document.getElementById('e-fetch-code-amp').style.display=path==='amplitude'?'block':'none';
   document.getElementById('e-fetch-code-sa').style.display=path==='standalone'?'block':'none';
   document.getElementById('e-uid-row').style.display='none'; // handled by e-seg-uid-row now
-  document.getElementById('e-expose-code-amp').style.display=path==='amplitude'?'block':'none';
-  document.getElementById('e-expose-code-sa').style.display=path==='standalone'?'block':'none';
+  // e-expose-code-amp / e-expose-code-sa removed — exposure section now uses tabbed layout
   eInit_done=false;eAssigned=null;experimentClient=null;
   document.getElementById('e-sdk-status').className='pill pill-idle';
   document.getElementById('e-sdk-status').innerHTML='<span class="pill-dot"></span>Not initialized';
@@ -2945,7 +3425,7 @@ async function eInit(){
         exposureTrackingProvider:{
           track:(exposure)=>{
             if(window.analytics&&window.analytics.track)window.analytics.track('$exposure',exposure);
-            addEvent('e-stream','expose','$exposure (auto via ExposureTrackingProvider)',{flag_key:exposure.flag_key,variant:exposure.variant,sent_via:'analytics.track() → Segment → Amplitude'});
+            addEvent('e-stream','exposure','$exposure',{flag_key:exposure.flag_key,variant:exposure.variant,method:'experiment.variant() → ExposureTrackingProvider → analytics.track()'});
             incStat('e-cnt-expose');
           }
         }
@@ -2954,8 +3434,7 @@ async function eInit(){
     eInit_done=true;
     document.getElementById('e-sdk-status').className='pill pill-ok';
     document.getElementById('e-sdk-status').innerHTML='<span class="pill-dot"></span>Connected';
-    addEvent('e-stream','fetch','Experiment client initialized',{method:expPath==='amplitude'?'initializeWithAmplitudeAnalytics':'initialize (Segment)',deployment:depKey.slice(0,8)+'...'});
-    incStat('e-cnt-fetch');
+    addEvent('e-stream','action','Experiment client initialized',{method:expPath==='amplitude'?'initializeWithAmplitudeAnalytics':'initialize (Segment)',deployment:depKey.slice(0,8)+'...'});
   } catch(e) {
     document.getElementById('e-sdk-status').innerHTML='<span class="pill-dot"></span>Failed';
     alert('Could not initialize Experiment SDK. ' + e.message);
@@ -2970,8 +3449,9 @@ async function eFetch(){
   document.getElementById('e-sdk-status').innerHTML='<span class="pill-dot"></span>Fetching...';
   try {
     await experimentClient.fetch();
+    addEvent('e-stream','fetch','fetch()',{flag_key:flag,method:'experiment.fetch()'});
+    incStat('e-cnt-fetch');
     const v=experimentClient.variant(flag);
-    // variant() automatically fires ExposureTrackingProvider.track() — no manual call needed
     eAssigned=v.value||'';
     document.getElementById('e-sdk-status').className='pill pill-ok';
     document.getElementById('e-sdk-status').innerHTML='<span class="pill-dot"></span>Connected';
@@ -2982,14 +3462,13 @@ async function eFetch(){
     document.getElementById('e-vc').querySelector('.v-label').textContent=!isTreatment?'Control — assigned':'Control';
     document.getElementById('e-vt').querySelector('.v-label').textContent=isTreatment?'Treatment — assigned':'Treatment';
     document.getElementById('e-vt').querySelector('.v-name').textContent=eAssigned||'off';
-    // Console output matching the snippet shown in step 5
-    if(isTreatment){
-      console.log('Variant:', eAssigned);
-    } else {
-      console.log('Variant:', eAssigned||'(not bucketed)');
+    if(isTreatment){ console.log('Variant:', eAssigned); } else { console.log('Variant:', eAssigned||'(not bucketed)'); }
+    // Amplitude path: variant() fires exposure through amplitude.track() automatically — capture it in the experiment stream too
+    // Segment path: ExposureTrackingProvider fires and writes to e-stream, so no duplicate here
+    if(expPath==='amplitude'){
+      addEvent('e-stream','exposure','variant(): '+flag,{flag_key:flag,assigned_variant:eAssigned||'(not bucketed)',payload:v.payload||undefined,method:'experiment.variant() → amplitude.track(\'$exposure\')'});
+      incStat('e-cnt-expose');
     }
-    addEvent('e-stream','fetch','variant() called: '+flag,{flag_key:flag,assigned_variant:eAssigned||'(not bucketed)',payload:v.payload||undefined,note:'Exposure fired automatically'});
-    incStat('e-cnt-fetch');
   } catch(e){
     document.getElementById('e-sdk-status').className='pill pill-ok';
     document.getElementById('e-sdk-status').innerHTML='<span class="pill-dot"></span>Connected';
@@ -3003,10 +3482,10 @@ function eExpose(){
   const flag=document.getElementById('e-flag').value||'instrumentation-demo';
   if(expPath==='amplitude'&&experimentClient&&experimentClient.exposure){
     try{experimentClient.exposure(flag);}catch(e){}
-    addEvent('e-stream','expose','[Experiment] Exposure',{flag_key:flag,variant:eAssigned,sent_via:'auto via Analytics SDK'});
+    addEvent('e-stream','exposure','$exposure',{flag_key:flag,variant:eAssigned,method:'experiment.exposure()'});
     incStat('e-cnt-expose');
   } else {
-    addEvent('e-stream','expose','Exposure already fired automatically',{note:'ExposureTrackingProvider fired on variant() call — no manual tracking needed'});
+    addEvent('e-stream','exposure','$exposure (already fired)',{note:'ExposureTrackingProvider fired automatically on variant() — no manual call needed',method:'experiment.variant() → ExposureTrackingProvider'});
   }
 }
 function eConvert(){
@@ -3014,13 +3493,39 @@ function eConvert(){
   const evtName=(document.getElementById('e-outcome-name')||{}).value||'Checkout Completed';
   if(expPath==='amplitude'&&window.amplitude&&aInit_done)window.amplitude.track(evtName,{variant:eAssigned||'unknown',revenue:49});
   else if(window.analytics&&window.analytics.track)window.analytics.track(evtName,{variant:eAssigned||'unknown',revenue:49});
-  addEvent('e-stream','outcome',evtName,{variant:eAssigned||'unknown',revenue:49,sent_via:expPath==='amplitude'?'amplitude.track()':'analytics.track() → Segment'});
+  addEvent('e-stream','track',evtName,{variant:eAssigned||'unknown',revenue:49,method:expPath==='amplitude'?'amplitude.track()':'analytics.track() → Segment'});
   incStat('e-cnt-outcome');
 }
-function eBounce(){
-  if(!eReq())return;
-  addEvent('e-stream','outcome','Session Ended without Purchase',{variant:eAssigned||'unknown',session_duration_s:Math.floor(Math.random()*120)+15});
+function eConversion(eventName,outId){
+  const name=(eventName&&eventName.trim())||'Metric Event Fired';
+  const out=document.getElementById(outId||'experiment-output');
+  addEvent('e-stream','track',name,{note:'Metric event — replace with your real outcome action'});
   incStat('e-cnt-outcome');
+  if(out){out.textContent='✓ "'+name+'" logged. In a real app, replace this with the user action you want to measure.';out.className='output-line success';}
+}
+function eManualExposure(){
+  const out=document.getElementById('exp-manual-out');
+  const flag='my-flag';
+  if(experimentClient&&experimentClient.exposure){try{experimentClient.exposure(flag);}catch(e){}}
+  addEvent('e-stream','exposure','$exposure',{flag_key:flag,variant:eAssigned||'treatment',method:'experiment.exposure()'});
+  incStat('e-cnt-expose');
+  if(out){out.textContent='✓ experiment.exposure("'+flag+'") fired — exposure event sent to Amplitude.';out.className='output-line success';}
+}
+function eTrackExposure(){
+  const out=document.getElementById('exp-track-out');
+  const flag='my-flag';
+  if(window.amplitude&&aInit_done){try{window.amplitude.track('$exposure',{flag_key:flag,variant:'treatment',surface:'homepage'});}catch(e){}}
+  addEvent('e-stream','exposure','$exposure',{flag_key:flag,variant:'treatment',surface:'homepage',method:'amplitude.track(\'$exposure\')'});
+  incStat('e-cnt-expose');
+  if(out){out.textContent='✓ $exposure event sent via amplitude.track() with custom surface property.';out.className='output-line success';}
+}
+function selectExpTracking(type){
+  ['auto','sdk','code'].forEach(t=>{
+    const panel=document.getElementById('exp-track-'+t);
+    const btn=document.getElementById('exp-tab-btn-'+t);
+    if(panel)panel.style.display=t===type?'block':'none';
+    if(btn){btn.className=t===type?'btn btn-blue':'btn';if(t===type)btn.style.fontWeight='700';else btn.style.fontWeight='';}
+  });
 }
 
 // ══ GUIDES & SURVEYS ══════════════════════════════
@@ -3051,7 +3556,34 @@ async function gsInit(){
       await loadScript(`https://cdn.amplitude.com/script/${key}.js`);
       await loadScript(`https://cdn.amplitude.com/script/${key}.engagement.js`);
       window.amplitude.add(window.engagement.plugin());
-      window.amplitude.init(key,{fetchRemoteConfig:true,autocapture:false});
+      // Only init amplitude if analytics tab hasn't already done so —
+      // re-calling init() clears registered plugins and breaks the analytics QA stream
+      if (!aInit_done) {
+        window.amplitude.init(key,{fetchRemoteConfig:true,autocapture:false});
+      }
+      // Intercept G&S shown events via amplitude enrichment plugin.
+      // Only surface 'shown/viewed' events — no interactions counter, no autocapture noise.
+      // Autocapture events ([Amplitude] Page Viewed, Session Start/End, Element Clicked, etc.)
+      // are excluded by the keyword filter so they never appear in the G&S stream.
+      window.amplitude.add({
+        name: 'gs-event-interceptor',
+        type: 'enrichment',
+        setup: async () => {},
+        execute: async (event) => {
+          const et = event.event_type;
+          // Only G&S shown/viewed events — require Guide/Survey/NPS/Engagement keyword
+          // to exclude autocapture events that share the [Amplitude] prefix
+          if (et && et.startsWith('[Amplitude]') &&
+              (et.includes('Guide') || et.includes('Survey') || et.includes('NPS') || et.includes('Engagement'))) {
+            const isShown = et.toLowerCase().includes('shown') || et.toLowerCase().includes('viewed');
+            if (isShown) {
+              addEvent('gs-stream', 'shown', et, event.event_properties || null);
+              incStat('gs-cnt-shown');
+            }
+          }
+          return event;
+        }
+      });
     } else {
       await loadScript(`https://cdn.amplitude.com/script/${key}.engagement.js`);
       window.engagement.init(key,{serverZone:'US'});
@@ -3059,8 +3591,6 @@ async function gsInit(){
     gsInit_done=true;
     pill.className='pill pill-ok';pill.innerHTML='<span class="pill-dot"></span>SDK loaded';
     if(gsPath==='standalone')document.getElementById('g-boot-row').style.display='block';
-    addEvent('gs-stream','shown','Engagement SDK loaded',{path:gsPath,api_key:key.slice(0,8)+'...',source:'CDN'});
-    incStat('gs-cnt-shown');
   } catch(e){
     pill.innerHTML='<span class="pill-dot"></span>Failed';
     alert('Could not load SDK. Check your API key.\n'+e.message);
@@ -3073,17 +3603,18 @@ async function gsBoot(){
   const plan=document.getElementById('gs-plan').value||'growth';
   if(gsPath==='plugin'){
     if(window.amplitude)window.amplitude.setUserId(uid);
-    addEvent('gs-stream','action','User identity set',{user_id:uid,note:'G&S inherits via amplitude.setUserId()'});
   } else {
     try{
       await window.engagement.boot({
         user:{user_id:uid,user_properties:{plan}},
-        integrations:[{track:(ev)=>{addEvent('gs-stream','action','[G&S] '+ev.event_type,ev.event_properties);incStat('gs-cnt-action');}}]
+        integrations:[{track:(ev)=>{
+          const et=ev.event_type||'';
+          const isShown=et.toLowerCase().includes('shown')||et.toLowerCase().includes('viewed');
+          if(isShown){addEvent('gs-stream','shown',et,ev.event_properties);incStat('gs-cnt-shown');}
+        }}]
       });
-    }catch(e){addEvent('gs-stream','action','boot() error: '+e.message,{});}
-    addEvent('gs-stream','action','engagement.boot() called',{user_id:uid,plan,path:'standalone'});
+    }catch(e){/* boot error — silent */}
   }
-  incStat('gs-cnt-action');
 }
 
 function gsShow(){
@@ -3095,7 +3626,7 @@ function gsShow(){
   let called=false;
   try{if(window.engagement&&window.engagement.gs&&window.engagement.gs.show){window.engagement.gs.show(key,step);called=true;}}
   catch(e){res.className='show-result err';res.style.display='block';tl.textContent='SDK call failed';bd.textContent=e.message;return;}
-  addEvent('gs-stream','shown','engagement.gs.show() called',{key,stepIndex:step,sdk_present:called});incStat('gs-cnt-shown');
+  if(called){addEvent('gs-stream','shown','gs.show()',{key,stepIndex:step||0});incStat('gs-cnt-shown');}
   res.className='show-result '+(called?'ok':'err');res.style.display='block';
   if(called){tl.textContent=`window.engagement.gs.show("${key}"${step>0?', '+step:''}) called`;bd.textContent='The guide should render on this page if the key matches a live guide in your project.';}
   else{tl.textContent='window.engagement.gs not available';bd.textContent='Make sure the SDK has loaded and boot() has completed.';}
@@ -3106,26 +3637,70 @@ function gsList(){
   let list=[];try{if(window.engagement&&window.engagement.gs&&window.engagement.gs.list)list=window.engagement.gs.list()||[];}catch(e){}
   const res=document.getElementById('gs-show-result'),tl=document.getElementById('gs-result-title'),bd=document.getElementById('gs-result-body');
   res.style.display='block';
-  if(list.length>0){res.className='show-result ok';tl.textContent=list.length+' guide(s)/survey(s) found';bd.innerHTML='<code style="font-family:var(--mono);font-size:11px;white-space:pre-wrap">'+JSON.stringify(list,null,2)+'</code>';}
-  else{res.className='show-result err';tl.textContent='No guides/surveys returned';bd.textContent='Make sure you have live guides or surveys published for this API key.';}
-  addEvent('gs-stream','action','engagement.gs.list() called',{count:list.length});incStat('gs-cnt-action');
+  if(list.length>0){
+    res.className='show-result ok';
+    tl.textContent=list.length+' guide(s)/survey(s) found';
+    bd.innerHTML='<code style="font-family:var(--mono);font-size:11px;white-space:pre-wrap">'+JSON.stringify(list,null,2)+'</code>';
+  } else {
+    res.className='show-result info';
+    tl.textContent='list() returned 0 eligible guides — this is expected';
+    bd.textContent='list() only returns guides whose targeting rules match the current session. Guides targeting authenticated users, specific URLs, or with frequency limits won\'t appear here for an anonymous local-file session. gs.show(key) bypasses targeting and is the right tool for QA. If decideSuccessful is false in _debugStatus(), the SDK hasn\'t fetched guide config yet — re-initialize.';
+  }
 }
 
 function gsForwardEvent(){
   if(!gsInit_done){alert('Initialize first.');return;}
   const p={feature:'export',timestamp:Date.now()};
   try{if(window.engagement&&window.engagement.forwardEvent)window.engagement.forwardEvent({event_type:'Feature Used',event_properties:p});}catch(e){}
-  addEvent('gs-stream','action','forwardEvent() called',{event_type:'Feature Used',...p});incStat('gs-cnt-action');
 }
 
-function gsDebug(){
+async function gsDebug(){
   const out=document.getElementById('gs-debug-out'),pre=document.getElementById('gs-debug-pre');
-  let result;
-  try{if(window.engagement&&window.engagement._debugStatus)result=window.engagement._debugStatus();
-  else result={error:'window.engagement._debugStatus not found',tip:'Make sure SDK has loaded and initialized.',expected:{user:{user_id:'...',device_id:'...'},apiKey:'6ae8d3d7...',stateInitialized:true,decideSuccessful:true,num_guides_surveys:3,analyticsIntegrations:1}};}
-  catch(e){result={error:e.message};}
-  out.style.display='block';pre.textContent=JSON.stringify(result,null,2);
-  addEvent('gs-stream','action','_debugStatus() called',{});incStat('gs-cnt-action');
+  out.style.display='block';
+  pre.textContent='Running _debugStatus()…';
+  let output;
+  try{
+    if(window.engagement&&window.engagement._debugStatus){
+      // _debugStatus() likely prints via console.log and returns undefined
+      // Intercept console.log to capture the output, then restore it
+      let captured=null;
+      const origLog=console.log;
+      console.log=function(...args){
+        origLog.apply(console,args); // still print normally
+        // Grab first object arg that looks like a debug status result
+        for(const a of args){
+          if(a&&typeof a==='object'&&!Array.isArray(a)&&(a.stateInitialized!==undefined||a.decideSuccessful!==undefined)){
+            captured=a; break;
+          }
+        }
+      };
+      let r;
+      try{ r=await window.engagement._debugStatus.call(window.engagement); }catch(e){}
+      if(r==null){ try{ r=await window.engagement._debugStatus(); }catch(e){} }
+      // Give a tick for any sync console.log to fire before we restore
+      await new Promise(res=>setTimeout(res,0));
+      console.log=origLog;
+
+      const source=r??captured; // prefer return value, fall back to console-captured object
+      if(source!=null){
+        const safe={
+          stateInitialized: source.stateInitialized,
+          decideSuccessful: source.decideSuccessful,
+          num_guides_surveys: source.num_guides_surveys,
+          apiKey: source.apiKey,
+          analyticsIntegrations: source.analyticsIntegrations,
+          user: source.user ? {user_id:source.user.user_id, device_id:source.user.device_id} : undefined
+        };
+        const hasData=Object.values(safe).some(v=>v!=null);
+        output=hasData ? JSON.stringify(safe,null,2) : JSON.stringify({note:'_debugStatus() ran but property access was blocked. Open DevTools console and run: window.engagement._debugStatus()'},null,2);
+      } else {
+        output=JSON.stringify({note:'_debugStatus() returned no data. Re-initialize the SDK — make sure the API key is valid and the engagement script loaded.'},null,2);
+      }
+    } else {
+      output=JSON.stringify({error:'window.engagement._debugStatus not found',tip:'Make sure the SDK has loaded and initialized.',expected:{stateInitialized:true,decideSuccessful:true,num_guides_surveys:3,analyticsIntegrations:1}},null,2);
+    }
+  }catch(e){output=JSON.stringify({error:e.message},null,2);}
+  pre.textContent=output;
 }
 
 // ══ SESSION REPLAY ════════════════════════════════
@@ -3156,83 +3731,34 @@ async function srInit() {
       window.amplitude.add(window.sessionReplay.plugin({ sampleRate: rate }));
     }
     srInit_done = true;
+    installDemoPlugin();
     pill.className = 'pill pill-ok';
     pill.innerHTML = '<span class="pill-dot"></span>Initialized';
-    const sampled = srIsSessionSampled();
-    document.getElementById('r-cnt-sampled').textContent = sampled ? 'Yes' : 'No';
-    addSrEvent('action', 'Session Replay initialized', { path: srPath, sampleRate: rate, session_sampled: sampled, api_key: key.slice(0,8)+'...' });
-    incStat('r-cnt-total');
   } catch(e) {
     pill.innerHTML = '<span class="pill-dot"></span>Failed';
     alert('Could not initialize Session Replay SDK.\n' + e.message);
   }
 }
 
-function srIsSessionSampled() {
-  try {
-    if (window.sessionReplay && window.sessionReplay.getSessionReplayProperties) {
-      const props = window.sessionReplay.getSessionReplayProperties();
-      return !!(props && props['[Amplitude] Session Replay ID']);
-    }
-  } catch(e) {}
-  return false;
-}
 
-function srSimulateEvents() {
-  if (!srInit_done) { alert('Initialize the SDK first (step 4)'); return; }
-  const events = [
-    ['Page Viewed',       { page_title: 'Dashboard', url: '/dashboard' }],
-    ['Feature Clicked',   { feature: 'chart_builder', section: 'analytics' }],
-    ['Search Performed',  { query: 'retention cohort', results: 14 }],
-    ['Button Clicked',    { button_id: 'export_csv', page: 'dashboard' }],
-  ];
-  let replayId = null;
-  try {
-    if (window.sessionReplay && window.sessionReplay.getSessionReplayProperties) {
-      const props = window.sessionReplay.getSessionReplayProperties();
-      replayId = props && props['[Amplitude] Session Replay ID'] || null;
-    }
-  } catch(e) {}
-  events.forEach(([name, props]) => {
-    const enriched = replayId ? { ...props, '[Amplitude] Session Replay ID': replayId } : props;
-    if (window.amplitude && srInit_done) { try { window.amplitude.track(name, enriched); } catch(e) {} }
-    addSrEvent('track', name, enriched);
-    incStat('r-cnt-total');
-    if (replayId) incStat('r-cnt-replay');
-  });
-}
 
 function srGetProperties() {
   const out = document.getElementById('r-props-out');
   const pre = document.getElementById('r-props-pre');
   let result;
   try {
-    if (window.sessionReplay && window.sessionReplay.getSessionReplayProperties) {
-      result = window.sessionReplay.getSessionReplayProperties();
+    if (!srInit_done) {
+      result = { error: 'SDK not initialized — complete step 4 first.' };
+    } else if (window._lastSrId) {
+      result = { '[Amplitude] Session Replay ID': window._lastSrId };
     } else {
-      result = {
-        note: 'sessionReplay.getSessionReplayProperties() not available on this page',
-        expected_when_sampled: { '[Amplitude] Session Replay ID': 'device123/1234567890000' },
-        expected_when_not_sampled: {}
-      };
+      result = { result: {}, note: 'No replay ID seen yet — session may not be sampled, or fire an event first by interacting with the demo.' };
     }
   } catch(e) { result = { error: e.message }; }
-  out.style.display = 'block';
   pre.textContent = JSON.stringify(result, null, 2);
-  addSrEvent('action', 'getSessionReplayProperties() called', result);
-  incStat('r-cnt-total');
 }
 
-function addSrEvent(type, name, props) {
-  const stream = document.getElementById('r-stream');
-  const empty = stream.querySelector('.stream-empty');
-  if (empty) empty.remove();
-  const tags = { track:'t-track', action:'t-action', identify:'t-identify' };
-  const el = document.createElement('div');
-  el.className = 'event-item';
-  el.innerHTML = `<span class="etag ${tags[type]||'t-track'}">${type}</span><div class="ebody"><div class="ename">${name}</div>${props ? `<div class="eprops">${JSON.stringify(props)}</div>` : ''}</div><span class="etime">${now()}</span>`;
-  stream.insertBefore(el, stream.firstChild);
-}
+
 // ══ AUTOCAPTURE TOGGLES ══════════════════════════════
 const acState = {
   attribution: true, pageViews: true, sessions: true,
@@ -3371,6 +3897,93 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ══ PRESENTER MODE ════════════════════════════════════
+let presenterActive = false;
+
+// Flat list of all steps in order for cross-tab keyboard nav
+const PRESENTER_STEPS = [
+  {tab:'overview', prefix:'o', count:2},
+  {tab:'analytics', prefix:'a', count:10},
+  {tab:'replay', prefix:'r', count:7},
+  {tab:'experiment', prefix:'e', count:8},
+  {tab:'guides', prefix:'g', count:8},
+];
+
+function getPresenterFlat() {
+  const flat = [];
+  PRESENTER_STEPS.forEach(t => {
+    for (let i = 0; i < t.count; i++) flat.push({tab: t.tab, prefix: t.prefix, step: i, total: t.count});
+  });
+  return flat;
+}
+
+function getCurrentPresenterIdx() {
+  const flat = getPresenterFlat();
+  // Find currently active tab
+  const activeTab = document.querySelector('.tab-panel.active');
+  if (!activeTab) return 0;
+  const tabId = activeTab.id.replace('panel-', '');
+  const entry = PRESENTER_STEPS.find(t => t.tab === tabId);
+  if (!entry) return 0;
+  // Find active step within that tab
+  const activeStep = activeTab.querySelector('.step-page.active');
+  const stepIdx = activeStep ? parseInt(activeStep.id.split('-step-')[1]) : 0;
+  const tabStart = flat.findIndex(f => f.tab === tabId);
+  return tabStart + stepIdx;
+}
+
+function updatePresenterProgress() {
+  const flat = getPresenterFlat();
+  const idx = getCurrentPresenterIdx();
+  const cur = flat[idx];
+  if (!cur) return;
+  const tabLabel = {overview:'Overview', analytics:'Analytics', replay:'Session Replay', experiment:'Experiment', guides:'Guides & Surveys'};
+  document.getElementById('p-progress').textContent =
+    (tabLabel[cur.tab] || cur.tab) + ' · ' + (cur.step + 1) + ' of ' + cur.total;
+}
+
+function presenterNav(dir) {
+  const flat = getPresenterFlat();
+  const idx = getCurrentPresenterIdx();
+  const next = idx + dir;
+  if (next < 0 || next >= flat.length) return;
+  const target = flat[next];
+  // Switch tab if needed
+  const activeTab = document.querySelector('.tab-panel.active');
+  const curTabId = activeTab ? activeTab.id.replace('panel-', '') : '';
+  if (target.tab !== curTabId) {
+    const tabBtn = document.querySelector(`.tab[onclick*="'${target.tab}'"]`);
+    if (tabBtn) tabBtn.click();
+    // Wait for tab to activate then show step
+    setTimeout(() => { showStep(target.prefix, target.step, null); updatePresenterProgress(); }, 50);
+  } else {
+    showStep(target.prefix, target.step, null);
+    updatePresenterProgress();
+  }
+}
+
+function togglePresenterMode() {
+  presenterActive = !presenterActive;
+  document.body.classList.toggle('presenter-mode', presenterActive);
+  const btn = document.getElementById('present-toggle-btn');
+  if (presenterActive) {
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="12" rx="1" fill="white"/><rect x="9" y="2" width="5" height="12" rx="1" fill="white"/></svg> Exit';
+    btn.style.background = 'var(--gray-600)';
+    updatePresenterProgress();
+    window.scrollTo(0, 0);
+  } else {
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><polygon points="4,2 14,8 4,14" fill="white"/></svg> Present';
+    btn.style.background = 'var(--amp-blue)';
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (!presenterActive) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); presenterNav(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); presenterNav(-1); }
+  if (e.key === 'Escape') { if (presenterActive) togglePresenterMode(); }
+});
+
 </script>
 
 <!-- ══════════════════════════════════════
@@ -3398,7 +4011,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <div class="step-item" onclick="showStep('r',4,this)">
       <div class="step-num"><span>5</span></div>
-      <div class="step-label">Initialize &amp; configure</div>
+      <div class="step-label">Config options</div>
     </div>
     <div class="step-item" onclick="showStep('r',5,this)">
       <div class="step-num"><span>6</span></div>
@@ -3418,6 +4031,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="step-eyebrow" style="color:var(--teal)">Session Replay — Overview</div>
       <h2 class="step-title">What is Session Replay?</h2>
       <p class="step-sub">Session Replay captures user interactions on your web or mobile app and lets you watch them back as video-like recordings — combined with your Amplitude event data to understand exactly what users did and why.</p>
+      <div class="tldr" style="border-left-color:var(--teal)"><span class="tldr-icon">💡</span><span>Session Replay records what the user <strong>saw and did</strong> — not just what events fired. It's the difference between knowing a user dropped off and knowing <em>why</em>.</span></div>
 
       <div class="concept-grid">
         <div class="concept-card" style="border:2px solid var(--teal)">
@@ -3468,6 +4082,10 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="step-eyebrow" style="color:var(--teal)">Session Replay — Overview</div>
       <h2 class="step-title">Sample rate &amp; privacy</h2>
       <p class="step-sub">Not every session needs to be recorded. Set a sample rate to balance coverage against storage costs, and mask sensitive content before it ever leaves the browser.</p>
+      <div class="tldr" style="border-left-color:var(--teal)"><span class="tldr-icon">💡</span><span><strong>Sample rate</strong> controls cost and volume. <strong>Masking level</strong> controls privacy. Set the sample rate at initialization — it can be overridden remotely without a code deploy.</span></div>
+
+      <div class="step-body">
+      <div class="step-content">
 
       <div class="concept-grid">
         <div class="concept-card">
@@ -3514,10 +4132,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <strong>Only sampled sessions have a Replay ID.</strong> Events from sessions that aren't sampled in will not have the <code>[Amplitude] Session Replay ID</code> property and won't appear in the replay viewer.
       </div>
 
-      <div class="step-body" style="margin-top:14px">
-      <div class="step-content">
-        <div class="info amber"><strong>sampleRate defaults to 0.</strong> If you forget to set it, nothing will be recorded — no error is thrown. Always set it explicitly. Use <code style="font-family:var(--mono)">sampleRate: 1</code> during development and QA, then lower it for production.</div>
-      </div>
+      <div class="info amber"><strong>sampleRate defaults to 0.</strong> If you forget to set it, nothing will be recorded — no error is thrown. Always set it explicitly. Use <code style="font-family:var(--mono)">sampleRate: 1</code> during development and QA, then lower it for production.</div>
+
+      </div><!-- /step-content -->
       <aside class="step-aside">
         <div class="aside-card">
           <div class="aside-section">Sample rate guidance</div>
@@ -3587,6 +4204,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="step-eyebrow" style="color:var(--teal)">Session Replay — Implementation</div>
       <h2 class="step-title">Choose your installation method</h2>
       <p class="step-sub">Session Replay supports three installation paths for web. Choose based on what analytics SDK is already in your stack.</p>
+      <div class="tldr" style="border-left-color:var(--teal)"><span class="tldr-icon">💡</span><span>The plugin path shares identity from the Analytics SDK automatically. The standalone path requires you to pass <code style="font-family:var(--mono);font-size:12px">device_id</code> and <code style="font-family:var(--mono);font-size:12px">session_id</code> on every event — don't skip them or replays won't stitch.</span></div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
         <div class="decision-card selected" id="r-opt-plugin" onclick="selectSrPath('plugin')">
@@ -3673,7 +4291,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="field-group" style="margin-top:4px">
         <div class="field-row">
           <label>Amplitude API key</label>
-          <input id="r-api-key" type="text" placeholder="Paste your Amplitude API key" oninput="const v=this.value||'API_KEY';['r-key-plugin','r-key-init'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});const sa=document.getElementById('r-key-sa');if(sa)sa.textContent=this.value||'AMPLITUDE_API_KEY';"/>
+          <input id="r-api-key" type="text" placeholder="Paste your Amplitude API key" oninput="this.dataset.userModified='true';const v=this.value||'API_KEY';['r-key-plugin','r-key-init'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=v});const sa=document.getElementById('r-key-sa');if(sa)sa.textContent=this.value||'AMPLITUDE_API_KEY';"/>
         </div>
         <div class="field-row" id="r-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
@@ -3697,15 +4315,18 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('r',2,null)">← Back</button></div>
         <span class="nav-progress">Step 4 of 7</span>
-        <button class="btn btn-primary" onclick="showStep('r',4,null)">Next: Initialize &amp; configure →</button>
+        <button class="btn btn-primary" onclick="showStep('r',4,null)">Next: Config options →</button>
       </div>
     </div>
 
     <!-- R4: Initialize & configure -->
     <div id="r-step-4" class="step-page">
       <div class="step-eyebrow" style="color:var(--teal)">Session Replay — Implementation</div>
-      <h2 class="step-title">Initialize &amp; configure</h2>
+      <h2 class="step-title">Config options</h2>
       <p class="step-sub">Key configuration options that affect capture behavior, performance, and linkage to your analytics data.</p>
+
+      <div class="step-body">
+      <div class="step-content">
 
       <div class="code-wrap">
         <span class="code-label">full config — plugin path</span>
@@ -3743,10 +4364,9 @@ document.addEventListener('DOMContentLoaded', () => {
         <strong>sampleRate defaults to 0.</strong> If you initialize without setting sampleRate, nothing will be recorded. Always set it explicitly — use <code>1</code> (100%) during testing and development.
       </div>
 
-      <div class="step-body" style="margin-top:14px">
-      <div class="step-content">
-        <div class="info blue"><strong>Experiment integration.</strong> Use feature flags to control Session Replay rollout. If using Amplitude Experiment: <code style="font-family:var(--mono);font-size:11px">if (variant.value === 'treatment') amplitude.remove('@amplitude/plugin-session-replay-browser')</code> — this prevents replay from capturing the treatment group, useful for A/B test integrity or compliance.</div>
-      </div>
+      <div class="info blue"><strong>Experiment integration.</strong> Use feature flags to control Session Replay rollout. If using Amplitude Experiment: <code style="font-family:var(--mono);font-size:11px">if (variant.value === 'treatment') amplitude.remove('@amplitude/plugin-session-replay-browser')</code> — this prevents replay from capturing the treatment group, useful for A/B test integrity or compliance.</div>
+
+      </div><!-- /step-content -->
       <aside class="step-aside">
         <div class="aside-card">
           <div class="aside-section">Key config options</div>
@@ -3761,7 +4381,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <strong>Opt-out scope:</strong> <code style="font-family:var(--mono);font-size:10px">amplitude.setOptOut(true)</code> stops both event tracking and Session Replay. To stop <em>only</em> replay (keep Analytics running), use <code style="font-family:var(--mono);font-size:10px">amplitude.remove('@amplitude/plugin-session-replay-browser')</code>.
         </div>
       </aside>
-      </div>
+      </div><!-- /step-body -->
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('r',3,null)">← Back</button></div>
@@ -3770,7 +4390,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
 
-    <!-- R5: Privacy & masking -->
+    <!-- R5: Config options -->
     <div id="r-step-5" class="step-page">
       <div class="step-eyebrow" style="color:var(--teal)">Session Replay — Implementation</div>
       <h2 class="step-title">Privacy &amp; masking</h2>
@@ -3839,26 +4459,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       <div class="info teal" style="display:flex;gap:10px;align-items:flex-start">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7.25" stroke="#1D9E75" stroke-width="1.5"/><rect x="7.25" y="4" width="1.5" height="1.5" rx=".75" fill="#1D9E75"/><rect x="7.25" y="6.5" width="1.5" height="5.5" rx=".75" fill="#1D9E75"/></svg>
-        <div><strong>What to look for:</strong> After initializing with a real API key and sampleRate &gt; 0, click "Simulate events" to fire tracked events with a Session Replay ID attached. Then open Amplitude → Session Replay — the recordings should appear within seconds.</div>
+        <div><strong>What to look for:</strong> After initializing with a real API key and sampleRate &gt; 0, interact with the demo — navigate steps, click buttons, or call any SDK method. When the session is sampled, events will appear here with <code style="font-family:var(--mono);font-size:11px">[Amplitude] Session Replay ID</code> attached. Then open Amplitude → Session Replay — recordings should appear within seconds.</div>
       </div>
 
       <div class="stat-row">
         <div class="stat"><div class="stat-val" id="r-cnt-total">0</div><div class="stat-lbl">events fired</div></div>
-        <div class="stat"><div class="stat-val" id="r-cnt-replay">0</div><div class="stat-lbl">with replay ID</div></div>
-        <div class="stat"><div class="stat-val" id="r-cnt-sampled" style="font-size:14px;padding-top:4px">—</div><div class="stat-lbl">session sampled</div></div>
       </div>
       <div class="card" style="padding:12px">
-        <div class="stream" id="r-stream"><div class="stream-empty">Initialize the SDK in step 4 then simulate events — they'll appear here</div></div>
+        <div class="stream" id="r-stream"><div class="stream-empty">Initialize the SDK in step 4 — events will appear here automatically as you interact with the SDK</div></div>
       </div>
 
       <div style="margin-top:14px" class="btn-row">
-        <button class="btn btn-teal" onclick="srSimulateEvents()">Simulate tracked events</button>
         <button class="btn" onclick="srGetProperties()">Check getSessionReplayProperties()</button>
       </div>
 
-      <div id="r-props-out" style="display:none;margin-top:10px">
+      <div id="r-props-out" style="margin-top:10px">
+        <div class="code-label" style="font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:4px">getSessionReplayProperties() result</div>
         <div class="code-wrap" style="margin-bottom:0">
-          <pre id="r-props-pre" style="white-space:pre-wrap;font-size:11px"></pre>
+          <pre id="r-props-pre" style="white-space:pre-wrap;font-size:11px;color:var(--text-3);font-style:italic">Click the button above to inspect the current session replay properties</pre>
         </div>
       </div>
 

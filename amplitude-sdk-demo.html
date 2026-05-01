@@ -708,6 +708,60 @@ body.presenter-mode .nav-footer { display:none !important; }
   font-size:15px; flex-shrink:0; margin-top:1px;
 }
 .tldr strong { color:var(--text); font-weight:600; }
+
+/* ── Identity Flow Diagram ──────────── */
+.flow-wrap { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-xl); padding:20px; margin-bottom:16px; }
+.flow-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.flow-hdr-title { font-size:12px; font-weight:600; color:var(--text-2); }
+.flow-rows { display:flex; flex-direction:column; gap:10px; }
+.flow-row { display:flex; align-items:center; gap:0; min-height:58px; }
+.flow-row-lbl { width:110px; flex-shrink:0; padding-right:12px; }
+.flow-row-user { font-size:10px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px; }
+.flow-row-did { font-size:10px; font-family:var(--mono); color:var(--text-2); }
+.flow-row-uid { font-size:10px; font-family:var(--mono); color:var(--teal-dk); font-weight:600; margin-top:2px; display:none; }
+.flow-timeline { flex:1; position:relative; height:58px; display:flex; align-items:center; }
+.flow-tl-line { position:absolute; left:0; right:0; height:2px; top:50%; transform:translateY(-50%); border-radius:2px; background:var(--border-2); transition:background .5s; }
+.flow-tl-line.active { background:linear-gradient(90deg, var(--amp-blue-mid), var(--amp-blue)); }
+.flow-evts { position:relative; z-index:1; display:flex; align-items:center; width:100%; }
+.flow-evt { display:flex; flex-direction:column; align-items:center; flex:1; gap:5px; }
+.flow-dot { width:10px; height:10px; border-radius:50%; background:var(--gray-mid); border:2px solid var(--surface); flex-shrink:0; transition:background .3s, transform .3s, box-shadow .3s; }
+.flow-evt-lbl { font-size:9px; color:var(--text-3); text-align:center; line-height:1.3; white-space:nowrap; }
+.flow-evt.login .flow-dot { width:13px; height:13px; background:var(--teal-mid); cursor:pointer; }
+.flow-evt.login .flow-evt-lbl { color:var(--teal-dk); font-weight:600; cursor:pointer; }
+.flow-evt.login:hover .flow-dot { background:var(--teal); transform:scale(1.15); }
+.flow-evt.login.done .flow-dot { background:var(--teal); box-shadow:0 0 0 3px rgba(29,158,117,.25); cursor:default; }
+.flow-evt.login.done .flow-evt-lbl { color:var(--teal-dk); }
+.flow-evt.faded { opacity:.28; }
+.flow-ghost-row { border:1.5px dashed var(--border-2); border-radius:var(--r-lg); padding:11px 14px; cursor:pointer; transition:border-color .2s, background .2s; display:flex; align-items:center; gap:12px; }
+.flow-ghost-row:hover { border-color:var(--amp-blue); background:rgba(28,108,229,.04); }
+.flow-ghost-lbl { font-size:12px; font-weight:500; color:var(--text-2); }
+.flow-ghost-sub { font-size:11px; color:var(--text-3); margin-top:1px; }
+.flow-merge { margin-top:14px; border-radius:var(--r-lg); overflow:hidden; display:none; }
+.flow-merge.show { display:block; }
+.flow-merge-bar { background:var(--amp-blue); display:flex; align-items:center; gap:10px; padding:10px 16px; }
+.flow-merge-bar-title { font-size:12px; font-weight:600; color:#fff; }
+.flow-merge-pills { background:var(--amp-blue-lt); padding:10px 16px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.flow-merge-pill { font-size:10px; font-family:var(--mono); color:var(--amp-blue-dk); background:rgba(28,108,229,.08); border:1px solid var(--amp-blue-mid); border-radius:20px; padding:2px 9px; }
+.flow-merge-note { background:var(--amp-blue-lt); padding:6px 16px 10px; font-size:10px; color:var(--text-3); border-top:1px solid var(--amp-blue-mid); }
+/* Flow diagram guide strip */
+.flow-guide { display:flex; align-items:center; gap:4px; margin-bottom:16px; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:8px 12px; flex-wrap:wrap; }
+.flow-guide-step { font-size:11px; color:var(--text-3); padding:3px 9px; border-radius:5px; transition:background .3s, color .3s; white-space:nowrap; cursor:default; }
+.flow-guide-step.active { background:var(--amp-blue); color:#fff; font-weight:600; cursor:pointer; }
+.flow-guide-step.active:hover { background:var(--amp-blue-dk); }
+.flow-guide-step.done { color:var(--teal-dk); font-weight:500; }
+.flow-guide-sep { font-size:11px; color:var(--border-2); flex-shrink:0; }
+/* Row end label (Known User) */
+.flow-row-end { width:96px; flex-shrink:0; padding-left:10px; opacity:0; transition:opacity .45s; pointer-events:none; }
+.flow-row-end.show { opacity:1; }
+.flow-end-user { font-size:10px; font-weight:600; color:var(--amp-blue-dk); text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px; }
+.flow-end-uid { font-size:10px; font-family:var(--mono); color:var(--amp-blue-dk); font-weight:600; word-break:break-all; }
+.flow-end-amp { font-size:9px; color:var(--text-3); font-family:var(--mono); margin-top:2px; }
+.flow-end-amp.merged { color:var(--amp-blue-dk); font-weight:600; }
+/* Pulse animation for actionable items */
+@keyframes flow-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(28,108,229,.35)} 50%{box-shadow:0 0 0 5px rgba(28,108,229,.0)} }
+.flow-evt.login:not(.done) .flow-dot { animation:flow-pulse 1.8s ease-in-out infinite; }
+@keyframes ghost-pulse { 0%,100%{border-color:var(--border-2)} 50%{border-color:var(--amp-blue-mid)} }
+.flow-ghost-row.pulsing { animation:ghost-pulse 1.8s ease-in-out infinite; }
 </style>
 </head>
 <body>
@@ -894,23 +948,27 @@ body.presenter-mode .nav-footer { display:none !important; }
     </div>
     <div class="step-item" onclick="showStep('a',5,this)">
       <div class="step-num"><span>6</span></div>
-      <div class="step-label">Track events</div>
+      <div class="step-label">Set user properties</div>
     </div>
     <div class="step-item" onclick="showStep('a',6,this)">
       <div class="step-num"><span>7</span></div>
-      <div class="step-label">Track revenue</div>
+      <div class="step-label">Track events</div>
     </div>
     <div class="step-item" onclick="showStep('a',7,this)">
       <div class="step-num"><span>8</span></div>
-      <div class="step-label">Groups &amp; group properties</div>
+      <div class="step-label">Track revenue</div>
     </div>
     <div class="step-item" onclick="showStep('a',8,this)">
       <div class="step-num"><span>9</span></div>
+      <div class="step-label">Groups &amp; group properties</div>
+    </div>
+    <div class="step-item" onclick="showStep('a',9,this)">
+      <div class="step-num"><span>10</span></div>
       <div class="step-label">SDK Plugins</div>
     </div>
     <div class="sidebar-section">QA</div>
-    <div class="step-item" onclick="showStep('a',9,this)">
-      <div class="step-num"><span>10</span></div>
+    <div class="step-item" onclick="showStep('a',10,this)">
+      <div class="step-num"><span>11</span></div>
       <div class="step-label">QA &amp; Validation</div>
     </div>
   </aside>
@@ -969,7 +1027,7 @@ body.presenter-mode .nav-footer { display:none !important; }
       </div>
 
       <div class="nav-footer">
-        <span class="nav-progress">Step 1 of 10</span>
+        <span class="nav-progress">Step 1 of 11</span>
         <button class="btn btn-primary" onclick="showStep('a',1,null)">Next: Autocapture vs Precision →</button>
       </div>
     </div>
@@ -1042,7 +1100,7 @@ body.presenter-mode .nav-footer { display:none !important; }
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('a',0,null)">← Back</button></div>
-        <span class="nav-progress">Step 2 of 10</span>
+        <span class="nav-progress">Step 2 of 11</span>
         <button class="btn btn-primary" onclick="showStep('a',2,null)">Next: Choose install method →</button>
       </div>
     </div>
@@ -1106,7 +1164,7 @@ body.presenter-mode .nav-footer { display:none !important; }
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('a',1,null)">← Back</button></div>
-        <span class="nav-progress">Step 3 of 10</span>
+        <span class="nav-progress">Step 3 of 11</span>
         <button class="btn btn-primary" onclick="showStep('a',3,null)">Next: Configure &amp; initialize →</button>
       </div>
     </div>
@@ -1307,25 +1365,160 @@ body.presenter-mode .nav-footer { display:none !important; }
 
       <div class="nav-footer">
         <div><button class="btn" onclick="showStep('a',2,null)">← Back</button></div>
-        <span class="nav-progress">Step 4 of 10</span>
+        <span class="nav-progress">Step 4 of 11</span>
         <button class="btn btn-primary" onclick="showStep('a',4,null)">Next: Identify users →</button>
       </div>
     </div>
 
-    <!-- A4: Identify -->
+    <!-- A4: Identify users -->
     <div id="a-step-4" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Identify users</h2>
-      <p class="step-sub">Amplitude tracks every user by a <code style="font-family:var(--mono)">device_id</code> (anonymous) and optionally a <code style="font-family:var(--mono)">user_id</code> (authenticated). User properties power targeting in Experiment and Guides &amp; Surveys.</p>
+      <p class="step-sub">Amplitude tracks every user by a <code style="font-family:var(--mono)">device_id</code> (anonymous) and optionally a <code style="font-family:var(--mono)">user_id</code> (authenticated). Call <code style="font-family:var(--mono)">setUserId()</code> when a user logs in to unlock cross-device identity resolution.</p>
+      <div class="step-body">
+      <div class="step-content">
+
+      <!-- Identity flow diagram (matches slide 24 layout) -->
+      <div class="flow-wrap">
+        <div class="flow-hdr">
+          <span class="flow-hdr-title">Easily track users across products &amp; devices</span>
+          <button class="btn" style="font-size:11px;padding:4px 10px" onclick="flowReset()">↺ Reset</button>
+        </div>
+        <!-- Step-by-step guide strip -->
+        <div class="flow-guide" id="flow-guide">
+          <span class="flow-guide-step active" id="fgs-1" onclick="flowGuideStep(1)">① Log In on Device 1</span>
+          <span class="flow-guide-sep">→</span>
+          <span class="flow-guide-step" id="fgs-2" onclick="flowGuideStep(2)">② Add a second device</span>
+          <span class="flow-guide-sep">→</span>
+          <span class="flow-guide-step" id="fgs-3" onclick="flowGuideStep(3)">③ Log In on Device 2</span>
+        </div>
+        <div class="flow-rows">
+
+          <!-- Row 1: Anonymous User 1 -->
+          <div class="flow-row" id="flow-row1">
+            <div class="flow-row-lbl">
+              <div class="flow-row-user">Anonymous User 1</div>
+              <div class="flow-row-did" id="flow-did1">dev-……</div>
+              <div class="flow-row-uid" id="flow-uid1"></div>
+            </div>
+            <div class="flow-timeline">
+              <div class="flow-tl-line" id="flow-line1"></div>
+              <div class="flow-evts">
+                <div class="flow-evt"><div class="flow-dot"></div><div class="flow-evt-lbl">View Ad</div></div>
+                <div class="flow-evt"><div class="flow-dot"></div><div class="flow-evt-lbl">Register</div></div>
+                <div class="flow-evt"><div class="flow-dot"></div><div class="flow-evt-lbl">Load Home Page</div></div>
+                <div class="flow-evt login" id="flow-login1" onclick="flowLogin(1)" title="Click to simulate login">
+                  <div class="flow-dot"></div><div class="flow-evt-lbl">Log In</div>
+                </div>
+                <div class="flow-evt faded" id="flow-post1"><div class="flow-dot"></div><div class="flow-evt-lbl">Complete Purchase</div></div>
+              </div>
+            </div>
+            <!-- End state: Known User -->
+            <div class="flow-row-end" id="flow-end1">
+              <div class="flow-end-user">Known User</div>
+              <div class="flow-end-uid" id="flow-end-uid1"></div>
+            </div>
+          </div>
+
+          <!-- Ghost row: add second device -->
+          <div class="flow-ghost-row" id="flow-ghost" onclick="flowAddDevice()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><rect x="7" y="2" width="10" height="20" rx="2" stroke="var(--text-3)" stroke-width="1.5"/><circle cx="12" cy="18" r="1" fill="var(--text-3)"/></svg>
+            <div>
+              <div class="flow-ghost-lbl">Same user opens on a second device</div>
+              <div class="flow-ghost-sub">Amplitude assigns a brand-new device_id — no knowledge of the first session</div>
+            </div>
+          </div>
+
+          <!-- Row 2: Anonymous User 2 (hidden until ghost is clicked) -->
+          <div class="flow-row" id="flow-row2" style="display:none">
+            <div class="flow-row-lbl">
+              <div class="flow-row-user">Anonymous User 2</div>
+              <div class="flow-row-did" id="flow-did2">dev-……</div>
+              <div class="flow-row-uid" id="flow-uid2"></div>
+            </div>
+            <div class="flow-timeline">
+              <div class="flow-tl-line" id="flow-line2"></div>
+              <div class="flow-evts">
+                <div class="flow-evt"><div class="flow-dot"></div><div class="flow-evt-lbl">View Ad</div></div>
+                <div class="flow-evt"><div class="flow-dot"></div><div class="flow-evt-lbl">Load Home Page</div></div>
+                <div class="flow-evt"><div class="flow-dot"></div><div class="flow-evt-lbl">Feature Used</div></div>
+                <div class="flow-evt login" id="flow-login2" onclick="flowLogin(2)" title="Click to simulate login">
+                  <div class="flow-dot"></div><div class="flow-evt-lbl">Log In</div>
+                </div>
+                <div class="flow-evt faded" id="flow-post2"><div class="flow-dot"></div><div class="flow-evt-lbl">Purchase</div></div>
+              </div>
+            </div>
+            <!-- End state: Known User -->
+            <div class="flow-row-end" id="flow-end2">
+              <div class="flow-end-user">Known User</div>
+              <div class="flow-end-uid" id="flow-end-uid2"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Merge result (appears after both log in) -->
+        <div class="flow-merge" id="flow-merge">
+          <div class="flow-merge-bar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="flow-merge-bar-title">One continuous event stream in Amplitude</span>
+          </div>
+          <div class="flow-merge-pills">
+            <span class="flow-merge-pill" id="flow-pill-uid">user_id: "user_demo_001"</span>
+            <span class="flow-merge-pill" id="flow-pill-d1">Device A: dev-……</span>
+            <span class="flow-merge-pill" id="flow-pill-d2">Device B: dev-……</span>
+            <span class="flow-merge-pill">→ single Amplitude ID</span>
+            <span class="flow-merge-pill">all events unified</span>
+          </div>
+          <div class="flow-merge-note">* Amplitude recognizes Device A and Device B are both "<span id="flow-note-uid">user_demo_001</span>", and the events from User 2 are merged into User 1.</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <pre><span class="cc">// Call after user logs in — triggers identity merge</span>
+<span class="cv">amplitude</span>.<span class="cf">setUserId</span>(<span class="cs" id="a-uid-code">'user_demo_001'</span>);</pre>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Try it</div>
+        <div class="field-group">
+          <div class="field-row"><label>User ID</label><input id="a-user-id" value="user_demo_001" oninput="syncT('a-uid-code',this.value)"/></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-teal" onclick="aSetUserId()">Set user ID</button></div>
+      </div>
+
+      </div><!-- /step-content -->
+      <aside class="step-aside">
+        <div class="aside-card-light">
+          <div class="aside-section-light">Identity fields</div>
+          <div class="aside-row-light"><span class="aside-label-light">device_id</span><span class="aside-val-light">Auto-generated per device. Anonymous users. Persists in localStorage.</span></div>
+          <div class="aside-row-light"><span class="aside-label-light">user_id</span><span class="aside-val-light">Set after login. Triggers identity merge with Amplitude ID.</span></div>
+          <div class="aside-row-light"><span class="aside-label-light">amplitude_id</span><span class="aside-val-light">Canonical ID generated by Amplitude. Always used for analysis.</span></div>
+        </div>
+        <div class="aside-tip">
+          <strong>Anonymous users:</strong> Never assign a user_id to anonymous sessions. Anonymous users are tracked by device_id and merged automatically when they later authenticate.
+        </div>
+      </aside>
+      </div><!-- /step-body -->
+
+      <div class="nav-footer">
+        <div><button class="btn" onclick="showStep('a',3,null)">← Back</button></div>
+        <span class="nav-progress">Step 5 of 11</span>
+        <button class="btn btn-primary" onclick="showStep('a',5,null)">Next: Set user properties →</button>
+      </div>
+    </div>
+
+    <!-- A5: Set user properties -->
+    <div id="a-step-5" class="step-page">
+      <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
+      <h2 class="step-title">Set user properties</h2>
+      <p class="step-sub">User properties describe who the user is — plan, role, segment. They persist across sessions and are the primary targeting mechanism for Experiment and Guides &amp; Surveys.</p>
       <div class="tldr"><span class="tldr-icon">💡</span><span>User properties set here flow automatically into <strong>Experiment targeting</strong> and <strong>G&amp;S audience filters</strong> — what you instrument in Analytics powers every other product.</span></div>
       <div class="step-body">
       <div class="step-content">
 
       <div class="code-wrap">
-        <pre><span class="cc">// Call after user logs in</span>
-<span class="cv">amplitude</span>.<span class="cf">setUserId</span>(<span class="cs" id="a-uid-code">'user_demo_001'</span>);
-
-<span class="cc">// Attach properties for targeting &amp; segmentation</span>
+        <pre><span class="cc">// Attach properties for targeting &amp; segmentation</span>
 <span class="ck">const</span> <span class="cv">identifyEvent</span> = <span class="ck">new</span> <span class="cv">amplitude</span>.<span class="ct">Identify</span>();
 <span class="cv">identifyEvent</span>.<span class="cf">set</span>(<span class="cs">'plan'</span>, <span class="cs" id="a-plan-code">'growth'</span>);
 <span class="cv">identifyEvent</span>.<span class="cf">set</span>(<span class="cs">'role'</span>, <span class="cs" id="a-role-code">'analyst'</span>);
@@ -1335,11 +1528,10 @@ body.presenter-mode .nav-footer { display:none !important; }
       <div class="card">
         <div class="card-title">Try it</div>
         <div class="field-group">
-          <div class="field-row"><label>User ID</label><input id="a-user-id" value="user_demo_001" oninput="syncT('a-uid-code',this.value)"/></div>
           <div class="field-row"><label>Plan</label><input id="a-plan" value="growth" oninput="syncT('a-plan-code',this.value)"/></div>
           <div class="field-row"><label>Role</label><input id="a-role" value="analyst" oninput="syncT('a-role-code',this.value)"/></div>
         </div>
-        <div class="btn-row"><button class="btn btn-teal" onclick="aIdentify()">Set user identity</button></div>
+        <div class="btn-row"><button class="btn btn-teal" onclick="aSetUserProperties()">Set user properties</button></div>
       </div>
 
       </div><!-- /step-content -->
@@ -1357,24 +1549,18 @@ body.presenter-mode .nav-footer { display:none !important; }
         <div class="aside-warn">
           <strong>Order matters.</strong> User properties applied <em>after</em> an event fires do not apply retroactively to that event. Set user properties before tracking the events you want them to appear on.
         </div>
-        <div class="aside-card-light">
-          <div class="aside-section-light">Identity fields</div>
-          <div class="aside-row-light"><span class="aside-label-light">device_id</span><span class="aside-val-light">Auto-generated per device. Anonymous users. Persists in localStorage.</span></div>
-          <div class="aside-row-light"><span class="aside-label-light">user_id</span><span class="aside-val-light">Set after login. Triggers identity merge with Amplitude ID.</span></div>
-          <div class="aside-row-light"><span class="aside-label-light">amplitude_id</span><span class="aside-val-light">Canonical ID generated by Amplitude. Always used for analysis.</span></div>
-        </div>
       </aside>
       </div><!-- /step-body -->
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',3,null)">← Back</button></div>
-        <span class="nav-progress">Step 5 of 10</span>
-        <button class="btn btn-primary" onclick="showStep('a',5,null)">Next: Track events →</button>
+        <div><button class="btn" onclick="showStep('a',4,null)">← Back</button></div>
+        <span class="nav-progress">Step 6 of 11</span>
+        <button class="btn btn-primary" onclick="showStep('a',6,null)">Next: Track events →</button>
       </div>
     </div>
 
-    <!-- A4: Track events -->
-    <div id="a-step-5" class="step-page">
+    <!-- A5: Track events -->
+    <div id="a-step-6" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Track events</h2>
       <p class="step-sub">Every meaningful user action is a track call. Event names and properties define what you can analyze — design them thoughtfully with your <a href="#">Implementation Workbook</a>.</p>
@@ -1445,14 +1631,14 @@ body.presenter-mode .nav-footer { display:none !important; }
       </div><!-- /step-body -->
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',4,null)">← Back</button></div>
-        <span class="nav-progress">Step 6 of 10</span>
-        <button class="btn btn-primary" onclick="showStep('a',6,null)">Next: Track revenue →</button>
+        <div><button class="btn" onclick="showStep('a',5,null)">← Back</button></div>
+        <span class="nav-progress">Step 7 of 11</span>
+        <button class="btn btn-primary" onclick="showStep('a',7,null)">Next: Track revenue →</button>
       </div>
     </div>
 
     <!-- A5: Revenue -->
-    <div id="a-step-6" class="step-page">
+    <div id="a-step-7" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Track revenue</h2>
       <p class="step-sub">The Revenue object ensures purchase events are structured consistently and flow into Amplitude's revenue charts, LTV analysis, and cohorts.</p>
@@ -1499,15 +1685,15 @@ body.presenter-mode .nav-footer { display:none !important; }
       </div><!-- /step-body -->
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',5,null)">← Back</button></div>
-        <span class="nav-progress">Step 7 of 10</span>
-        <button class="btn btn-primary" onclick="showStep('a',7,null)">Next: Groups &amp; Group Properties →</button>
+        <div><button class="btn" onclick="showStep('a',6,null)">← Back</button></div>
+        <span class="nav-progress">Step 8 of 11</span>
+        <button class="btn btn-primary" onclick="showStep('a',8,null)">Next: Groups &amp; Group Properties →</button>
       </div>
     </div>
 
 
     <!-- A6: Groups & Group Properties -->
-    <div id="a-step-7" class="step-page">
+    <div id="a-step-8" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">Groups &amp; group properties</h2>
       <p class="step-sub">Groups enable account-level analytics — query by organization, company, or any entity rather than individual users. Requires the <strong>Accounts add-on</strong>. Use <code style="font-family:var(--mono)">setGroup()</code> to associate users and <code style="font-family:var(--mono)">groupIdentify()</code> to set properties on the group itself.</p>
@@ -1618,14 +1804,14 @@ body.presenter-mode .nav-footer { display:none !important; }
       </div><!-- /step-body -->
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',6,null)">← Back</button></div>
-        <span class="nav-progress">Step 8 of 10</span>
-        <button class="btn btn-primary" onclick="showStep('a',8,null)">Next: SDK Plugins →</button>
+        <div><button class="btn" onclick="showStep('a',7,null)">← Back</button></div>
+        <span class="nav-progress">Step 9 of 11</span>
+        <button class="btn btn-primary" onclick="showStep('a',9,null)">Next: SDK Plugins →</button>
       </div>
     </div>
 
     <!-- A8: SDK Plugins -->
-    <div id="a-step-8" class="step-page">
+    <div id="a-step-9" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — Implementation</div>
       <h2 class="step-title">SDK Plugins</h2>
       <p class="step-sub">Plugins let you intercept, enrich, or redirect every event before it leaves the browser. Use them for data enrichment, custom destinations, or event filtering.</p>
@@ -1730,17 +1916,17 @@ body.presenter-mode .nav-footer { display:none !important; }
       </div><!-- /step-body -->
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',7,null)">← Back</button></div>
-        <span class="nav-progress">Step 9 of 10</span>
-        <button class="btn btn-primary" onclick="showStep('a',9,null)">Next: QA &amp; Validation →</button>
+        <div><button class="btn" onclick="showStep('a',8,null)">← Back</button></div>
+        <span class="nav-progress">Step 10 of 11</span>
+        <button class="btn btn-primary" onclick="showStep('a',10,null)">Next: QA &amp; Validation →</button>
       </div>
     </div>
 
     <!-- A9: QA & Validation -->
-    <div id="a-step-9" class="step-page">
+    <div id="a-step-10" class="step-page">
       <div class="step-eyebrow" style="color:var(--blue)">Analytics SDK — QA</div>
       <h2 class="step-title">QA &amp; Validation</h2>
-      <p class="step-sub">All events fired in steps 3–8 appear here in real time. With a valid API key, these are actually sent to Amplitude — verify in <a href="https://amplitude.com/docs/data/chrome-extension-debug" target="_blank">the Chrome Extension debugger</a>.</p>
+      <p class="step-sub">All events fired in steps 3–10 appear here in real time. With a valid API key, these are actually sent to Amplitude — verify in <a href="https://amplitude.com/docs/data/chrome-extension-debug" target="_blank">the Chrome Extension debugger</a>.</p>
 
       <div class="stat-row">
         <div class="stat"><div class="stat-val" id="a-cnt-total">0</div><div class="stat-lbl">total events</div></div>
@@ -1749,7 +1935,7 @@ body.presenter-mode .nav-footer { display:none !important; }
         <div class="stat"><div class="stat-val" id="a-cnt-identify">0</div><div class="stat-lbl">identify</div></div>
       </div>
       <div class="card" style="padding:12px">
-        <div class="stream" id="a-stream"><div class="stream-empty">Go through steps 3–9 and fire events — they'll appear here</div></div>
+        <div class="stream" id="a-stream"><div class="stream-empty">Go through steps 3–10 and fire events — they'll appear here</div></div>
       </div>
 
       <div class="info teal" style="margin-top:14px">
@@ -1757,8 +1943,8 @@ body.presenter-mode .nav-footer { display:none !important; }
       </div>
 
       <div class="nav-footer">
-        <div><button class="btn" onclick="showStep('a',8,null)">← Back</button></div>
-        <span class="nav-progress">Step 10 of 10</span>
+        <div><button class="btn" onclick="showStep('a',9,null)">← Back</button></div>
+        <span class="nav-progress">Step 11 of 11</span>
         <button class="btn btn-primary" onclick="goToProduct('replay')">Continue: Session Replay →</button>
       </div>
     </div>
@@ -3221,6 +3407,11 @@ async function aInit() {
     aInit_done = true;
     document.getElementById('a-sdk-status').className='pill pill-ok';
     document.getElementById('a-sdk-status').innerHTML='<span class="pill-dot"></span>Initialized';
+    // Update identity flow diagram with the real SDK device_id
+    try {
+      const realDid = window.amplitude.getDeviceId();
+      if(realDid){ const el=document.getElementById('flow-did1'); if(el) el.textContent=realDid.slice(0,12)+'…'; }
+    } catch(e){}
     // Silently boot Session Replay using the same API key
     aInitSessionReplay(key);
   } catch(e) {
@@ -3263,11 +3454,112 @@ async function aInitSessionReplay(key) {
   installDemoPlugin();
 }
 function aReq(){if(!aInit_done){alert('Initialize the SDK first (step 3)');return false;}return true;}
-function aIdentify(){
+
+// ── Identity flow diagram ────────────────────────────────────────────────────
+(function(){
+  function mkDevId(){ return 'dev-'+Math.random().toString(36).slice(2,8); }
+  const staticDid1 = mkDevId();
+  let did2Val = null, l1done = false, l2done = false;
+
+  function setDid1(){
+    const real = window.amplitude && window.amplitude.getDeviceId ? window.amplitude.getDeviceId() : null;
+    const el = document.getElementById('flow-did1');
+    if(el) el.textContent = real ? real.slice(0,12)+'…' : staticDid1;
+  }
+
+  function setGuideStep(active){
+    for(let i=1;i<=3;i++){
+      const el=document.getElementById('fgs-'+i);
+      if(!el) continue;
+      el.classList.remove('active','done');
+      if(i < active) el.classList.add('done');
+      else if(i === active) el.classList.add('active');
+    }
+  }
+
+  // Called when a guide strip step is clicked
+  window.flowGuideStep = function(n){
+    if(n===1 && !l1done) window.flowLogin(1);
+    if(n===2 && l1done && !did2Val) window.flowAddDevice();
+    if(n===3 && did2Val && !l2done) window.flowLogin(2);
+  };
+
+  window.flowReset = function(){
+    l1done=false; l2done=false; did2Val=null;
+    setDid1();
+    setGuideStep(1);
+    ['flow-login1','flow-login2'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('done');});
+    ['flow-line1','flow-line2'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('active');});
+    ['flow-post1','flow-post2'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('faded');});
+    ['flow-uid1','flow-uid2'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='';}});
+    ['flow-end1','flow-end2'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('show');});
+    const ghost=document.getElementById('flow-ghost');
+    if(ghost){ghost.style.display='';ghost.classList.remove('pulsing');}
+    const r2=document.getElementById('flow-row2');if(r2)r2.style.display='none';
+    const fm=document.getElementById('flow-merge');if(fm)fm.className='flow-merge';
+  };
+
+  window.flowAddDevice = function(){
+    did2Val=mkDevId();
+    setGuideStep(3);
+    const ghost=document.getElementById('flow-ghost');
+    if(ghost){ghost.style.display='none';ghost.classList.remove('pulsing');}
+    const r2=document.getElementById('flow-row2');if(r2)r2.style.display='';
+    const d2el=document.getElementById('flow-did2');if(d2el)d2el.textContent=did2Val;
+  };
+
+  window.flowLogin = function(n){
+    const uid=(document.getElementById('a-user-id')||{value:'user_demo_001'}).value||'user_demo_001';
+    if(n===1){
+      l1done=true;
+      setGuideStep(2);
+      // Pulse the ghost row to draw attention to the next step
+      const ghost=document.getElementById('flow-ghost');
+      if(ghost && ghost.style.display!=='none') ghost.classList.add('pulsing');
+    } else {
+      l2done=true;
+    }
+    const loginEl=document.getElementById('flow-login'+n);if(loginEl)loginEl.classList.add('done');
+    const lineEl=document.getElementById('flow-line'+n);if(lineEl)lineEl.classList.add('active');
+    const postEl=document.getElementById('flow-post'+n);if(postEl)postEl.classList.remove('faded');
+    const uidEl=document.getElementById('flow-uid'+n);
+    if(uidEl){uidEl.textContent='"'+uid+'"';uidEl.style.display='';}
+    // Reveal the end-of-row "Known User" label
+    const endUidEl=document.getElementById('flow-end-uid'+n);
+    if(endUidEl) endUidEl.textContent='"'+uid+'"';
+    const endEl=document.getElementById('flow-end'+n);
+    if(endEl) setTimeout(()=>endEl.classList.add('show'), 200);
+
+    if(l1done && l2done){
+      setGuideStep(4); // past all steps → all show as done
+      setTimeout(()=>{
+        const d1=(document.getElementById('flow-did1')||{}).textContent||staticDid1;
+        const d2=(document.getElementById('flow-did2')||{}).textContent||did2Val||'dev-……';
+        const pu=document.getElementById('flow-pill-uid');if(pu)pu.textContent='user_id: "'+uid+'"';
+        const pd1=document.getElementById('flow-pill-d1');if(pd1)pd1.textContent='Device A: '+d1;
+        const pd2=document.getElementById('flow-pill-d2');if(pd2)pd2.textContent='Device B: '+d2;
+        const nu=document.getElementById('flow-note-uid');if(nu)nu.textContent=uid;
+        const fm=document.getElementById('flow-merge');if(fm)fm.className='flow-merge show';
+      }, 350);
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(setDid1,150));
+})();
+
+function aSetUserId(){
   if(!aReq())return;
-  const uid=document.getElementById('a-user-id').value, plan=document.getElementById('a-plan').value, role=document.getElementById('a-role').value;
+  const uid=document.getElementById('a-user-id').value;
+  window.amplitude.setUserId(uid);
+  // Sync the flow diagram — log in on device 1 automatically
+  const l1=document.getElementById('flow-login1');
+  if(l1 && !l1.classList.contains('done')) window.flowLogin(1);
+}
+function aSetUserProperties(){
+  if(!aReq())return;
+  const plan=document.getElementById('a-plan').value, role=document.getElementById('a-role').value;
   const id=new window.amplitude.Identify();id.set('plan',plan);id.set('role',role);
-  window.amplitude.setUserId(uid);window.amplitude.identify(id);
+  window.amplitude.identify(id);
 }
 function aTrack(){
   if(!aReq())return;

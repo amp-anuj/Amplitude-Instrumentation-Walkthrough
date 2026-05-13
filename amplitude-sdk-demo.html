@@ -2306,7 +2306,7 @@ body.presenter-mode .nav-footer { display:none !important; }
         <div class="field-row" id="e-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
           <input id="e-seg-wk-input" placeholder="Segment source write key"
-            oninput="const el=document.getElementById('e-seg-wk');if(el)el.textContent=this.value||'YOUR_WRITE_KEY';"/>
+            oninput="syncSegmentWriteKey(this.value, this.id)"/>
         </div>
         <div class="field-row">
           <label>Deployment key</label>
@@ -2936,7 +2936,7 @@ body.presenter-mode .nav-footer { display:none !important; }
         <div class="field-row" id="g-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
           <input id="g-seg-wk-input" placeholder="Segment source write key"
-            oninput="const el=document.getElementById('g-seg-wk');if(el)el.textContent=this.value||'YOUR_WRITE_KEY';"/>
+            oninput="syncSegmentWriteKey(this.value, this.id)"/>
         </div>
         <div class="field-row">
           <label>User ID</label>
@@ -3323,6 +3323,22 @@ function loadScript(src) {
   return new Promise((res,rej)=>{
     if(document.querySelector(`script[src="${src}"]`)){res();return;}
     const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Failed: '+src));document.head.appendChild(s);
+  });
+}
+
+// ══ SEGMENT WRITE KEY SYNC ════════════════════════
+// Keeps all three product Segment write key inputs in sync.
+// Call with the new value and the source input's id so we don't overwrite a
+// field the user is actively typing in.
+function syncSegmentWriteKey(val, sourceId) {
+  const inputs = ['e-seg-wk-input', 'g-seg-wk-input', 'r-seg-wk-input'];
+  const spans  = ['e-seg-wk',       'g-seg-wk',       'r-seg-wk'      ];
+  inputs.forEach(function(id, i) {
+    const span = document.getElementById(spans[i]);
+    if (span) span.textContent = val || 'YOUR_WRITE_KEY';
+    if (id === sourceId) return; // don't overwrite the field being typed in
+    const el = document.getElementById(id);
+    if (el) el.value = val;
   });
 }
 
@@ -3877,7 +3893,22 @@ async function gsInit(){
         }
       });
     } else {
+      const segWk=(document.getElementById('g-seg-wk-input')||{}).value||'';
       await loadScript(`https://cdn.amplitude.com/script/${key}.engagement.js`);
+      if(segWk.trim()){
+        await new Promise(resolve=>{
+          if(window.analytics&&window.analytics.initialized){resolve();return;}
+          const s=document.createElement('script');s.async=true;
+          s.src='https://cdn.segment.com/analytics.js/v1/'+segWk.trim()+'/analytics.min.js';
+          s.onload=resolve; document.head.appendChild(s);
+          window.analytics=window.analytics||[];
+          ['identify','track','page','group','alias','ready','on','off'].forEach(function(m){
+            if(!window.analytics[m])window.analytics[m]=function(){
+              if(window.analytics.push)window.analytics.push([m].concat(Array.prototype.slice.call(arguments)));
+            };
+          });
+        });
+      }
       window.engagement.init(key,{serverZone:'US'});
     }
     gsInit_done=true;
@@ -4588,7 +4619,7 @@ document.addEventListener('keydown', function(e) {
         <div class="field-row" id="r-seg-wk-row" style="display:none">
           <label>Segment Write Key</label>
           <input id="r-seg-wk-input" placeholder="Segment source write key"
-            oninput="const el=document.getElementById('r-seg-wk');if(el)el.textContent=this.value||'YOUR_WRITE_KEY';"/>
+            oninput="syncSegmentWriteKey(this.value, this.id)"/>
         </div>
         <div class="field-row" id="r-seg-uid-row" style="display:none">
           <label>User ID</label>

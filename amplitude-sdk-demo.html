@@ -3847,7 +3847,7 @@ function selectGsPath(path){
   document.getElementById('g-code-sa').style.display=path==='standalone'?'block':'none';
   document.getElementById('g-boot-note-plugin').style.display=path==='plugin'?'block':'none';
   document.getElementById('g-boot-note-sa').style.display=path==='standalone'?'block':'none';
-  document.getElementById('g-boot-row').style.display=path==='standalone'&&gsInit_done?'block':'none';
+  document.getElementById('gs-boot-row').style.display=path==='standalone'&&gsInit_done?'block':'none';
   document.getElementById('g-forward-plugin-note').style.display=path==='plugin'?'block':'none';
   document.getElementById('g-forward-sa-note').style.display=path==='standalone'?'block':'none';
   document.getElementById('gs-forward-btn').style.display=path==='standalone'?'inline-flex':'none';
@@ -3913,7 +3913,7 @@ async function gsInit(){
     }
     gsInit_done=true;
     pill.className='pill pill-ok';pill.innerHTML='<span class="pill-dot"></span>SDK loaded';
-    if(gsPath==='standalone')document.getElementById('g-boot-row').style.display='block';
+    if(gsPath==='standalone')document.getElementById('gs-boot-row').style.display='block';
   } catch(e){
     pill.innerHTML='<span class="pill-dot"></span>Failed';
     alert('Could not load SDK. Check your API key.\n'+e.message);
